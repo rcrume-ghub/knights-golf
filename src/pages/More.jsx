@@ -28,9 +28,7 @@ export default function More() {
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">League</p>
         </div>
         <MenuLink to="/handicaps" label="Handicaps" icon="📊" />
-        <MenuLink to="/standings" label="Standings" icon="🏆" />
         <MenuLink to="/schedule" label="Schedule" icon="📅" />
-        <MenuLink to="/seasons" label="Seasons" icon="🗂️" />
       </div>
 
       {isAdmin && (
@@ -38,11 +36,7 @@ export default function More() {
           <div className="px-4 py-2 border-b border-gray-100">
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Commissioner</p>
           </div>
-          <MenuLink to="/admin/roster" label="Roster" icon="👤" />
           <MenuLink to="/admin/import" label="Import Data" icon="📥" />
-          <MenuLink to="/admin/teams" label="Teams & Players" icon="👥" />
-          <MenuLink to="/admin/schedule-setup" label="Schedule Setup" icon="🗓️" />
-          <MenuLink to="/admin/dues" label="Dues Tracker" icon="💵" />
           <MenuLink to="/admin/subs" label="Sub List" icon="🔄" />
           <MenuLink to="/admin/handicap-calc" label="Recalculate Handicaps" icon="📐" />
         </div>
