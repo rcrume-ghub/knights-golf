@@ -16,7 +16,13 @@ export const seasons = {
     return all.find(s => s.is_active) ?? null
   },
   getAll: () => getAll('seasons'),
-  upsert: (data) => putOne('seasons', { ...data, id: data.id || newId() })
+  upsert: (data) => putOne('seasons', { ...data, id: data.id || newId() }),
+  setActive: async (id) => {
+    const all = await getAll('seasons')
+    for (const s of all) {
+      await putOne('seasons', { ...s, is_active: s.id === id })
+    }
+  }
 }
 
 // ─── Players ─────────────────────────────────────────────────────────────────
