@@ -60,7 +60,8 @@ export default function HandicapCalc() {
       }
 
       const latest = calculateHandicap(playerScores.map(s => s.gross), season.course_par, season.max_handicap)
-      resultRows.push({ name: player.name, teamNumber: player.teamNumber, handicap: latest, rounds: playerScores.length })
+      const fullName = `${player.first_name || ''} ${player.last_name || ''}`.trim()
+      resultRows.push({ name: fullName, teamNumber: player.teamNumber, handicap: latest, rounds: playerScores.length })
     }
 
     if (upserts.length > 0) {

@@ -43,12 +43,16 @@ export default function Schedule() {
   const teamById = Object.fromEntries(allTeams.map(t => [t.id, t]))
   const teamPlayersMap = {}
   for (const tp of allTeamPlayers) {
-    if (!teamPlayersMap[tp.team_id]) teamPlayersMap[tp.team_id] = {}
-    teamPlayersMap[tp.team_id][tp.slot] = playerById[tp.player_id]
+    if (!teamPlayersMap[tp.team_id]) teamPlayersMap[tp.team_id] = []
+    teamPlayersMap[tp.team_id].push(playerById[tp.player_id])
   }
 
   const getNames = (teamId) =>
-    ['A', 'B'].map(s => teamPlayersMap[teamId]?.[s]?.name).filter(Boolean).join(' & ')
+    (teamPlayersMap[teamId] || [])
+      .filter(Boolean)
+      .map(p => `${p.first_name || ''} ${p.last_name || ''}`.trim())
+      .filter(Boolean)
+      .join(' & ')
 
   const selectedWeek = allWeeks.find(w => w.id === selectedWeekId)
 

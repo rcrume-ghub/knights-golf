@@ -32,9 +32,13 @@ export const players = {
   getById: (id) => getOne('players', id),
   upsert: (data) => putOne('players', { ...data, id: data.id || newId() }),
   delete: (id) => deleteOne('players', id),
+  getByStatus: async (status) => {
+    const all = await getAll('players')
+    return all.filter(p => p.status === status)
+  },
   getSubs: async () => {
     const all = await getAll('players')
-    return all.filter(p => p.is_sub)
+    return all.filter(p => p.status === 'Sub')
   }
 }
 
@@ -140,6 +144,25 @@ export const handicaps = {
     })
     return putMany('handicaps', upserted)
   }
+}
+
+// ─── Season Player HCP ───────────────────────────────────────────────────────
+
+export const seasonPlayerHcp = {
+  getAll: () => getAll('season_player_hcp'),
+  getBySeason: async (seasonId) => {
+    const all = await getAll('season_player_hcp')
+    return all.filter(h => h.season_id === seasonId)
+  },
+  getByPlayer: async (playerId) => {
+    const all = await getAll('season_player_hcp')
+    return all.filter(h => h.player_id === playerId)
+  },
+  upsert: async (data) => {
+    const all = await getAll('season_player_hcp')
+    const existing = all.find(h => h.player_id === data.player_id && h.season_id === data.season_id)
+    return putOne('season_player_hcp', { ...data, id: existing?.id || data.id || newId() })
+  },
 }
 
 // ─── Dues ─────────────────────────────────────────────────────────────────────

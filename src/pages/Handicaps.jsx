@@ -26,7 +26,6 @@ export default function Handicaps() {
     const playerById = Object.fromEntries(allPlayers.map(p => [p.id, p]))
     const matchupById = Object.fromEntries(allMatchups.map(m => [m.id, m]))
 
-    // score by player + weekId
     const scoreGrid = {}
     for (const sc of allScores) {
       const weekId = matchupById[sc.matchup_id]?.week_id
@@ -35,29 +34,34 @@ export default function Handicaps() {
       scoreGrid[sc.player_id][weekId] = { gross: sc.gross, isBlind: sc.is_blind }
     }
 
-    // handicap by player + weekId
     const hcpGrid = {}
     for (const h of allHandicaps) {
       if (!hcpGrid[h.player_id]) hcpGrid[h.player_id] = {}
-      hcpGrid[h.player_id][h.week_id] = h.value
+      if (h.week_id) hcpGrid[h.player_id][h.week_id] = h.value
+    }
+
+    const latestHcpMap = {}
+    for (const h of allHandicaps) {
+      if (!latestHcpMap[h.player_id] || new Date(h.calculated_at) > new Date(latestHcpMap[h.player_id].calculated_at)) {
+        latestHcpMap[h.player_id] = h
+      }
     }
 
     const teams = allTeams.map(team => {
-      const players = ['A', 'B'].map(slot => {
-        const tp = allTeamPlayers.find(tp => tp.team_id === team.id && tp.slot === slot)
-        if (!tp) return null
+      const tps = allTeamPlayers.filter(tp => tp.team_id === team.id)
+      const teamPlayersList = tps.map(tp => {
         const player = playerById[tp.player_id]
         if (!player) return null
-        const hcpValues = Object.values(hcpGrid[player.id] || {})
-        const currentHcp = hcpValues.length > 0
-          ? allHandicaps.filter(h => h.player_id === player.id).sort((a, b) => new Date(b.calculated_at) - new Date(a.calculated_at))[0]?.value
-          : null
-        return { player, slot, currentHcp, scoreGrid: scoreGrid[player.id] || {}, hcpGrid: hcpGrid[player.id] || {} }
-      }).filter(Boolean)
-      return { team, players }
-    })
+        return {
+          player,
+          currentHcp: latestHcpMap[player.id]?.value ?? null,
+          scoreGrid: scoreGrid[player.id] || {},
+          hcpGrid: hcpGrid[player.id] || {}
+        }
+      }).filter(Boolean).sort((a, b) => (a.currentHcp ?? 99) - (b.currentHcp ?? 99))
 
-    const playedWeeks = w.filter(wk => players_have_scores_in_week(wk.id, scoreGrid))
+      return { team, players: teamPlayersList }
+    })
 
     setByTeam(teams)
     setAllWeeks(w)
@@ -66,7 +70,10 @@ export default function Handicaps() {
 
   if (loading) return (
     <div className="flex items-center justify-center h-48">
-      <div className="text-center text-gray-400"><div className="text-3xl mb-2 animate-pulse">📊</div><p className="text-sm">Loading…</p></div>
+      <div className="text-center text-gray-400">
+        <div className="text-3xl mb-2 animate-pulse">📊</div>
+        <p className="text-sm">Loading…</p>
+      </div>
     </div>
   )
 
@@ -82,15 +89,19 @@ export default function Handicaps() {
           <div className="bg-gray-50 px-4 py-2 border-b border-gray-100">
             <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Team {team.number}</span>
           </div>
-          {players.map(({ player, slot, currentHcp, scoreGrid, hcpGrid }) => {
+          {players.map(({ player, currentHcp, scoreGrid, hcpGrid }, idx) => {
             const isExpanded = expanded === player.id
             const playedWeeks = allWeeks.filter(w => scoreGrid[w.id] != null)
+            const fullName = `${player.first_name || ''} ${player.last_name || ''}`.trim()
+            const slot = idx === 0 ? 'A' : 'B'
             return (
               <div key={player.id} className="border-b border-gray-50 last:border-0">
-                <button className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50 transition-colors"
-                  onClick={() => setExpanded(isExpanded ? null : player.id)}>
+                <button
+                  className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                  onClick={() => setExpanded(isExpanded ? null : player.id)}
+                >
                   <div>
-                    <span className="font-medium text-gray-900 text-sm">{player.name}</span>
+                    <span className="font-medium text-gray-900 text-sm">{fullName}</span>
                     <span className="text-xs text-gray-400 ml-2">({slot})</span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -133,12 +144,11 @@ export default function Handicaps() {
               </div>
             )
           })}
+          {players.length === 0 && (
+            <p className="px-4 py-4 text-xs text-gray-400">No players assigned.</p>
+          )}
         </div>
       ))}
     </div>
   )
-}
-
-function players_have_scores_in_week(weekId, scoreGrid) {
-  return Object.values(scoreGrid).some(wg => wg[weekId] != null)
 }

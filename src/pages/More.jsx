@@ -38,6 +38,8 @@ export default function More() {
           <div className="px-4 py-2 border-b border-gray-100">
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Commissioner</p>
           </div>
+          <MenuLink to="/admin/roster" label="Roster" icon="👤" />
+          <MenuLink to="/admin/import" label="Import Data" icon="📥" />
           <MenuLink to="/admin/teams" label="Teams & Players" icon="👥" />
           <MenuLink to="/admin/schedule-setup" label="Schedule Setup" icon="🗓️" />
           <MenuLink to="/admin/dues" label="Dues Tracker" icon="💵" />

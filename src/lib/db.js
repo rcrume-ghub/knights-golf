@@ -1,7 +1,7 @@
 import { openDB } from 'idb'
 
 const DB_NAME = 'knights-golf'
-const DB_VERSION = 2
+const DB_VERSION = 3
 
 let _db = null
 
@@ -12,7 +12,7 @@ export async function getDB() {
       const stores = [
         'seasons', 'players', 'teams', 'team_players',
         'weeks', 'matchups', 'scores', 'handicaps',
-        'dues', 'free_rounds', 'settings'
+        'season_player_hcp', 'dues', 'settings'
       ]
       for (const name of stores) {
         if (!db.objectStoreNames.contains(name)) {
