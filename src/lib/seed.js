@@ -1,9 +1,16 @@
 // Auto-generated from Knights Golf_New_v3.xlsx — do not hand-edit
 import { putMany } from './db.js'
 
+const SEED_VERSION = 'v10-hcp-w8-final'
+
 export async function seedIfEmpty(db) {
-  const existing = await db.count('seasons')
-  if (existing > 0) return
+  // Check if this seed version has already been applied
+  const versionRow = await db.get('settings', 'seed_version')
+  if (versionRow?.value === SEED_VERSION) return
+
+  // Clear all stores before reseeding
+  const stores = ['seasons', 'players', 'teams', 'team_players', 'weeks', 'matchups', 'scores', 'handicaps', 'season_player_hcp', 'dues']
+  for (const s of stores) await db.clear(s)
 
   const seasons = [
   {
@@ -12,7 +19,7 @@ export async function seedIfEmpty(db) {
     "start_date": "2026-04-13",
     "league_night": 1,
     "weeks": 20,
-    "par": 36,
+    "par": 35,
     "blind_score": 39,
     "max_handicap": 18,
     "is_active": true,
@@ -902,12 +909,6 @@ export async function seedIfEmpty(db) {
     "name": ""
   },
   {
-    "id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
-    "number": 18,
-    "name": ""
-  },
-  {
     "id": "4c6769f5-561a-4f87-8777-be6936aaf2f8",
     "season_id": "967d8e8f-46d4-4be8-9ea4-cbbcd6f5f290",
     "number": 1,
@@ -1152,241 +1153,6 @@ export async function seedIfEmpty(db) {
     "player_id": "e1d37712-5c13-4c2a-b576-44033095b725"
   },
   {
-    "id": "1882cb29-5d9b-409a-aaa1-6b42fc86837a",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "c2d8ddf0-08e5-4c33-9ba5-f14d18000128"
-  },
-  {
-    "id": "f528e24d-cba5-47ce-9f7f-26e38330b1cd",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "a9c0d809-cd18-4b49-9f60-6d49ed530bbb"
-  },
-  {
-    "id": "faf3d855-f856-450d-9ea6-4aa06d4e98c3",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "6303feeb-99f0-4965-a1eb-b78242336773"
-  },
-  {
-    "id": "afa2cce5-9aa2-4440-b07a-89a905b29227",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "a3f0246c-53bf-4a29-bd7c-96b3be909862"
-  },
-  {
-    "id": "e815ec0a-e8a6-40df-93a5-d7ee851cdcdf",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "8561f20e-d42c-4749-be8c-2062abe0bc4d"
-  },
-  {
-    "id": "43aefc11-d3a8-4877-9458-b5fd742559f6",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "6c5751f8-d00d-4609-8b62-a901c3a2265b"
-  },
-  {
-    "id": "baf36c04-358c-4f72-a69d-f9423228ca3f",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "86b15906-164e-40c9-bee6-ef91149e5177"
-  },
-  {
-    "id": "4e87c573-371a-47e2-b335-70a644cefdd1",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "f6425748-d8c8-4dab-ab6a-b875d6544696"
-  },
-  {
-    "id": "bfce872e-08f9-4ecf-b98c-7d9e7de02603",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "cdfa8028-3576-4cfc-a607-906146bfa418"
-  },
-  {
-    "id": "26fc6f9f-7a61-45f7-9b33-278eed2fe1ab",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "ecf24114-e7a5-4943-96f7-f12396ff07d6"
-  },
-  {
-    "id": "c0f239d9-41b8-4fd2-8312-11bf54decd50",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "3fc99779-bf58-45d8-98e8-4564ee34ab57"
-  },
-  {
-    "id": "d37a5809-43b9-469b-8ca4-fbf0e593446b",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "82718a61-917d-471f-8ca1-3598313862a6"
-  },
-  {
-    "id": "9795a146-27b4-4c3a-9c8e-db964b4e9521",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "5ff21dad-2d42-41c6-9a3f-6b31e866834c"
-  },
-  {
-    "id": "60d77910-029b-4365-984b-ebf21b75fbc4",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "5ae1fe76-e745-4216-bfc0-40e7bd4de5b1"
-  },
-  {
-    "id": "a8daf799-683a-4db9-b18e-16fd251be356",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "ccbfadd8-d859-46cd-bd14-cbdfcfb74788"
-  },
-  {
-    "id": "97fb45ec-9327-4764-9407-801ae53ffb28",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "9e401065-52e0-4a51-8e1d-bf4a2ea86bba"
-  },
-  {
-    "id": "98ea6173-fb40-4f62-82ae-86bf40452cb3",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "6c1894b7-3e50-427f-a6db-c3bf97f2ceb5"
-  },
-  {
-    "id": "a8f2d8eb-a2d3-4d86-95eb-1d39177c505c",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "2b0ed269-dd98-42a7-979d-38b4df3d033d"
-  },
-  {
-    "id": "aad49ddf-474a-4a92-891b-93ccb255349d",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "34985117-2557-44ea-87c2-b0eaf8b36ca0"
-  },
-  {
-    "id": "f0f9f7e6-7103-434d-917d-1efecacdb305",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "cd9d5dd4-2ba1-45c4-b082-5b6e34e634c9"
-  },
-  {
-    "id": "7687bd0e-3fcc-45c3-9634-9a5d419d4112",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "56155500-0c25-4f3f-89a2-2f9009ac0655"
-  },
-  {
-    "id": "4b47e39a-2ee6-4910-bd0a-794a3db9a566",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "b3b8f573-324e-4f83-8d52-c95267f4f99a"
-  },
-  {
-    "id": "937c43d4-ba63-4ff3-a30e-aa02228cb9ca",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "ba09e057-ddd6-4b5b-bd4c-bf20ecc3d773"
-  },
-  {
-    "id": "f156699b-5622-456c-88f9-6265edc2703f",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "3a94687b-a392-4dcf-84de-6784a8659f7b"
-  },
-  {
-    "id": "cabf05ce-585b-41b4-86d3-1ebe57c197b3",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "820089c1-c0e8-431c-aa66-173c29df0e22"
-  },
-  {
-    "id": "4704f1e6-f345-488f-9400-a45f7cc6edc4",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "a6092c77-1b79-4deb-aeab-a80b5a3c8873"
-  },
-  {
-    "id": "1ba8c96a-a5bf-4611-b6be-a718de8b5838",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "046f7ddc-cc38-46e5-94d6-9429b2d7b381"
-  },
-  {
-    "id": "bfdf5e7b-f86c-4b63-a857-00616285f1ff",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "92b25049-6b58-467b-bf36-fa8dfdc1ceb4"
-  },
-  {
-    "id": "d591ae33-b7c9-46f4-8176-271f3af9a20f",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "be1cb9a1-30a0-4b77-b1a0-d63682dad809"
-  },
-  {
-    "id": "41143c44-b6f0-41d0-b3f6-da78559f5602",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "41d6f335-d4a2-4b7b-b7c2-9d7a4f642ef5"
-  },
-  {
-    "id": "dbcf2064-c968-4891-91b3-f2701418c2e3",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "7e88a74e-327c-469c-8031-c04ba4786e79"
-  },
-  {
-    "id": "ac04b306-5cd9-47d0-bae0-f3aa950d71cf",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "1a272dd6-8f1f-4662-a6e6-2910b25cfac9"
-  },
-  {
-    "id": "a12a2e67-b4b7-4c3f-92a8-e3b03229e5c2",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "813476d0-6cd4-43d9-83ad-5b12cc6fb3fe"
-  },
-  {
-    "id": "6ebd7e0b-2f34-431d-97c1-fda50bd988c9",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "ee7a4e73-8cd3-45cb-807f-180a204d5255"
-  },
-  {
-    "id": "49639f53-3e97-435f-83da-8ee3af113dc2",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "19516088-a0ff-4b79-a00a-a96bcba52f5b"
-  },
-  {
-    "id": "25ff66d9-0641-45f4-bcdd-da40d2ad0654",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "f3c9bdf0-8bf0-4f12-bcf0-45777ee112cc"
-  },
-  {
-    "id": "fbf3c710-1905-4919-a7df-4cfabeb60ca7",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "88f91ee9-5d1e-4b65-a864-001c52984dd3"
-  },
-  {
-    "id": "a03fc927-9609-4fbe-ba4e-4a0b84042508",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "b49e51ae-13ad-4602-8b94-1c80d41d561e"
-  },
-  {
-    "id": "56e65920-1668-4111-bcbe-24ffeb54963b",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "49f59782-1c83-4d57-ac0b-e6c29b4aae87"
-  },
-  {
-    "id": "0aef0011-4b31-4e58-a0d3-99f0e2008989",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "b7587a55-8318-4479-ab9e-0c90242e3a1f"
-  },
-  {
-    "id": "4975240c-ef7a-4392-865d-3c8ca6daae28",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "8f12924f-0eaa-4a51-956c-4f419a86f52a"
-  },
-  {
-    "id": "ad8fb2ea-e187-4e6d-b422-be9bab4d944d",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "190ed774-4f23-4fdf-b386-bbd60765b30a"
-  },
-  {
-    "id": "9058303a-84d2-406f-931a-82c2f400307f",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "2af64f4c-2f37-4997-8c69-24322361e842"
-  },
-  {
-    "id": "a9ca8670-f0ff-46bf-8913-23290f1d127e",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "b74a70c8-2432-45cd-af7c-05ca5db96b56"
-  },
-  {
-    "id": "eea49ff7-6c4a-4ec2-8fd1-02fac13488d1",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "7cf57af1-bb9d-4feb-a172-898327699279"
-  },
-  {
-    "id": "7b878879-dcd3-455c-a9d5-06d8c9f8c4d4",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "ada10e8e-4301-47a5-acd6-c9f008f8e89c"
-  },
-  {
-    "id": "4d419356-7d3d-411f-8b1b-8f024e0b8739",
-    "team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "player_id": "e9b7c8ed-934b-484d-b124-71c3e93b731f"
-  },
-  {
     "id": "a3f87185-736c-41e0-941c-d42660f7ff74",
     "team_id": "4c6769f5-561a-4f87-8777-be6936aaf2f8",
     "player_id": "22a93b47-0639-44d0-9ac1-f76de428bda8"
@@ -1563,7 +1329,7 @@ export async function seedIfEmpty(db) {
     "player_id": "22a93b47-0639-44d0-9ac1-f76de428bda8",
     "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
     "prev_season_hcp": 12.94,
-    "current_hcp": 10.6
+    "current_hcp": 9.6
   },
   {
     "id": "013cf04e-96d8-4f15-a675-2aa19997e2b7",
@@ -1577,14 +1343,14 @@ export async function seedIfEmpty(db) {
     "player_id": "1f2801b1-4e46-459b-9b99-919938b85746",
     "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
     "prev_season_hcp": 10.83,
-    "current_hcp": 8.2
+    "current_hcp": 6.8
   },
   {
     "id": "838b93f9-0eaf-43d0-af14-408890905f59",
     "player_id": "a388e4d8-994d-4841-8947-b21ef2a0c73c",
     "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
     "prev_season_hcp": 0.0,
-    "current_hcp": 20.0
+    "current_hcp": 18.4
   },
   {
     "id": "ee05d358-3855-4d8c-be0a-83df6b75bff4",
@@ -1598,14 +1364,14 @@ export async function seedIfEmpty(db) {
     "player_id": "094c9953-7459-4fe1-8a60-fdc6c96357ab",
     "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
     "prev_season_hcp": 13.94,
-    "current_hcp": 11.6
+    "current_hcp": 9.6
   },
   {
     "id": "b757f1c7-9055-4a53-b831-7aec22e55052",
     "player_id": "45801361-ad21-4fa2-89ad-ac7e13659eaa",
     "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
     "prev_season_hcp": 12.22,
-    "current_hcp": 10.0
+    "current_hcp": 9.8
   },
   {
     "id": "fe7d811c-d455-4789-a260-0cae8f52da23",
@@ -1619,21 +1385,21 @@ export async function seedIfEmpty(db) {
     "player_id": "f794f0e1-3958-48b7-ae96-ff6ba2b9cc81",
     "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
     "prev_season_hcp": 6.44,
-    "current_hcp": 4.6
+    "current_hcp": 3.8
   },
   {
     "id": "3c443fc2-58f3-47f6-9bc7-943f66f8ff40",
     "player_id": "e86deedb-14bb-4e79-a88e-0a7aea058470",
     "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
     "prev_season_hcp": 11.78,
-    "current_hcp": 6.2
+    "current_hcp": 5.8
   },
   {
     "id": "7deaf9f0-a33c-4372-86ec-3a0909175c65",
     "player_id": "e724d747-9aa5-469c-995e-1d3d4dad3e79",
     "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
     "prev_season_hcp": 9.12,
-    "current_hcp": 8.6
+    "current_hcp": 8.0
   },
   {
     "id": "3c68f701-3c3b-4173-bd37-a05196dc0995",
@@ -1661,7 +1427,7 @@ export async function seedIfEmpty(db) {
     "player_id": "1199232e-d347-4204-84f1-7ba2d024d813",
     "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
     "prev_season_hcp": 14.57,
-    "current_hcp": 16.0
+    "current_hcp": 12.2
   },
   {
     "id": "2ff9a142-adf6-4d40-96cf-f4858c6328c8",
@@ -1689,14 +1455,14 @@ export async function seedIfEmpty(db) {
     "player_id": "5cfe4a20-e0d5-4970-a61c-a4fdff613d51",
     "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
     "prev_season_hcp": 7.65,
-    "current_hcp": 7.2
+    "current_hcp": 6.6
   },
   {
     "id": "0e9fc6c2-5275-4ce6-a823-fbf5ac36516c",
     "player_id": "3baea938-96a5-45b7-a7f0-3ab79774a7b4",
     "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
     "prev_season_hcp": 19.82,
-    "current_hcp": 17.2
+    "current_hcp": 16.6
   },
   {
     "id": "272bdc1f-e188-49ef-9e31-01811dcbd48e",
@@ -1710,21 +1476,21 @@ export async function seedIfEmpty(db) {
     "player_id": "f9fb1f9e-08b5-4c9b-96f6-0a8acb6ddc63",
     "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
     "prev_season_hcp": 23.18,
-    "current_hcp": 20.2
+    "current_hcp": 19.2
   },
   {
     "id": "e0aeba17-d0df-4058-8d42-5f3a8ffa994d",
     "player_id": "8b27968d-3365-455e-b36a-b61a691ecca2",
     "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
     "prev_season_hcp": 0.0,
-    "current_hcp": 18.4
+    "current_hcp": 17.2
   },
   {
     "id": "e49be85e-be5f-40e9-b712-85bfac4c220c",
     "player_id": "576803c2-f3d3-4d95-921f-083985db10cc",
     "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
     "prev_season_hcp": 13.31,
-    "current_hcp": 10.2
+    "current_hcp": 9.2
   },
   {
     "id": "542c5a6e-9c21-4d0c-b4fe-5833f65783d4",
@@ -1745,7 +1511,7 @@ export async function seedIfEmpty(db) {
     "player_id": "b42100a4-f210-4512-a0b1-bb02100442cf",
     "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
     "prev_season_hcp": 11.79,
-    "current_hcp": 10.4
+    "current_hcp": 8.6
   },
   {
     "id": "2df7d973-62f2-4e64-b025-22999a6b1132",
@@ -2246,1971 +2012,373 @@ export async function seedIfEmpty(db) {
   }
 ]
   const weeks = [
-  {
-    "id": "9cdc0f3c-09ea-4022-a6f4-ca959568b423",
-    "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
-    "number": 1,
-    "date": "2026-04-13",
-    "week_type": "scramble"
-  },
-  {
-    "id": "279e869a-d712-4aa2-99ca-55b201154736",
-    "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
-    "number": 2,
-    "date": "2026-04-20",
-    "week_type": "regular"
-  },
-  {
-    "id": "0becd14e-8647-4a8c-9d11-ea070a34bb53",
-    "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
-    "number": 3,
-    "date": "2026-04-27",
-    "week_type": "regular"
-  },
-  {
-    "id": "0826f5aa-a3fc-482a-9f76-ae24fbf7d236",
-    "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
-    "number": 4,
-    "date": "2026-05-04",
-    "week_type": "regular"
-  },
-  {
-    "id": "ce03bf44-3e26-47e5-b144-f51b8b82e39b",
-    "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
-    "number": 5,
-    "date": "2026-05-11",
-    "week_type": "regular"
-  },
-  {
-    "id": "43673d66-353b-4d91-8e8f-57efdd3dd7c2",
-    "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
-    "number": 6,
-    "date": "2026-05-18",
-    "week_type": "regular"
-  },
-  {
-    "id": "db1379f5-00e7-44b4-9ba7-0b363201de4e",
-    "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
-    "number": 7,
-    "date": "2026-05-25",
-    "week_type": "regular"
-  },
-  {
-    "id": "1edebf97-f304-49a9-bbd3-ffb9b241e942",
-    "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
-    "number": 8,
-    "date": "2026-06-01",
-    "week_type": "regular"
-  },
-  {
-    "id": "0287a7bd-be72-400e-85e8-268e948f5df7",
-    "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
-    "number": 9,
-    "date": "2026-06-08",
-    "week_type": "regular"
-  },
-  {
-    "id": "87322ab6-ad6f-448b-b15e-ed21ee708e01",
-    "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
-    "number": 10,
-    "date": "2026-06-15",
-    "week_type": "regular"
-  },
-  {
-    "id": "1a1d71c7-87b4-478e-9d24-bafc50395cd5",
-    "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
-    "number": 11,
-    "date": "2026-06-22",
-    "week_type": "regular"
-  },
-  {
-    "id": "fd9ba2d7-9b04-411f-83c7-c890c4623a79",
-    "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
-    "number": 12,
-    "date": "2026-06-29",
-    "week_type": "regular"
-  },
-  {
-    "id": "2dbd3f8c-4593-4e3f-8e24-d60e12621e5f",
-    "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
-    "number": 13,
-    "date": "2026-07-06",
-    "week_type": "regular"
-  },
-  {
-    "id": "6f75d6df-353c-4afb-a8dc-ccc68bbfe1dd",
-    "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
-    "number": 14,
-    "date": "2026-07-13",
-    "week_type": "regular"
-  },
-  {
-    "id": "11909c6a-7810-4852-877e-0a5ad5244013",
-    "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
-    "number": 15,
-    "date": "2026-07-20",
-    "week_type": "regular"
-  },
-  {
-    "id": "4f73b841-e2e9-46d4-b570-2773d3e3119c",
-    "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
-    "number": 16,
-    "date": "2026-07-27",
-    "week_type": "regular"
-  },
-  {
-    "id": "fbd2fff7-b351-4895-95cc-f9a343c25962",
-    "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
-    "number": 17,
-    "date": "2026-08-03",
-    "week_type": "regular"
-  },
-  {
-    "id": "8b103552-da44-4577-b95f-c1cc680780ac",
-    "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
-    "number": 18,
-    "date": "2026-08-10",
-    "week_type": "regular"
-  },
-  {
-    "id": "dc946d17-3657-437a-ad23-7f75f5409938",
-    "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
-    "number": 19,
-    "date": "2026-08-17",
-    "week_type": "regular"
-  },
-  {
-    "id": "d747eb98-7290-46ac-95b2-907d19fc7d37",
-    "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae",
-    "number": 20,
-    "date": "",
-    "week_type": "end_scramble"
-  },
-  {
-    "id": "dc8c8d1f-6c76-4364-b411-3fba943d037b",
-    "season_id": "967d8e8f-46d4-4be8-9ea4-cbbcd6f5f290",
-    "number": 1,
-    "date": "2024-04-08",
-    "week_type": "regular"
-  },
-  {
-    "id": "7ad0ca1a-435d-4d13-b575-0dfc039cf909",
-    "season_id": "967d8e8f-46d4-4be8-9ea4-cbbcd6f5f290",
-    "number": 2,
-    "date": "2024-04-14",
-    "week_type": "regular"
-  },
-  {
-    "id": "709fbac7-9f7b-4739-aceb-f63959d24c87",
-    "season_id": "967d8e8f-46d4-4be8-9ea4-cbbcd6f5f290",
-    "number": 3,
-    "date": "2024-04-21",
-    "week_type": "regular"
-  },
-  {
-    "id": "6738aefd-03f2-45bd-a09b-2005dca0c276",
-    "season_id": "967d8e8f-46d4-4be8-9ea4-cbbcd6f5f290",
-    "number": 4,
-    "date": "2024-04-28",
-    "week_type": "regular"
-  },
-  {
-    "id": "19838a95-2bd2-40b1-8164-447e7f1049fb",
-    "season_id": "967d8e8f-46d4-4be8-9ea4-cbbcd6f5f290",
-    "number": 5,
-    "date": "2024-05-05",
-    "week_type": "regular"
-  },
-  {
-    "id": "63e4bb45-f9c7-4594-b744-2a5e4774e7d0",
-    "season_id": "967d8e8f-46d4-4be8-9ea4-cbbcd6f5f290",
-    "number": 6,
-    "date": "2024-05-12",
-    "week_type": "regular"
-  },
-  {
-    "id": "7128995c-1718-4312-adb2-f4fa64500406",
-    "season_id": "967d8e8f-46d4-4be8-9ea4-cbbcd6f5f290",
-    "number": 7,
-    "date": "2024-05-19",
-    "week_type": "regular"
-  },
-  {
-    "id": "a293e6f7-2e46-48d1-9afc-f3f9fe386976",
-    "season_id": "967d8e8f-46d4-4be8-9ea4-cbbcd6f5f290",
-    "number": 8,
-    "date": "2024-06-02",
-    "week_type": "regular"
-  },
-  {
-    "id": "7a711edf-38c9-4827-84b4-3ccba52d840b",
-    "season_id": "967d8e8f-46d4-4be8-9ea4-cbbcd6f5f290",
-    "number": 9,
-    "date": "2025-06-09",
-    "week_type": "regular"
-  },
-  {
-    "id": "1b51dd38-9a30-4b3a-b6c8-f0eaf1ca30fe",
-    "season_id": "967d8e8f-46d4-4be8-9ea4-cbbcd6f5f290",
-    "number": 10,
-    "date": "2025-06-16",
-    "week_type": "regular"
-  },
-  {
-    "id": "ca69ea9d-59d4-4e8c-b95a-75ce2c4bda31",
-    "season_id": "967d8e8f-46d4-4be8-9ea4-cbbcd6f5f290",
-    "number": 11,
-    "date": "2025-06-23",
-    "week_type": "regular"
-  },
-  {
-    "id": "b4f984d3-3f10-45b0-b350-a8d992904871",
-    "season_id": "967d8e8f-46d4-4be8-9ea4-cbbcd6f5f290",
-    "number": 12,
-    "date": "2025-06-30",
-    "week_type": "regular"
-  },
-  {
-    "id": "13456862-a4f4-41d4-95fc-243e5338f4aa",
-    "season_id": "967d8e8f-46d4-4be8-9ea4-cbbcd6f5f290",
-    "number": 13,
-    "date": "2025-07-07",
-    "week_type": "regular"
-  },
-  {
-    "id": "ece766d2-e463-4e3b-b3f8-668d59cd3164",
-    "season_id": "967d8e8f-46d4-4be8-9ea4-cbbcd6f5f290",
-    "number": 14,
-    "date": "2025-07-14",
-    "week_type": "regular"
-  },
-  {
-    "id": "eb4e10f6-6daf-4715-a0c5-b5e96eada093",
-    "season_id": "967d8e8f-46d4-4be8-9ea4-cbbcd6f5f290",
-    "number": 15,
-    "date": "2025-07-21",
-    "week_type": "regular"
-  },
-  {
-    "id": "9617fd14-8573-4b04-8843-ecb7a6ce32d1",
-    "season_id": "967d8e8f-46d4-4be8-9ea4-cbbcd6f5f290",
-    "number": 16,
-    "date": "2025-07-28",
-    "week_type": "regular"
-  },
-  {
-    "id": "3a8f4d31-aaa3-49b6-bf80-d17065839c94",
-    "season_id": "967d8e8f-46d4-4be8-9ea4-cbbcd6f5f290",
-    "number": 17,
-    "date": "2025-08-04",
-    "week_type": "regular"
-  },
-  {
-    "id": "f086b2a4-6d07-4aa7-b90e-f8184968adb7",
-    "season_id": "967d8e8f-46d4-4be8-9ea4-cbbcd6f5f290",
-    "number": 18,
-    "date": "2025-08-11",
-    "week_type": "regular"
-  },
-  {
-    "id": "13ed8c51-18ac-4de3-aa2f-118b658f14e6",
-    "season_id": "967d8e8f-46d4-4be8-9ea4-cbbcd6f5f290",
-    "number": 19,
-    "date": "2025-08-18",
-    "week_type": "regular"
-  }
-]
+    {"id": "a44b6c45-3e89-f181-1496-7287593ad91b", "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae", "number": 1, "date": "2026-04-13", "week_type": "scramble"},
+    {"id": "b9614276-7e3c-d9ee-b7c1-d68442cd784a", "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae", "number": 2, "date": "2026-04-20", "week_type": "regular"},
+    {"id": "1fbc5fc6-1253-c1b1-4310-1a0cd63e5a5c", "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae", "number": 3, "date": "2026-04-27", "week_type": "regular"},
+    {"id": "7dab1f4e-fe10-78cc-be67-89910c660722", "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae", "number": 4, "date": "2026-05-04", "week_type": "regular"},
+    {"id": "04414e1f-be0d-abbc-94e9-5d29048d5e86", "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae", "number": 5, "date": "2026-05-11", "week_type": "regular"},
+    {"id": "ac4881d6-0ea5-2f1c-190c-7324b8f90591", "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae", "number": 6, "date": "2026-05-18", "week_type": "regular"},
+    {"id": "dc51d5c4-b6b4-e82d-ab89-91948809c294", "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae", "number": 7, "date": "2026-06-01", "week_type": "position_night"},
+    {"id": "57ed3fc8-f15a-5d6c-b0f1-375e06df1f89", "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae", "number": 8, "date": "2026-06-08", "week_type": "regular"},
+    {"id": "69c5829e-f720-4c69-0e3f-a6f2d8891c07", "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae", "number": 9, "date": "2026-06-15", "week_type": "regular"},
+    {"id": "5eedc44e-4142-db82-d349-2bc46b6adc93", "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae", "number": 10, "date": "2026-06-22", "week_type": "regular"},
+    {"id": "8edea147-94dc-fd4d-29f9-b63e10acb5b8", "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae", "number": 11, "date": "2026-06-29", "week_type": "regular"},
+    {"id": "bfa8034a-a9b7-522b-23ac-47dc54e631de", "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae", "number": 12, "date": "2026-07-06", "week_type": "regular"},
+    {"id": "ff2bbb45-b39d-0154-de2b-f7f4d662a654", "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae", "number": 13, "date": "2026-07-13", "week_type": "position_night"},
+    {"id": "77474231-c901-9702-7a55-5196a5484390", "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae", "number": 14, "date": "2026-07-20", "week_type": "regular"},
+    {"id": "794edacd-8d0b-7122-e130-0c2402037fd7", "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae", "number": 15, "date": "2026-07-27", "week_type": "regular"},
+    {"id": "5db275df-636e-1cbb-687c-31c80fe59a0b", "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae", "number": 16, "date": "2026-08-03", "week_type": "regular"},
+    {"id": "ff5fb3a6-8604-2285-bb7f-cbe89d571577", "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae", "number": 17, "date": "2026-08-10", "week_type": "regular"},
+    {"id": "36d147af-73d7-01b8-03bf-e7c62284019b", "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae", "number": 18, "date": "2026-08-17", "week_type": "regular"},
+    {"id": "60e38037-7e9a-059e-56ef-92c83a837c4d", "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae", "number": 19, "date": "2026-08-24", "week_type": "position_night"},
+    {"id": "3c70b05e-b7e9-341a-e029-d5487dd78ab9", "season_id": "cebd083f-caf4-4ac7-af78-13c8184b3fae", "number": 20, "date": "2026-08-31", "week_type": "end_scramble"}
+  ]
   const matchups = [
-  {
-    "id": "af3eb264-f630-45f6-b0d0-1f06a3eb29a8",
-    "week_id": "279e869a-d712-4aa2-99ca-55b201154736",
-    "home_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2",
-    "away_team_id": "db878758-8438-475d-81e8-b60209071cab",
-    "hole_assignment": 1
-  },
-  {
-    "id": "a70afce9-9d16-438c-9922-c7f7ac2507cd",
-    "week_id": "279e869a-d712-4aa2-99ca-55b201154736",
-    "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c",
-    "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55",
-    "hole_assignment": 2
-  },
-  {
-    "id": "8e1fa12e-0029-4614-bec8-6d120fb5d1db",
-    "week_id": "279e869a-d712-4aa2-99ca-55b201154736",
-    "home_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398",
-    "away_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8",
-    "hole_assignment": 3
-  },
-  {
-    "id": "ee370eb3-6362-4ae8-8f9d-e0784950bd35",
-    "week_id": "279e869a-d712-4aa2-99ca-55b201154736",
-    "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd",
-    "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146",
-    "hole_assignment": 4
-  },
-  {
-    "id": "c43b7e4a-85ad-4e2a-9bf9-9969372438ad",
-    "week_id": "279e869a-d712-4aa2-99ca-55b201154736",
-    "home_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46",
-    "away_team_id": "47a302df-73ee-4678-a6df-0ec44130e290",
-    "hole_assignment": 5
-  },
-  {
-    "id": "8a77d124-1d85-4032-b0b3-ad10a93b6329",
-    "week_id": "279e869a-d712-4aa2-99ca-55b201154736",
-    "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f",
-    "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c",
-    "hole_assignment": 6
-  },
-  {
-    "id": "3aa21033-36c5-4907-aba8-e2a0e995b14d",
-    "week_id": "0becd14e-8647-4a8c-9d11-ea070a34bb53",
-    "home_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398",
-    "away_team_id": "db878758-8438-475d-81e8-b60209071cab",
-    "hole_assignment": 1
-  },
-  {
-    "id": "a117a200-76e8-49ec-95f2-98a44ec6a15a",
-    "week_id": "0becd14e-8647-4a8c-9d11-ea070a34bb53",
-    "home_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c",
-    "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146",
-    "hole_assignment": 2
-  },
-  {
-    "id": "5c386402-fb95-417f-89a3-b21ea6006bed",
-    "week_id": "0becd14e-8647-4a8c-9d11-ea070a34bb53",
-    "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c",
-    "away_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8",
-    "hole_assignment": 3
-  },
-  {
-    "id": "75d60317-882e-44bb-9d05-5e14ea1b1d22",
-    "week_id": "0becd14e-8647-4a8c-9d11-ea070a34bb53",
-    "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578",
-    "away_team_id": "47a302df-73ee-4678-a6df-0ec44130e290",
-    "hole_assignment": 4
-  },
-  {
-    "id": "fc0debe9-ef46-4c3c-98d7-0a0a64141715",
-    "week_id": "0becd14e-8647-4a8c-9d11-ea070a34bb53",
-    "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd",
-    "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55",
-    "hole_assignment": 5
-  },
-  {
-    "id": "f55ea1d4-64b8-4e59-9b96-405b0f3628b1",
-    "week_id": "0becd14e-8647-4a8c-9d11-ea070a34bb53",
-    "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f",
-    "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7",
-    "hole_assignment": 6
-  },
-  {
-    "id": "fb87e027-6f6c-4da3-a35a-b30e26d2e738",
-    "week_id": "0826f5aa-a3fc-482a-9f76-ae24fbf7d236",
-    "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f",
-    "away_team_id": "47a302df-73ee-4678-a6df-0ec44130e290",
-    "hole_assignment": 1
-  },
-  {
-    "id": "9dba10d8-a7fa-4890-b111-2f94927810d6",
-    "week_id": "0826f5aa-a3fc-482a-9f76-ae24fbf7d236",
-    "home_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7",
-    "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146",
-    "hole_assignment": 2
-  },
-  {
-    "id": "3ce2803f-db0d-4255-8183-a63e94114ed7",
-    "week_id": "0826f5aa-a3fc-482a-9f76-ae24fbf7d236",
-    "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd",
-    "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c",
-    "hole_assignment": 3
-  },
-  {
-    "id": "4df96c99-c529-40c9-bb9c-fd02c61e99fe",
-    "week_id": "0826f5aa-a3fc-482a-9f76-ae24fbf7d236",
-    "home_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398",
-    "away_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46",
-    "hole_assignment": 4
-  },
-  {
-    "id": "921aaf05-1bdf-4df7-afe8-66281418c769",
-    "week_id": "0826f5aa-a3fc-482a-9f76-ae24fbf7d236",
-    "home_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8",
-    "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55",
-    "hole_assignment": 5
-  },
-  {
-    "id": "78efdace-1404-417a-8d8b-fcef0cdf451f",
-    "week_id": "0826f5aa-a3fc-482a-9f76-ae24fbf7d236",
-    "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c",
-    "away_team_id": "db878758-8438-475d-81e8-b60209071cab",
-    "hole_assignment": 6
-  },
-  {
-    "id": "5da0c651-8185-4900-a4c1-367a494f211a",
-    "week_id": "ce03bf44-3e26-47e5-b144-f51b8b82e39b",
-    "home_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7",
-    "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c",
-    "hole_assignment": 1
-  },
-  {
-    "id": "9313bce7-8045-4c26-a7e6-bcd4987b0476",
-    "week_id": "ce03bf44-3e26-47e5-b144-f51b8b82e39b",
-    "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f",
-    "away_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2",
-    "hole_assignment": 2
-  },
-  {
-    "id": "d8b47586-63b8-4e10-9e3b-f7e089d758ce",
-    "week_id": "ce03bf44-3e26-47e5-b144-f51b8b82e39b",
-    "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd",
-    "away_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8",
-    "hole_assignment": 3
-  },
-  {
-    "id": "8bc36956-ab7e-40ab-bfff-ca38ff276c82",
-    "week_id": "ce03bf44-3e26-47e5-b144-f51b8b82e39b",
-    "home_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398",
-    "away_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578",
-    "hole_assignment": 4
-  },
-  {
-    "id": "4a6c5e2f-9d0f-4ae7-96fc-a71752246968",
-    "week_id": "ce03bf44-3e26-47e5-b144-f51b8b82e39b",
-    "home_team_id": "db878758-8438-475d-81e8-b60209071cab",
-    "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55",
-    "hole_assignment": 5
-  },
-  {
-    "id": "16337ec5-4607-4501-8a36-ab255ba365cd",
-    "week_id": "ce03bf44-3e26-47e5-b144-f51b8b82e39b",
-    "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c",
-    "away_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46",
-    "hole_assignment": 6
-  },
-  {
-    "id": "2cc0bdde-ee67-4ca4-a64e-c42e141d1bdb",
-    "week_id": "43673d66-353b-4d91-8e8f-57efdd3dd7c2",
-    "home_team_id": "db878758-8438-475d-81e8-b60209071cab",
-    "away_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8",
-    "hole_assignment": 1
-  },
-  {
-    "id": "002a871d-9728-4274-820b-c366d31714c6",
-    "week_id": "43673d66-353b-4d91-8e8f-57efdd3dd7c2",
-    "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f",
-    "away_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398",
-    "hole_assignment": 2
-  },
-  {
-    "id": "3af5ab44-b872-4547-953d-6617d03ecf16",
-    "week_id": "43673d66-353b-4d91-8e8f-57efdd3dd7c2",
-    "home_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2",
-    "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146",
-    "hole_assignment": 3
-  },
-  {
-    "id": "3dba026f-4231-4360-bb28-bf1103dcda76",
-    "week_id": "43673d66-353b-4d91-8e8f-57efdd3dd7c2",
-    "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c",
-    "away_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578",
-    "hole_assignment": 4
-  },
-  {
-    "id": "8f01d14c-ddf6-47ff-96b6-3493ae2d8ee7",
-    "week_id": "43673d66-353b-4d91-8e8f-57efdd3dd7c2",
-    "home_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46",
-    "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55",
-    "hole_assignment": 5
-  },
-  {
-    "id": "fc4861f3-3fc2-4f4d-b38b-3a43a99d44f4",
-    "week_id": "43673d66-353b-4d91-8e8f-57efdd3dd7c2",
-    "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd",
-    "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7",
-    "hole_assignment": 6
-  },
-  {
-    "id": "a1612204-3b63-4d43-af0e-9d4bf93e0e32",
-    "week_id": "db1379f5-00e7-44b4-9ba7-0b363201de4e",
-    "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd",
-    "away_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8",
-    "hole_assignment": 1
-  },
-  {
-    "id": "ce1fe122-5709-4d9b-99af-e814b1913b17",
-    "week_id": "db1379f5-00e7-44b4-9ba7-0b363201de4e",
-    "home_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c",
-    "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7",
-    "hole_assignment": 2
-  },
-  {
-    "id": "fed5af2a-3934-40f4-a85a-65e35f518302",
-    "week_id": "db1379f5-00e7-44b4-9ba7-0b363201de4e",
-    "home_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55",
-    "away_team_id": "db878758-8438-475d-81e8-b60209071cab",
-    "hole_assignment": 3
-  },
-  {
-    "id": "f86622f4-75fb-4462-84d6-eb9ca313c2de",
-    "week_id": "db1379f5-00e7-44b4-9ba7-0b363201de4e",
-    "home_team_id": "33f76372-7937-4a54-84d4-9c50be263146",
-    "away_team_id": "47a302df-73ee-4678-a6df-0ec44130e290",
-    "hole_assignment": 4
-  },
-  {
-    "id": "68c330cf-7cae-413e-9292-e08d65c6128a",
-    "week_id": "db1379f5-00e7-44b4-9ba7-0b363201de4e",
-    "home_team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "away_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46",
-    "hole_assignment": 5
-  },
-  {
-    "id": "60a4e661-b8f2-4774-8348-02128614fa66",
-    "week_id": "db1379f5-00e7-44b4-9ba7-0b363201de4e",
-    "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c",
-    "away_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578",
-    "hole_assignment": 6
-  },
-  {
-    "id": "aa34af48-fd64-41bb-9d50-360fbb0aef60",
-    "week_id": "db1379f5-00e7-44b4-9ba7-0b363201de4e",
-    "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f",
-    "away_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398",
-    "hole_assignment": 7
-  },
-  {
-    "id": "ff3b1672-9092-422f-ab02-75620a1995a4",
-    "week_id": "1edebf97-f304-49a9-bbd3-ffb9b241e942",
-    "home_team_id": "47a302df-73ee-4678-a6df-0ec44130e290",
-    "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7",
-    "hole_assignment": 1
-  },
-  {
-    "id": "82a5582b-bac4-46b4-a4d6-57e72c7d9272",
-    "week_id": "1edebf97-f304-49a9-bbd3-ffb9b241e942",
-    "home_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398",
-    "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146",
-    "hole_assignment": 2
-  },
-  {
-    "id": "8f5beb81-66eb-40ac-8e89-6e814d9d501e",
-    "week_id": "1edebf97-f304-49a9-bbd3-ffb9b241e942",
-    "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c",
-    "away_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f",
-    "hole_assignment": 3
-  },
-  {
-    "id": "30941d00-8b80-4d7b-aee7-a24eae235296",
-    "week_id": "1edebf97-f304-49a9-bbd3-ffb9b241e942",
-    "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd",
-    "away_team_id": "db878758-8438-475d-81e8-b60209071cab",
-    "hole_assignment": 4
-  },
-  {
-    "id": "4ac94552-4efb-43df-b54b-2e2b9886a1b5",
-    "week_id": "1edebf97-f304-49a9-bbd3-ffb9b241e942",
-    "home_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46",
-    "away_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8",
-    "hole_assignment": 5
-  },
-  {
-    "id": "f2543940-e115-4d05-aac1-7c71fd57464f",
-    "week_id": "1edebf97-f304-49a9-bbd3-ffb9b241e942",
-    "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578",
-    "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55",
-    "hole_assignment": 6
-  },
-  {
-    "id": "5ecd8093-2f51-4956-8d8e-b83da237a5c6",
-    "week_id": "0287a7bd-be72-400e-85e8-268e948f5df7",
-    "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578",
-    "away_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8",
-    "hole_assignment": 1
-  },
-  {
-    "id": "4e97c84d-6c28-4faa-9354-7f4abf65b5f9",
-    "week_id": "0287a7bd-be72-400e-85e8-268e948f5df7",
-    "home_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46",
-    "away_team_id": "db878758-8438-475d-81e8-b60209071cab",
-    "hole_assignment": 2
-  },
-  {
-    "id": "3ce78e31-a7bd-43a1-8573-f55bc75d74f8",
-    "week_id": "0287a7bd-be72-400e-85e8-268e948f5df7",
-    "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd",
-    "away_team_id": "47a302df-73ee-4678-a6df-0ec44130e290",
-    "hole_assignment": 3
-  },
-  {
-    "id": "5abdc967-e5b4-4605-bd77-ea29523eaddc",
-    "week_id": "0287a7bd-be72-400e-85e8-268e948f5df7",
-    "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f",
-    "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55",
-    "hole_assignment": 4
-  },
-  {
-    "id": "828ef844-dbf0-4630-8e2e-c2940c81eb67",
-    "week_id": "0287a7bd-be72-400e-85e8-268e948f5df7",
-    "home_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2",
-    "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7",
-    "hole_assignment": 5
-  },
-  {
-    "id": "0a4ee6a3-7098-44fa-91c3-c8a26fd932a8",
-    "week_id": "0287a7bd-be72-400e-85e8-268e948f5df7",
-    "home_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398",
-    "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c",
-    "hole_assignment": 6
-  },
-  {
-    "id": "c4e731f5-67f7-42c5-b06c-41428cb7935a",
-    "week_id": "87322ab6-ad6f-448b-b15e-ed21ee708e01",
-    "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578",
-    "away_team_id": "db878758-8438-475d-81e8-b60209071cab",
-    "hole_assignment": 1
-  },
-  {
-    "id": "394801b2-69bc-4112-b7e7-29a0366e1a78",
-    "week_id": "87322ab6-ad6f-448b-b15e-ed21ee708e01",
-    "home_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55",
-    "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146",
-    "hole_assignment": 2
-  },
-  {
-    "id": "a2091f85-31c7-4362-8bcc-1cc2ca6338aa",
-    "week_id": "87322ab6-ad6f-448b-b15e-ed21ee708e01",
-    "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f",
-    "away_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8",
-    "hole_assignment": 3
-  },
-  {
-    "id": "825c1f40-de29-47c2-b793-aabeba1a766a",
-    "week_id": "87322ab6-ad6f-448b-b15e-ed21ee708e01",
-    "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd",
-    "away_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46",
-    "hole_assignment": 4
-  },
-  {
-    "id": "2a20cb39-4a1f-4ced-aeda-548522a6bee7",
-    "week_id": "87322ab6-ad6f-448b-b15e-ed21ee708e01",
-    "home_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398",
-    "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7",
-    "hole_assignment": 5
-  },
-  {
-    "id": "074c4fae-5d61-44bc-84f3-ad96db576fa4",
-    "week_id": "87322ab6-ad6f-448b-b15e-ed21ee708e01",
-    "home_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2",
-    "away_team_id": "47a302df-73ee-4678-a6df-0ec44130e290",
-    "hole_assignment": 6
-  },
-  {
-    "id": "8edce0ec-24da-4e81-aa3b-6acd277a5630",
-    "week_id": "1a1d71c7-87b4-478e-9d24-bafc50395cd5",
-    "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578",
-    "away_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46",
-    "hole_assignment": 1
-  },
-  {
-    "id": "cc2c87ba-8fa0-47a5-b559-c862ae21edf0",
-    "week_id": "1a1d71c7-87b4-478e-9d24-bafc50395cd5",
-    "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c",
-    "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7",
-    "hole_assignment": 2
-  },
-  {
-    "id": "13f81a86-3141-4b88-a9db-6f7ebbfe6ee0",
-    "week_id": "1a1d71c7-87b4-478e-9d24-bafc50395cd5",
-    "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd",
-    "away_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2",
-    "hole_assignment": 3
-  },
-  {
-    "id": "c5ca346d-56af-43c8-8483-aba9703a82cb",
-    "week_id": "1a1d71c7-87b4-478e-9d24-bafc50395cd5",
-    "home_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8",
-    "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146",
-    "hole_assignment": 4
-  },
-  {
-    "id": "0e045890-3a84-4468-b330-dd861c6bb6ed",
-    "week_id": "1a1d71c7-87b4-478e-9d24-bafc50395cd5",
-    "home_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398",
-    "away_team_id": "47a302df-73ee-4678-a6df-0ec44130e290",
-    "hole_assignment": 5
-  },
-  {
-    "id": "83c9c023-9865-4170-8437-38af36895148",
-    "week_id": "1a1d71c7-87b4-478e-9d24-bafc50395cd5",
-    "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f",
-    "away_team_id": "db878758-8438-475d-81e8-b60209071cab",
-    "hole_assignment": 6
-  },
-  {
-    "id": "3327de8a-05dc-406e-ad4e-16f40c9bbc46",
-    "week_id": "fd9ba2d7-9b04-411f-83c7-c890c4623a79",
-    "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f",
-    "away_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46",
-    "hole_assignment": 1
-  },
-  {
-    "id": "b1b63715-93b0-48a9-a392-dedc59775b15",
-    "week_id": "fd9ba2d7-9b04-411f-83c7-c890c4623a79",
-    "home_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7",
-    "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55",
-    "hole_assignment": 2
-  },
-  {
-    "id": "8262ecc7-9849-4b8f-aa4b-68b076f90015",
-    "week_id": "fd9ba2d7-9b04-411f-83c7-c890c4623a79",
-    "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd",
-    "away_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578",
-    "hole_assignment": 3
-  },
-  {
-    "id": "e2a0e36b-1a8d-4190-9f58-d8822b81aa3a",
-    "week_id": "fd9ba2d7-9b04-411f-83c7-c890c4623a79",
-    "home_team_id": "db878758-8438-475d-81e8-b60209071cab",
-    "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146",
-    "hole_assignment": 4
-  },
-  {
-    "id": "9e7ce163-29c9-463b-9eaa-406c9bb3956e",
-    "week_id": "fd9ba2d7-9b04-411f-83c7-c890c4623a79",
-    "home_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398",
-    "away_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2",
-    "hole_assignment": 5
-  },
-  {
-    "id": "6858bb3e-05cb-4227-ade3-35dcb10dc38d",
-    "week_id": "fd9ba2d7-9b04-411f-83c7-c890c4623a79",
-    "home_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8",
-    "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c",
-    "hole_assignment": 6
-  },
-  {
-    "id": "7a5ae562-f413-4b33-943c-899e6cd0331c",
-    "week_id": "2dbd3f8c-4593-4e3f-8e24-d60e12621e5f",
-    "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd",
-    "away_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578",
-    "hole_assignment": 1
-  },
-  {
-    "id": "45613551-5012-4f51-a8cb-0777537bf2ca",
-    "week_id": "2dbd3f8c-4593-4e3f-8e24-d60e12621e5f",
-    "home_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2",
-    "away_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398",
-    "hole_assignment": 2
-  },
-  {
-    "id": "acf4aaa8-c652-4255-9f36-c5050992b278",
-    "week_id": "2dbd3f8c-4593-4e3f-8e24-d60e12621e5f",
-    "home_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46",
-    "away_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f",
-    "hole_assignment": 3
-  },
-  {
-    "id": "a58dcf67-870b-4526-9e48-9bdd929561ab",
-    "week_id": "2dbd3f8c-4593-4e3f-8e24-d60e12621e5f",
-    "home_team_id": "47a302df-73ee-4678-a6df-0ec44130e290",
-    "away_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c",
-    "hole_assignment": 4
-  },
-  {
-    "id": "963582eb-d89d-489a-b893-362fe3303bc2",
-    "week_id": "2dbd3f8c-4593-4e3f-8e24-d60e12621e5f",
-    "home_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7",
-    "away_team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "hole_assignment": 5
-  },
-  {
-    "id": "49414d75-8e35-4ce5-b535-6eb04c07f3b5",
-    "week_id": "2dbd3f8c-4593-4e3f-8e24-d60e12621e5f",
-    "home_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8",
-    "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146",
-    "hole_assignment": 6
-  },
-  {
-    "id": "aab3ff05-02e9-45f5-8abb-aded39ff4fdd",
-    "week_id": "2dbd3f8c-4593-4e3f-8e24-d60e12621e5f",
-    "home_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c",
-    "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55",
-    "hole_assignment": 7
-  },
-  {
-    "id": "9749f9c7-9aaf-4bfc-946d-616bc1cbba22",
-    "week_id": "6f75d6df-353c-4afb-a8dc-ccc68bbfe1dd",
-    "home_team_id": "47a302df-73ee-4678-a6df-0ec44130e290",
-    "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55",
-    "hole_assignment": 1
-  },
-  {
-    "id": "0b7c0f0c-3c2c-4aef-a2e1-b4238afafb50",
-    "week_id": "6f75d6df-353c-4afb-a8dc-ccc68bbfe1dd",
-    "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c",
-    "away_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2",
-    "hole_assignment": 2
-  },
-  {
-    "id": "96d9e12f-95d8-475d-a823-6bd4f0c403ee",
-    "week_id": "6f75d6df-353c-4afb-a8dc-ccc68bbfe1dd",
-    "home_team_id": "db878758-8438-475d-81e8-b60209071cab",
-    "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c",
-    "hole_assignment": 3
-  },
-  {
-    "id": "1fa23f87-3979-4e57-bcd1-52a42e2324fc",
-    "week_id": "6f75d6df-353c-4afb-a8dc-ccc68bbfe1dd",
-    "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd",
-    "away_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398",
-    "hole_assignment": 4
-  },
-  {
-    "id": "6858d62e-54c6-45e0-94d7-cfc2e091f9bb",
-    "week_id": "6f75d6df-353c-4afb-a8dc-ccc68bbfe1dd",
-    "home_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46",
-    "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146",
-    "hole_assignment": 5
-  },
-  {
-    "id": "d0afb716-aa85-46fb-95c2-d4627da6f7b8",
-    "week_id": "6f75d6df-353c-4afb-a8dc-ccc68bbfe1dd",
-    "home_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7",
-    "away_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8",
-    "hole_assignment": 6
-  },
-  {
-    "id": "4f211a89-7b30-4899-a666-9702701daba4",
-    "week_id": "11909c6a-7810-4852-877e-0a5ad5244013",
-    "home_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2",
-    "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55",
-    "hole_assignment": 1
-  },
-  {
-    "id": "076c6622-9db8-42ce-aab6-ba6c78f9a1ce",
-    "week_id": "11909c6a-7810-4852-877e-0a5ad5244013",
-    "home_team_id": "db878758-8438-475d-81e8-b60209071cab",
-    "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7",
-    "hole_assignment": 2
-  },
-  {
-    "id": "2e725846-72ee-43a5-8418-3caf2946ff46",
-    "week_id": "11909c6a-7810-4852-877e-0a5ad5244013",
-    "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd",
-    "away_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f",
-    "hole_assignment": 3
-  },
-  {
-    "id": "189e3259-dc32-4585-b399-65f1574361a5",
-    "week_id": "11909c6a-7810-4852-877e-0a5ad5244013",
-    "home_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46",
-    "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c",
-    "hole_assignment": 4
-  },
-  {
-    "id": "6ee8ea0f-a78c-4176-a284-14dc97c7857d",
-    "week_id": "11909c6a-7810-4852-877e-0a5ad5244013",
-    "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578",
-    "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146",
-    "hole_assignment": 5
-  },
-  {
-    "id": "69311e7c-31c7-410f-aefa-e11ff7108cf2",
-    "week_id": "11909c6a-7810-4852-877e-0a5ad5244013",
-    "home_team_id": "47a302df-73ee-4678-a6df-0ec44130e290",
-    "away_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8",
-    "hole_assignment": 6
-  },
-  {
-    "id": "42bcbb0e-8cbc-42f0-a127-f7e99edde4c4",
-    "week_id": "4f73b841-e2e9-46d4-b570-2773d3e3119c",
-    "home_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46",
-    "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7",
-    "hole_assignment": 1
-  },
-  {
-    "id": "d0b0faa4-1afd-4d21-aa63-30e1a1f160a2",
-    "week_id": "4f73b841-e2e9-46d4-b570-2773d3e3119c",
-    "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f",
-    "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146",
-    "hole_assignment": 2
-  },
-  {
-    "id": "117732f6-6468-4ca5-8aa6-c38e6200d82a",
-    "week_id": "4f73b841-e2e9-46d4-b570-2773d3e3119c",
-    "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578",
-    "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c",
-    "hole_assignment": 3
-  },
-  {
-    "id": "cfd6d11b-74ad-48d7-ab39-7606907a0c8a",
-    "week_id": "4f73b841-e2e9-46d4-b570-2773d3e3119c",
-    "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd",
-    "away_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c",
-    "hole_assignment": 4
-  },
-  {
-    "id": "816f414c-c8fc-4813-9048-8f3449271a3f",
-    "week_id": "4f73b841-e2e9-46d4-b570-2773d3e3119c",
-    "home_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398",
-    "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55",
-    "hole_assignment": 5
-  },
-  {
-    "id": "5dd7d943-0da4-49d3-a24c-02935ac28c61",
-    "week_id": "4f73b841-e2e9-46d4-b570-2773d3e3119c",
-    "home_team_id": "47a302df-73ee-4678-a6df-0ec44130e290",
-    "away_team_id": "db878758-8438-475d-81e8-b60209071cab",
-    "hole_assignment": 6
-  },
-  {
-    "id": "101ccbf3-858d-48cd-9b0b-55d9652b54f0",
-    "week_id": "fbd2fff7-b351-4895-95cc-f9a343c25962",
-    "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578",
-    "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7",
-    "hole_assignment": 1
-  },
-  {
-    "id": "5bd0cdb9-c504-42e8-8293-32e40c33732a",
-    "week_id": "fbd2fff7-b351-4895-95cc-f9a343c25962",
-    "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd",
-    "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146",
-    "hole_assignment": 2
-  },
-  {
-    "id": "41115e98-2b60-4840-9844-777c06b986a3",
-    "week_id": "fbd2fff7-b351-4895-95cc-f9a343c25962",
-    "home_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2",
-    "away_team_id": "db878758-8438-475d-81e8-b60209071cab",
-    "hole_assignment": 3
-  },
-  {
-    "id": "e75c4cfa-379e-400e-b1ed-c2c6f0425bb7",
-    "week_id": "fbd2fff7-b351-4895-95cc-f9a343c25962",
-    "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f",
-    "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c",
-    "hole_assignment": 4
-  },
-  {
-    "id": "2af063f6-9cfb-4118-aa56-8535d09f3619",
-    "week_id": "fbd2fff7-b351-4895-95cc-f9a343c25962",
-    "home_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46",
-    "away_team_id": "47a302df-73ee-4678-a6df-0ec44130e290",
-    "hole_assignment": 5
-  },
-  {
-    "id": "48e0d0bd-99c5-457e-afc7-e045a9a12dbf",
-    "week_id": "fbd2fff7-b351-4895-95cc-f9a343c25962",
-    "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c",
-    "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55",
-    "hole_assignment": 6
-  },
-  {
-    "id": "02ab1e14-7bbc-418a-85d4-54670236e2af",
-    "week_id": "8b103552-da44-4577-b95f-c1cc680780ac",
-    "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c",
-    "away_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8",
-    "hole_assignment": 1
-  },
-  {
-    "id": "9d8172a4-35e2-450a-845a-9703eafe4a5d",
-    "week_id": "8b103552-da44-4577-b95f-c1cc680780ac",
-    "home_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398",
-    "away_team_id": "db878758-8438-475d-81e8-b60209071cab",
-    "hole_assignment": 2
-  },
-  {
-    "id": "324d8ec4-1860-445a-b78c-fd8d795163a9",
-    "week_id": "8b103552-da44-4577-b95f-c1cc680780ac",
-    "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd",
-    "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c",
-    "hole_assignment": 3
-  },
-  {
-    "id": "d846c1ae-af27-4aae-88f6-5dfdf8cad659",
-    "week_id": "8b103552-da44-4577-b95f-c1cc680780ac",
-    "home_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2",
-    "away_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46",
-    "hole_assignment": 4
-  },
-  {
-    "id": "502b427f-e191-4e0c-90d8-c850feb2c75a",
-    "week_id": "8b103552-da44-4577-b95f-c1cc680780ac",
-    "home_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55",
-    "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146",
-    "hole_assignment": 5
-  },
-  {
-    "id": "9ea5b071-a92d-4603-b74e-c2219b460c66",
-    "week_id": "8b103552-da44-4577-b95f-c1cc680780ac",
-    "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578",
-    "away_team_id": "47a302df-73ee-4678-a6df-0ec44130e290",
-    "hole_assignment": 6
-  },
-  {
-    "id": "e3b96973-900f-4fd6-ac20-680424a14598",
-    "week_id": "dc946d17-3657-437a-ad23-7f75f5409938",
-    "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd",
-    "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146",
-    "hole_assignment": 1
-  },
-  {
-    "id": "02757baa-b8cf-4081-a06e-9161f4dea122",
-    "week_id": "dc946d17-3657-437a-ad23-7f75f5409938",
-    "home_team_id": "4e7515f7-841c-466c-9363-1f91fd11ccb7",
-    "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55",
-    "hole_assignment": 2
-  },
-  {
-    "id": "01c96824-1ca3-4c40-ac8f-e5ad9785ab2e",
-    "week_id": "dc946d17-3657-437a-ad23-7f75f5409938",
-    "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c",
-    "away_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8",
-    "hole_assignment": 3
-  },
-  {
-    "id": "0cff288b-5ced-4e6b-8c6b-53dded762191",
-    "week_id": "dc946d17-3657-437a-ad23-7f75f5409938",
-    "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f",
-    "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7",
-    "hole_assignment": 4
-  },
-  {
-    "id": "4bf4d283-bf92-474b-97d3-3619d21779b9",
-    "week_id": "dc946d17-3657-437a-ad23-7f75f5409938",
-    "home_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398",
-    "away_team_id": "db878758-8438-475d-81e8-b60209071cab",
-    "hole_assignment": 5
-  },
-  {
-    "id": "9aa9ba04-1ae3-4ece-9489-54cc3a4e4bdb",
-    "week_id": "dc946d17-3657-437a-ad23-7f75f5409938",
-    "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578",
-    "away_team_id": "47a302df-73ee-4678-a6df-0ec44130e290",
-    "hole_assignment": 6
-  },
-  {
-    "id": "8d3694d7-b956-4c8f-af23-9dad2caa2c39",
-    "week_id": "dc946d17-3657-437a-ad23-7f75f5409938",
-    "home_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2",
-    "away_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46",
-    "hole_assignment": 7
-  }
-]
+    {"id": "23f4b5d9-fbd3-7f1d-7341-44dbca1ed766", "week_id": "a44b6c45-3e89-f181-1496-7287593ad91b", "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd", "away_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c", "hole_assignment": 1},
+    {"id": "44584dd9-be7f-6679-b7b9-d123c8efab1c", "week_id": "a44b6c45-3e89-f181-1496-7287593ad91b", "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f", "away_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398", "hole_assignment": 2},
+    {"id": "3b6d0ae4-a793-2f2d-8394-494683d7ed62", "week_id": "a44b6c45-3e89-f181-1496-7287593ad91b", "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578", "away_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2", "hole_assignment": 3},
+    {"id": "ac77bafb-0751-7f7f-7d68-4ae4896e3da4", "week_id": "a44b6c45-3e89-f181-1496-7287593ad91b", "home_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46", "away_team_id": "47a302df-73ee-4678-a6df-0ec44130e290", "hole_assignment": 4},
+    {"id": "b0de90a6-a128-c2d4-2c1c-e3cb156ffca8", "week_id": "a44b6c45-3e89-f181-1496-7287593ad91b", "home_team_id": "db878758-8438-475d-81e8-b60209071cab", "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7", "hole_assignment": 5},
+    {"id": "c742436a-e907-cb6c-e03c-05d99270b854", "week_id": "a44b6c45-3e89-f181-1496-7287593ad91b", "home_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8", "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c", "hole_assignment": 6},
+    {"id": "7061d1c4-2214-5b73-4626-e43bf72ebdf7", "week_id": "a44b6c45-3e89-f181-1496-7287593ad91b", "home_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55", "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146", "hole_assignment": 7},
+    {"id": "db21167d-a4ab-280a-8813-1fe40c75a3c5", "week_id": "b9614276-7e3c-d9ee-b7c1-d68442cd784a", "home_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2", "away_team_id": "db878758-8438-475d-81e8-b60209071cab", "hole_assignment": 1},
+    {"id": "51fcb3d0-5b69-2809-f556-401ef84c4478", "week_id": "b9614276-7e3c-d9ee-b7c1-d68442cd784a", "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c", "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55", "hole_assignment": 2},
+    {"id": "89aa564a-414c-505f-8def-1052e76a9bb2", "week_id": "b9614276-7e3c-d9ee-b7c1-d68442cd784a", "home_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398", "away_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8", "hole_assignment": 3},
+    {"id": "749198a8-89d7-3ff0-e0bb-ac0fb31e0277", "week_id": "b9614276-7e3c-d9ee-b7c1-d68442cd784a", "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd", "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146", "hole_assignment": 4},
+    {"id": "d63c3200-1187-658f-8cb3-72d7085bf505", "week_id": "b9614276-7e3c-d9ee-b7c1-d68442cd784a", "home_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46", "away_team_id": "47a302df-73ee-4678-a6df-0ec44130e290", "hole_assignment": 5},
+    {"id": "28a7495e-3799-81f6-c951-1be002581cc8", "week_id": "b9614276-7e3c-d9ee-b7c1-d68442cd784a", "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f", "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c", "hole_assignment": 6},
+    {"id": "40635635-2336-b49f-ccc6-2b69c35f5be4", "week_id": "b9614276-7e3c-d9ee-b7c1-d68442cd784a", "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578", "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7", "hole_assignment": 7},
+    {"id": "5926c084-3165-3e3b-88c5-67de18048d37", "week_id": "1fbc5fc6-1253-c1b1-4310-1a0cd63e5a5c", "home_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398", "away_team_id": "db878758-8438-475d-81e8-b60209071cab", "hole_assignment": 1},
+    {"id": "08fd6b33-8a39-ee66-7f2f-2a72a0feec14", "week_id": "1fbc5fc6-1253-c1b1-4310-1a0cd63e5a5c", "home_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c", "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146", "hole_assignment": 2},
+    {"id": "d0ac0ede-541a-deda-0da4-9d5cc495be7c", "week_id": "1fbc5fc6-1253-c1b1-4310-1a0cd63e5a5c", "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c", "away_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8", "hole_assignment": 3},
+    {"id": "71316939-6706-a5ca-8d0e-012f50183461", "week_id": "1fbc5fc6-1253-c1b1-4310-1a0cd63e5a5c", "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578", "away_team_id": "47a302df-73ee-4678-a6df-0ec44130e290", "hole_assignment": 4},
+    {"id": "7166e418-4692-14fd-c1a5-add2e410a0a8", "week_id": "1fbc5fc6-1253-c1b1-4310-1a0cd63e5a5c", "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd", "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55", "hole_assignment": 5},
+    {"id": "b5dccda1-8b00-102a-6b34-6f351c4176fa", "week_id": "1fbc5fc6-1253-c1b1-4310-1a0cd63e5a5c", "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f", "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7", "hole_assignment": 6},
+    {"id": "5f3aecf3-26ae-b9bc-c682-74a0fea2e2b7", "week_id": "1fbc5fc6-1253-c1b1-4310-1a0cd63e5a5c", "home_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2", "away_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46", "hole_assignment": 7},
+    {"id": "5b932332-2e65-e211-c9f6-596e2d862e75", "week_id": "7dab1f4e-fe10-78cc-be67-89910c660722", "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f", "away_team_id": "47a302df-73ee-4678-a6df-0ec44130e290", "hole_assignment": 1},
+    {"id": "4aa4a0eb-b685-5219-af62-ea81f401cd7d", "week_id": "7dab1f4e-fe10-78cc-be67-89910c660722", "home_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7", "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146", "hole_assignment": 2},
+    {"id": "99e19163-6870-9f25-96c9-42c6346460df", "week_id": "7dab1f4e-fe10-78cc-be67-89910c660722", "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd", "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c", "hole_assignment": 3},
+    {"id": "788a6253-bd26-dcc7-eb28-81cad1536deb", "week_id": "7dab1f4e-fe10-78cc-be67-89910c660722", "home_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398", "away_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46", "hole_assignment": 4},
+    {"id": "ee52f776-53db-c1ac-c7a1-0330fe0dced8", "week_id": "7dab1f4e-fe10-78cc-be67-89910c660722", "home_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8", "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55", "hole_assignment": 5},
+    {"id": "ff09ecb5-8a2f-a66d-3a60-b5a8b7c877cc", "week_id": "7dab1f4e-fe10-78cc-be67-89910c660722", "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c", "away_team_id": "db878758-8438-475d-81e8-b60209071cab", "hole_assignment": 6},
+    {"id": "c882889a-9b4b-702f-fff1-e3ed1c4822dc", "week_id": "7dab1f4e-fe10-78cc-be67-89910c660722", "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578", "away_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2", "hole_assignment": 7},
+    {"id": "30fc63a0-77e5-aea6-a83d-e552942ea954", "week_id": "04414e1f-be0d-abbc-94e9-5d29048d5e86", "home_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7", "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c", "hole_assignment": 1},
+    {"id": "8e127d01-a097-e9f8-b933-3c19134166c7", "week_id": "04414e1f-be0d-abbc-94e9-5d29048d5e86", "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f", "away_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2", "hole_assignment": 2},
+    {"id": "d700a3c5-3236-a223-27a5-cc8b037dcb31", "week_id": "04414e1f-be0d-abbc-94e9-5d29048d5e86", "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd", "away_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8", "hole_assignment": 3},
+    {"id": "f9b24b25-48cd-bca1-91e4-46f1384bda7f", "week_id": "04414e1f-be0d-abbc-94e9-5d29048d5e86", "home_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398", "away_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578", "hole_assignment": 4},
+    {"id": "f201865a-4b3d-3a2c-9126-76337ba72766", "week_id": "04414e1f-be0d-abbc-94e9-5d29048d5e86", "home_team_id": "db878758-8438-475d-81e8-b60209071cab", "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55", "hole_assignment": 5},
+    {"id": "ce20b3d8-81d0-4d70-01d4-aa7376b6bfcf", "week_id": "04414e1f-be0d-abbc-94e9-5d29048d5e86", "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c", "away_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46", "hole_assignment": 6},
+    {"id": "61ac25e8-085b-6915-fa17-34e11d7d403a", "week_id": "04414e1f-be0d-abbc-94e9-5d29048d5e86", "home_team_id": "47a302df-73ee-4678-a6df-0ec44130e290", "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146", "hole_assignment": 7},
+    {"id": "dc3c2cd1-e151-7af7-5b94-75157a48b1d7", "week_id": "ac4881d6-0ea5-2f1c-190c-7324b8f90591", "home_team_id": "db878758-8438-475d-81e8-b60209071cab", "away_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8", "hole_assignment": 1},
+    {"id": "3780ecb8-60a7-16de-0be2-962936e008e4", "week_id": "ac4881d6-0ea5-2f1c-190c-7324b8f90591", "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f", "away_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398", "hole_assignment": 2},
+    {"id": "263fd61c-326a-37bf-1999-5d440f7a6dc1", "week_id": "ac4881d6-0ea5-2f1c-190c-7324b8f90591", "home_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2", "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146", "hole_assignment": 3},
+    {"id": "766ad779-906d-b30a-844d-1b3bf1ccb7ae", "week_id": "ac4881d6-0ea5-2f1c-190c-7324b8f90591", "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c", "away_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578", "hole_assignment": 4},
+    {"id": "6c2c9ae0-b989-cb6e-6d98-6703aa0ea7b1", "week_id": "ac4881d6-0ea5-2f1c-190c-7324b8f90591", "home_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46", "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55", "hole_assignment": 5},
+    {"id": "ca8b0f16-567d-e28e-24a5-8d601d094ba3", "week_id": "ac4881d6-0ea5-2f1c-190c-7324b8f90591", "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd", "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7", "hole_assignment": 6},
+    {"id": "72de41a8-dde2-75b1-7b32-1ddcb5415385", "week_id": "ac4881d6-0ea5-2f1c-190c-7324b8f90591", "home_team_id": "47a302df-73ee-4678-a6df-0ec44130e290", "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c", "hole_assignment": 7},
+    {"id": "30589747-7665-083f-29a5-c23cd08338d9", "week_id": "dc51d5c4-b6b4-e82d-ab89-91948809c294", "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd", "away_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c", "hole_assignment": 1},
+    {"id": "ce071e80-a38e-96c2-6974-91ad80158eae", "week_id": "dc51d5c4-b6b4-e82d-ab89-91948809c294", "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f", "away_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398", "hole_assignment": 2},
+    {"id": "ae6825cf-0c0e-fb9c-3b46-7d5c656c12b7", "week_id": "dc51d5c4-b6b4-e82d-ab89-91948809c294", "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578", "away_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2", "hole_assignment": 3},
+    {"id": "1ab116d8-4db9-4384-f9f3-96dc29378ad7", "week_id": "dc51d5c4-b6b4-e82d-ab89-91948809c294", "home_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46", "away_team_id": "47a302df-73ee-4678-a6df-0ec44130e290", "hole_assignment": 4},
+    {"id": "1e4f7e8d-4cbe-e638-6c52-74c424ba739d", "week_id": "dc51d5c4-b6b4-e82d-ab89-91948809c294", "home_team_id": "db878758-8438-475d-81e8-b60209071cab", "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7", "hole_assignment": 5},
+    {"id": "a3294894-f830-2304-877a-0a2e50bfa8d5", "week_id": "dc51d5c4-b6b4-e82d-ab89-91948809c294", "home_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8", "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c", "hole_assignment": 6},
+    {"id": "23fc5bfc-4a40-4249-e72b-82c44b316393", "week_id": "dc51d5c4-b6b4-e82d-ab89-91948809c294", "home_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55", "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146", "hole_assignment": 7},
+    {"id": "25aa0bf0-ab3c-4be1-0056-52a0436bb2a4", "week_id": "57ed3fc8-f15a-5d6c-b0f1-375e06df1f89", "home_team_id": "47a302df-73ee-4678-a6df-0ec44130e290", "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7", "hole_assignment": 1},
+    {"id": "fd335a5b-093d-5abf-dd6e-8fe3324eb7a7", "week_id": "57ed3fc8-f15a-5d6c-b0f1-375e06df1f89", "home_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398", "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146", "hole_assignment": 2},
+    {"id": "cfb55312-6148-620d-b927-f6d2572e9bd7", "week_id": "57ed3fc8-f15a-5d6c-b0f1-375e06df1f89", "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c", "away_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f", "hole_assignment": 3},
+    {"id": "347f47ba-1f3a-b688-5d1d-65dc7f639c0e", "week_id": "57ed3fc8-f15a-5d6c-b0f1-375e06df1f89", "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd", "away_team_id": "db878758-8438-475d-81e8-b60209071cab", "hole_assignment": 4},
+    {"id": "2ca7102d-0864-8400-fb6b-eca0b73cdaf6", "week_id": "57ed3fc8-f15a-5d6c-b0f1-375e06df1f89", "home_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46", "away_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8", "hole_assignment": 5},
+    {"id": "edbbe441-a12e-3c95-2dc5-d7dd7f7f17e7", "week_id": "57ed3fc8-f15a-5d6c-b0f1-375e06df1f89", "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578", "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55", "hole_assignment": 6},
+    {"id": "4bc10e15-2652-a9df-4b05-f54f12f031da", "week_id": "57ed3fc8-f15a-5d6c-b0f1-375e06df1f89", "home_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2", "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c", "hole_assignment": 7},
+    {"id": "614f1fbd-e30e-d27a-6e42-ecb37a44adfb", "week_id": "69c5829e-f720-4c69-0e3f-a6f2d8891c07", "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578", "away_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8", "hole_assignment": 1},
+    {"id": "c09cc855-dde1-98b0-18e4-5af3d0ff92ff", "week_id": "69c5829e-f720-4c69-0e3f-a6f2d8891c07", "home_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46", "away_team_id": "db878758-8438-475d-81e8-b60209071cab", "hole_assignment": 2},
+    {"id": "f6d32a19-a61d-7949-33ea-e4d3fafa3193", "week_id": "69c5829e-f720-4c69-0e3f-a6f2d8891c07", "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd", "away_team_id": "47a302df-73ee-4678-a6df-0ec44130e290", "hole_assignment": 3},
+    {"id": "e5e1ef8d-2855-8b8e-ac4d-aad8835378c1", "week_id": "69c5829e-f720-4c69-0e3f-a6f2d8891c07", "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f", "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55", "hole_assignment": 4},
+    {"id": "0ab7bdbb-bdd7-2755-961e-1332478dc56f", "week_id": "69c5829e-f720-4c69-0e3f-a6f2d8891c07", "home_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2", "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7", "hole_assignment": 5},
+    {"id": "a58ed8b9-a609-b31b-a97e-d244d369c08c", "week_id": "69c5829e-f720-4c69-0e3f-a6f2d8891c07", "home_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398", "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c", "hole_assignment": 6},
+    {"id": "59f2462c-738e-e1c7-47d3-183ac68d8b7b", "week_id": "69c5829e-f720-4c69-0e3f-a6f2d8891c07", "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c", "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146", "hole_assignment": 7},
+    {"id": "fcbc604f-1742-b360-662a-fe27370d8cf4", "week_id": "5eedc44e-4142-db82-d349-2bc46b6adc93", "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578", "away_team_id": "db878758-8438-475d-81e8-b60209071cab", "hole_assignment": 1},
+    {"id": "127fa4ba-827e-8879-9c69-7f95a692abd6", "week_id": "5eedc44e-4142-db82-d349-2bc46b6adc93", "home_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55", "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146", "hole_assignment": 2},
+    {"id": "6fd14599-23ac-b374-6e5f-b464a55b37f3", "week_id": "5eedc44e-4142-db82-d349-2bc46b6adc93", "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f", "away_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8", "hole_assignment": 3},
+    {"id": "482d9ad9-f9c7-acdc-80d6-170f50cbeed0", "week_id": "5eedc44e-4142-db82-d349-2bc46b6adc93", "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd", "away_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46", "hole_assignment": 4},
+    {"id": "210cdec2-1974-2107-bdda-6fc946412dbc", "week_id": "5eedc44e-4142-db82-d349-2bc46b6adc93", "home_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398", "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7", "hole_assignment": 5},
+    {"id": "267a50c3-6c51-eb01-5046-1a8bf5cdaca0", "week_id": "5eedc44e-4142-db82-d349-2bc46b6adc93", "home_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2", "away_team_id": "47a302df-73ee-4678-a6df-0ec44130e290", "hole_assignment": 6},
+    {"id": "598a5caf-21d1-e045-29b6-66c403bf15a7", "week_id": "5eedc44e-4142-db82-d349-2bc46b6adc93", "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c", "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c", "hole_assignment": 7},
+    {"id": "567c4df3-1ce7-6191-0f40-cb4a1ab5e44c", "week_id": "8edea147-94dc-fd4d-29f9-b63e10acb5b8", "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578", "away_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46", "hole_assignment": 1},
+    {"id": "44b02884-c269-88a2-ebcd-30bc4b4709f4", "week_id": "8edea147-94dc-fd4d-29f9-b63e10acb5b8", "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c", "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7", "hole_assignment": 2},
+    {"id": "f64db8c2-9533-0d8f-9f46-d1b6b905c6d3", "week_id": "8edea147-94dc-fd4d-29f9-b63e10acb5b8", "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd", "away_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2", "hole_assignment": 3},
+    {"id": "3744242d-593b-dbb3-9948-25790caf1c9c", "week_id": "8edea147-94dc-fd4d-29f9-b63e10acb5b8", "home_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8", "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146", "hole_assignment": 4},
+    {"id": "44c18d35-41ec-391c-b98a-485debe78e6e", "week_id": "8edea147-94dc-fd4d-29f9-b63e10acb5b8", "home_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398", "away_team_id": "47a302df-73ee-4678-a6df-0ec44130e290", "hole_assignment": 5},
+    {"id": "13d6dc5e-c599-5db1-0551-1fcdee8a919b", "week_id": "8edea147-94dc-fd4d-29f9-b63e10acb5b8", "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f", "away_team_id": "db878758-8438-475d-81e8-b60209071cab", "hole_assignment": 6},
+    {"id": "89e7040a-de9f-a6ff-d9d7-3cc2c94715e9", "week_id": "8edea147-94dc-fd4d-29f9-b63e10acb5b8", "home_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c", "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55", "hole_assignment": 7},
+    {"id": "692236f7-2706-6b86-3ca6-51e60e5e5146", "week_id": "bfa8034a-a9b7-522b-23ac-47dc54e631de", "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f", "away_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46", "hole_assignment": 1},
+    {"id": "4fbc8d2c-34fb-49c6-1ec8-5d3618d3c64a", "week_id": "bfa8034a-a9b7-522b-23ac-47dc54e631de", "home_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7", "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55", "hole_assignment": 2},
+    {"id": "e7ee031b-ab4f-3942-d2b9-82c30c28a44b", "week_id": "bfa8034a-a9b7-522b-23ac-47dc54e631de", "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd", "away_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578", "hole_assignment": 3},
+    {"id": "db683318-e51c-2c90-b74b-f8e5558f28e7", "week_id": "bfa8034a-a9b7-522b-23ac-47dc54e631de", "home_team_id": "db878758-8438-475d-81e8-b60209071cab", "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146", "hole_assignment": 4},
+    {"id": "30dc6318-a9e3-09cc-ef66-7217e230cc49", "week_id": "bfa8034a-a9b7-522b-23ac-47dc54e631de", "home_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398", "away_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2", "hole_assignment": 5},
+    {"id": "0acdc88f-c58d-fb2d-8a28-47133779b6b5", "week_id": "bfa8034a-a9b7-522b-23ac-47dc54e631de", "home_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8", "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c", "hole_assignment": 6},
+    {"id": "f59d42c3-9164-97f4-5587-2366b53e9731", "week_id": "bfa8034a-a9b7-522b-23ac-47dc54e631de", "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c", "away_team_id": "47a302df-73ee-4678-a6df-0ec44130e290", "hole_assignment": 7},
+    {"id": "5dc2271f-6726-501a-6659-0431372af4e0", "week_id": "ff2bbb45-b39d-0154-de2b-f7f4d662a654", "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd", "away_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c", "hole_assignment": 1},
+    {"id": "fd8605a4-30f7-5767-ec77-89447747af5a", "week_id": "ff2bbb45-b39d-0154-de2b-f7f4d662a654", "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f", "away_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398", "hole_assignment": 2},
+    {"id": "62703ce6-c7af-b964-1913-38f1231195d6", "week_id": "ff2bbb45-b39d-0154-de2b-f7f4d662a654", "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578", "away_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2", "hole_assignment": 3},
+    {"id": "cdf55240-f508-a648-cbf6-fa1da00caf4d", "week_id": "ff2bbb45-b39d-0154-de2b-f7f4d662a654", "home_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46", "away_team_id": "47a302df-73ee-4678-a6df-0ec44130e290", "hole_assignment": 4},
+    {"id": "f9dc756f-7d49-5fb3-8cae-fd4f059c47ac", "week_id": "ff2bbb45-b39d-0154-de2b-f7f4d662a654", "home_team_id": "db878758-8438-475d-81e8-b60209071cab", "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7", "hole_assignment": 5},
+    {"id": "6bebd268-7abe-2ab6-3007-c830107e9b76", "week_id": "ff2bbb45-b39d-0154-de2b-f7f4d662a654", "home_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8", "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c", "hole_assignment": 6},
+    {"id": "15050230-8ff4-2560-2c09-26a44cc6f211", "week_id": "ff2bbb45-b39d-0154-de2b-f7f4d662a654", "home_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55", "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146", "hole_assignment": 7},
+    {"id": "4257c2ac-d224-1617-d61b-41af6e4a8446", "week_id": "77474231-c901-9702-7a55-5196a5484390", "home_team_id": "47a302df-73ee-4678-a6df-0ec44130e290", "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55", "hole_assignment": 1},
+    {"id": "f0d7e940-5c9c-bb6d-cb03-5e85e3466847", "week_id": "77474231-c901-9702-7a55-5196a5484390", "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c", "away_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2", "hole_assignment": 2},
+    {"id": "f02eca74-f926-741b-7284-4c13dec27955", "week_id": "77474231-c901-9702-7a55-5196a5484390", "home_team_id": "db878758-8438-475d-81e8-b60209071cab", "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c", "hole_assignment": 3},
+    {"id": "a1cc84fd-7989-7259-8a1b-aa59a629d15e", "week_id": "77474231-c901-9702-7a55-5196a5484390", "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd", "away_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398", "hole_assignment": 4},
+    {"id": "d8c12f5b-2b97-0b17-48ca-216844c103e4", "week_id": "77474231-c901-9702-7a55-5196a5484390", "home_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46", "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146", "hole_assignment": 5},
+    {"id": "55348741-ec70-c6d1-25c0-8a6f8638d060", "week_id": "77474231-c901-9702-7a55-5196a5484390", "home_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7", "away_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8", "hole_assignment": 6},
+    {"id": "3f5300d0-3b21-add3-5d6e-e52844af9a1d", "week_id": "77474231-c901-9702-7a55-5196a5484390", "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f", "away_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578", "hole_assignment": 7},
+    {"id": "88e58240-1f70-fc8f-22ab-0bb06dd0dce3", "week_id": "794edacd-8d0b-7122-e130-0c2402037fd7", "home_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2", "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55", "hole_assignment": 1},
+    {"id": "5ff15541-f600-1d5c-3144-5ed741c79341", "week_id": "794edacd-8d0b-7122-e130-0c2402037fd7", "home_team_id": "db878758-8438-475d-81e8-b60209071cab", "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7", "hole_assignment": 2},
+    {"id": "4748d956-025e-2a48-a948-dd0dc890d957", "week_id": "794edacd-8d0b-7122-e130-0c2402037fd7", "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd", "away_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f", "hole_assignment": 3},
+    {"id": "7db2ca96-d943-237e-4833-873e3006be0d", "week_id": "794edacd-8d0b-7122-e130-0c2402037fd7", "home_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46", "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c", "hole_assignment": 4},
+    {"id": "e2c7c198-276a-41cf-87de-1e93161acbf1", "week_id": "794edacd-8d0b-7122-e130-0c2402037fd7", "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578", "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146", "hole_assignment": 5},
+    {"id": "75f1f353-cb49-cfe4-404c-dab1d109c8cd", "week_id": "794edacd-8d0b-7122-e130-0c2402037fd7", "home_team_id": "47a302df-73ee-4678-a6df-0ec44130e290", "away_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8", "hole_assignment": 6},
+    {"id": "b7a2075b-4c58-7a92-e60d-6622eba67055", "week_id": "794edacd-8d0b-7122-e130-0c2402037fd7", "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c", "away_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398", "hole_assignment": 7},
+    {"id": "7aa5284e-ff47-c173-a18c-ac28685e0c96", "week_id": "5db275df-636e-1cbb-687c-31c80fe59a0b", "home_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46", "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7", "hole_assignment": 1},
+    {"id": "6ceec45c-ad6a-c5f3-f443-ee51175717ce", "week_id": "5db275df-636e-1cbb-687c-31c80fe59a0b", "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f", "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146", "hole_assignment": 2},
+    {"id": "ec6bb66b-97d4-3f15-d740-53344dba5f3c", "week_id": "5db275df-636e-1cbb-687c-31c80fe59a0b", "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578", "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c", "hole_assignment": 3},
+    {"id": "989220d8-d5a5-777c-676b-ca29e8ac9f86", "week_id": "5db275df-636e-1cbb-687c-31c80fe59a0b", "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd", "away_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c", "hole_assignment": 4},
+    {"id": "32889f15-6f85-495f-04c4-51935a98ab0a", "week_id": "5db275df-636e-1cbb-687c-31c80fe59a0b", "home_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398", "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55", "hole_assignment": 5},
+    {"id": "71f62b9a-5b55-79cb-7569-273be2ad6fab", "week_id": "5db275df-636e-1cbb-687c-31c80fe59a0b", "home_team_id": "47a302df-73ee-4678-a6df-0ec44130e290", "away_team_id": "db878758-8438-475d-81e8-b60209071cab", "hole_assignment": 6},
+    {"id": "573d6705-97e6-289c-6c02-efcb9920b9c4", "week_id": "5db275df-636e-1cbb-687c-31c80fe59a0b", "home_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2", "away_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8", "hole_assignment": 7},
+    {"id": "c2e61595-c340-51ce-be52-587ffa767c2f", "week_id": "ff5fb3a6-8604-2285-bb7f-cbe89d571577", "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578", "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7", "hole_assignment": 1},
+    {"id": "fe96dcdc-320a-fc52-346a-574c02374090", "week_id": "ff5fb3a6-8604-2285-bb7f-cbe89d571577", "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd", "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146", "hole_assignment": 2},
+    {"id": "2f6d96ea-4067-2037-33be-485b73ed3f4b", "week_id": "ff5fb3a6-8604-2285-bb7f-cbe89d571577", "home_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2", "away_team_id": "db878758-8438-475d-81e8-b60209071cab", "hole_assignment": 3},
+    {"id": "d49b6baf-eef5-2f8d-eb1d-245d97e2e1ff", "week_id": "ff5fb3a6-8604-2285-bb7f-cbe89d571577", "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f", "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c", "hole_assignment": 4},
+    {"id": "19748c43-e95b-36f6-9c0f-9fee5014affc", "week_id": "ff5fb3a6-8604-2285-bb7f-cbe89d571577", "home_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46", "away_team_id": "47a302df-73ee-4678-a6df-0ec44130e290", "hole_assignment": 5},
+    {"id": "718382da-e573-a188-2343-9499a8c6cea6", "week_id": "ff5fb3a6-8604-2285-bb7f-cbe89d571577", "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c", "away_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55", "hole_assignment": 6},
+    {"id": "88c2df6d-8dfe-a77c-c9e0-620767046821", "week_id": "ff5fb3a6-8604-2285-bb7f-cbe89d571577", "home_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398", "away_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8", "hole_assignment": 7},
+    {"id": "3c99c7b2-4080-c12b-8ed6-00b6e90628fd", "week_id": "36d147af-73d7-01b8-03bf-e7c62284019b", "home_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c", "away_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8", "hole_assignment": 1},
+    {"id": "736ee2db-586f-dd51-912e-4f4f1f41508f", "week_id": "36d147af-73d7-01b8-03bf-e7c62284019b", "home_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398", "away_team_id": "db878758-8438-475d-81e8-b60209071cab", "hole_assignment": 2},
+    {"id": "e5bf365c-2644-8a22-3c24-c7e8fc0285e5", "week_id": "36d147af-73d7-01b8-03bf-e7c62284019b", "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd", "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c", "hole_assignment": 3},
+    {"id": "b1d7a8ac-3273-8dc2-150a-072a9ebca319", "week_id": "36d147af-73d7-01b8-03bf-e7c62284019b", "home_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2", "away_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46", "hole_assignment": 4},
+    {"id": "bc9568cd-d362-cc52-6893-e0fa8359fa95", "week_id": "36d147af-73d7-01b8-03bf-e7c62284019b", "home_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55", "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146", "hole_assignment": 5},
+    {"id": "e2e34c91-3d11-5249-59ed-0ecc539e5baa", "week_id": "36d147af-73d7-01b8-03bf-e7c62284019b", "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578", "away_team_id": "47a302df-73ee-4678-a6df-0ec44130e290", "hole_assignment": 6},
+    {"id": "c8d151fc-e5a2-ec53-b776-e477981e8ff3", "week_id": "36d147af-73d7-01b8-03bf-e7c62284019b", "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f", "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7", "hole_assignment": 7},
+    {"id": "7a2db73e-3072-c315-b50d-344f40652d6c", "week_id": "60e38037-7e9a-059e-56ef-92c83a837c4d", "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd", "away_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c", "hole_assignment": 1},
+    {"id": "6aabdac2-77a6-239c-2147-469722871e56", "week_id": "60e38037-7e9a-059e-56ef-92c83a837c4d", "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f", "away_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398", "hole_assignment": 2},
+    {"id": "f3638efc-034d-7c76-3f12-61984e1ca6fa", "week_id": "60e38037-7e9a-059e-56ef-92c83a837c4d", "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578", "away_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2", "hole_assignment": 3},
+    {"id": "1f34ee84-24e3-ee4f-511e-d2ad4fd458d0", "week_id": "60e38037-7e9a-059e-56ef-92c83a837c4d", "home_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46", "away_team_id": "47a302df-73ee-4678-a6df-0ec44130e290", "hole_assignment": 4},
+    {"id": "41ff9bfa-68e3-c96e-61ab-756f014bd24d", "week_id": "60e38037-7e9a-059e-56ef-92c83a837c4d", "home_team_id": "db878758-8438-475d-81e8-b60209071cab", "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7", "hole_assignment": 5},
+    {"id": "cafb85c4-e620-f261-4ee1-4af86bb302f9", "week_id": "60e38037-7e9a-059e-56ef-92c83a837c4d", "home_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8", "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c", "hole_assignment": 6},
+    {"id": "38ec1249-e8b0-19cb-c948-4ef7580756ec", "week_id": "60e38037-7e9a-059e-56ef-92c83a837c4d", "home_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55", "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146", "hole_assignment": 7},
+    {"id": "a5b8c476-f312-2074-6d2e-f22678aa8c6b", "week_id": "3c70b05e-b7e9-341a-e029-d5487dd78ab9", "home_team_id": "cc6ed51d-06f0-4515-8a8a-d5fa7a2489fd", "away_team_id": "d6f2c642-0d56-4921-a3ec-a96c7b27b72c", "hole_assignment": 1},
+    {"id": "ebe69522-9e24-5eec-58e3-aa62f2a5ba24", "week_id": "3c70b05e-b7e9-341a-e029-d5487dd78ab9", "home_team_id": "2d0f8fcf-3576-4020-b2ee-7a73ad91dd6f", "away_team_id": "42884f58-915c-4a5f-954f-73bb95fa7398", "hole_assignment": 2},
+    {"id": "e1015ea3-bb64-e337-9dae-4d795856c0c8", "week_id": "3c70b05e-b7e9-341a-e029-d5487dd78ab9", "home_team_id": "51003291-f08d-40c1-bb0e-ecdb003dd578", "away_team_id": "da9a0972-dcaa-4dc4-946b-596928be24a2", "hole_assignment": 3},
+    {"id": "4b458151-6f81-8385-00d3-c544c92ed553", "week_id": "3c70b05e-b7e9-341a-e029-d5487dd78ab9", "home_team_id": "228fcff0-1912-4875-bebd-a78f3fd13c46", "away_team_id": "47a302df-73ee-4678-a6df-0ec44130e290", "hole_assignment": 4},
+    {"id": "6f189d40-54e5-fe99-a99a-4f315c603f52", "week_id": "3c70b05e-b7e9-341a-e029-d5487dd78ab9", "home_team_id": "db878758-8438-475d-81e8-b60209071cab", "away_team_id": "4bedf568-c29e-44cd-be63-6693a141f2a7", "hole_assignment": 5},
+    {"id": "7ef67e33-3203-b022-d034-490907406608", "week_id": "3c70b05e-b7e9-341a-e029-d5487dd78ab9", "home_team_id": "3997bc46-e78e-4319-bba3-fbb3df731fb8", "away_team_id": "7a5fe043-f133-4b95-b6a1-596b46daea9c", "hole_assignment": 6},
+    {"id": "1b77976b-18de-dd9c-2660-551591daf29f", "week_id": "3c70b05e-b7e9-341a-e029-d5487dd78ab9", "home_team_id": "b880fc96-788d-492c-b1b3-5940efa91e55", "away_team_id": "33f76372-7937-4a54-84d4-9c50be263146", "hole_assignment": 7}
+  ]
   const scores = [
-  {
-    "id": "8ad975c3-2950-4046-a626-ff085c702345",
-    "matchup_id": "ee370eb3-6362-4ae8-8f9d-e0784950bd35",
-    "player_id": "22a93b47-0639-44d0-9ac1-f76de428bda8",
-    "gross": 42,
-    "is_blind": false
-  },
-  {
-    "id": "6746a710-a40e-4543-8356-c435a062ad55",
-    "matchup_id": "fc0debe9-ef46-4c3c-98d7-0a0a64141715",
-    "player_id": "22a93b47-0639-44d0-9ac1-f76de428bda8",
-    "gross": 45,
-    "is_blind": false
-  },
-  {
-    "id": "13820a6d-4d73-46d3-a1d4-2cbe132bd510",
-    "matchup_id": "3ce2803f-db0d-4255-8183-a63e94114ed7",
-    "player_id": "22a93b47-0639-44d0-9ac1-f76de428bda8",
-    "gross": 54,
-    "is_blind": false
-  },
-  {
-    "id": "5de9baf3-9952-463d-92bf-d36e79cf4943",
-    "matchup_id": "d8b47586-63b8-4e10-9e3b-f7e089d758ce",
-    "player_id": "22a93b47-0639-44d0-9ac1-f76de428bda8",
-    "gross": 51,
-    "is_blind": false
-  },
-  {
-    "id": "0f34bdaf-7112-438c-8161-aafbda48f7a4",
-    "matchup_id": "fc4861f3-3fc2-4f4d-b38b-3a43a99d44f4",
-    "player_id": "22a93b47-0639-44d0-9ac1-f76de428bda8",
-    "gross": 54,
-    "is_blind": false
-  },
-  {
-    "id": "54ba7c78-5796-4f70-a219-eca61a19f30b",
-    "matchup_id": "a1612204-3b63-4d43-af0e-9d4bf93e0e32",
-    "player_id": "22a93b47-0639-44d0-9ac1-f76de428bda8",
-    "gross": 47,
-    "is_blind": false
-  },
-  {
-    "id": "3d88dfeb-14e9-46ac-aa0f-fe3358f5a5d4",
-    "matchup_id": "ee370eb3-6362-4ae8-8f9d-e0784950bd35",
-    "player_id": "9c2a55d6-0218-4949-8784-b2b7cef84a89",
-    "gross": 42,
-    "is_blind": false
-  },
-  {
-    "id": "b74d8405-4d95-4ee2-85d7-f18bdd5c9c47",
-    "matchup_id": "fc0debe9-ef46-4c3c-98d7-0a0a64141715",
-    "player_id": "9c2a55d6-0218-4949-8784-b2b7cef84a89",
-    "gross": 54,
-    "is_blind": false
-  },
-  {
-    "id": "8b7ed035-c84e-4cdc-8afe-ade57641d6a5",
-    "matchup_id": "3ce2803f-db0d-4255-8183-a63e94114ed7",
-    "player_id": "9c2a55d6-0218-4949-8784-b2b7cef84a89",
-    "gross": 42,
-    "is_blind": false
-  },
-  {
-    "id": "bd203e17-a79f-4709-8102-b044fc75c884",
-    "matchup_id": "d8b47586-63b8-4e10-9e3b-f7e089d758ce",
-    "player_id": "9c2a55d6-0218-4949-8784-b2b7cef84a89",
-    "gross": 49,
-    "is_blind": false
-  },
-  {
-    "id": "bab57be2-f2fb-4239-949b-ae9477bb516d",
-    "matchup_id": "fc4861f3-3fc2-4f4d-b38b-3a43a99d44f4",
-    "player_id": "9c2a55d6-0218-4949-8784-b2b7cef84a89",
-    "gross": 43,
-    "is_blind": false
-  },
-  {
-    "id": "d7576e2a-0dd4-4a35-99eb-7aafcbd4515d",
-    "matchup_id": "a1612204-3b63-4d43-af0e-9d4bf93e0e32",
-    "player_id": "9c2a55d6-0218-4949-8784-b2b7cef84a89",
-    "gross": 44,
-    "is_blind": false
-  },
-  {
-    "id": "07ec13ba-78a7-436e-86a4-d14676cdc76b",
-    "matchup_id": "a70afce9-9d16-438c-9922-c7f7ac2507cd",
-    "player_id": "1f2801b1-4e46-459b-9b99-919938b85746",
-    "gross": 45,
-    "is_blind": false
-  },
-  {
-    "id": "bf41f51d-101e-49fd-91ef-25d2cf638feb",
-    "matchup_id": "5c386402-fb95-417f-89a3-b21ea6006bed",
-    "player_id": "1f2801b1-4e46-459b-9b99-919938b85746",
-    "gross": 45,
-    "is_blind": false
-  },
-  {
-    "id": "c3276fe7-218e-4152-b5e9-61a1612c8b6b",
-    "matchup_id": "78efdace-1404-417a-8d8b-fcef0cdf451f",
-    "player_id": "1f2801b1-4e46-459b-9b99-919938b85746",
-    "gross": 47,
-    "is_blind": false
-  },
-  {
-    "id": "87d66ce5-c461-4b56-9ba9-7087ff6d6d1d",
-    "matchup_id": "16337ec5-4607-4501-8a36-ab255ba365cd",
-    "player_id": "1f2801b1-4e46-459b-9b99-919938b85746",
-    "gross": 46,
-    "is_blind": false
-  },
-  {
-    "id": "c9cbd8e0-727a-45e8-b4a7-7944d8f7500b",
-    "matchup_id": "3dba026f-4231-4360-bb28-bf1103dcda76",
-    "player_id": "1f2801b1-4e46-459b-9b99-919938b85746",
-    "gross": 39,
-    "is_blind": false
-  },
-  {
-    "id": "e808b40b-e953-4061-9f38-73b776d2bbea",
-    "matchup_id": "60a4e661-b8f2-4774-8348-02128614fa66",
-    "player_id": "1f2801b1-4e46-459b-9b99-919938b85746",
-    "gross": 44,
-    "is_blind": false
-  },
-  {
-    "id": "1471050d-4c9b-4297-b2c1-9517afe4b122",
-    "matchup_id": "a70afce9-9d16-438c-9922-c7f7ac2507cd",
-    "player_id": "a388e4d8-994d-4841-8947-b21ef2a0c73c",
-    "gross": 58,
-    "is_blind": false
-  },
-  {
-    "id": "dee0106a-11d7-4ae6-b62d-88aa327c2e9f",
-    "matchup_id": "5c386402-fb95-417f-89a3-b21ea6006bed",
-    "player_id": "a388e4d8-994d-4841-8947-b21ef2a0c73c",
-    "gross": 53,
-    "is_blind": false
-  },
-  {
-    "id": "aa9a0857-7ea4-444a-af85-c532347775e7",
-    "matchup_id": "78efdace-1404-417a-8d8b-fcef0cdf451f",
-    "player_id": "a388e4d8-994d-4841-8947-b21ef2a0c73c",
-    "gross": 60,
-    "is_blind": false
-  },
-  {
-    "id": "c10ad0e0-073f-46d7-b4da-6044d724926d",
-    "matchup_id": "16337ec5-4607-4501-8a36-ab255ba365cd",
-    "player_id": "a388e4d8-994d-4841-8947-b21ef2a0c73c",
-    "gross": 55,
-    "is_blind": false
-  },
-  {
-    "id": "3445ff4a-6a15-4d7f-8841-c7af475387e2",
-    "matchup_id": "3dba026f-4231-4360-bb28-bf1103dcda76",
-    "player_id": "a388e4d8-994d-4841-8947-b21ef2a0c73c",
-    "gross": 55,
-    "is_blind": false
-  },
-  {
-    "id": "6673774a-c777-4cd2-926f-9a79cd77f9d3",
-    "matchup_id": "8a77d124-1d85-4032-b0b3-ad10a93b6329",
-    "player_id": "39178706-dfec-4db2-9717-6c420ee81a33",
-    "gross": 45,
-    "is_blind": false
-  },
-  {
-    "id": "e544dc70-94fc-4670-ad9e-af4efab9936f",
-    "matchup_id": "f55ea1d4-64b8-4e59-9b96-405b0f3628b1",
-    "player_id": "39178706-dfec-4db2-9717-6c420ee81a33",
-    "gross": 47,
-    "is_blind": false
-  },
-  {
-    "id": "b6adfef2-2e4c-4796-9cd2-1ea12ea904f9",
-    "matchup_id": "fb87e027-6f6c-4da3-a35a-b30e26d2e738",
-    "player_id": "39178706-dfec-4db2-9717-6c420ee81a33",
-    "gross": 45,
-    "is_blind": false
-  },
-  {
-    "id": "af42e62a-ce47-40ff-bdbe-756afb541764",
-    "matchup_id": "9313bce7-8045-4c26-a7e6-bcd4987b0476",
-    "player_id": "39178706-dfec-4db2-9717-6c420ee81a33",
-    "gross": 49,
-    "is_blind": false
-  },
-  {
-    "id": "ae09b957-7701-4e64-8bcf-7c2b7d422328",
-    "matchup_id": "002a871d-9728-4274-820b-c366d31714c6",
-    "player_id": "39178706-dfec-4db2-9717-6c420ee81a33",
-    "gross": 46,
-    "is_blind": false
-  },
-  {
-    "id": "3481ef36-ccee-4d42-8cbd-29f5f7e97452",
-    "matchup_id": "aa34af48-fd64-41bb-9d50-360fbb0aef60",
-    "player_id": "39178706-dfec-4db2-9717-6c420ee81a33",
-    "gross": 41,
-    "is_blind": false
-  },
-  {
-    "id": "447d1c43-4d4d-426e-94a9-6aca4807832c",
-    "matchup_id": "8a77d124-1d85-4032-b0b3-ad10a93b6329",
-    "player_id": "094c9953-7459-4fe1-8a60-fdc6c96357ab",
-    "gross": 50,
-    "is_blind": false
-  },
-  {
-    "id": "eb6a0879-7421-4fd1-8a9f-c00e7ba77bc8",
-    "matchup_id": "f55ea1d4-64b8-4e59-9b96-405b0f3628b1",
-    "player_id": "094c9953-7459-4fe1-8a60-fdc6c96357ab",
-    "gross": 45,
-    "is_blind": false
-  },
-  {
-    "id": "d4a19c67-af4a-47c6-9b78-124e8ddf8730",
-    "matchup_id": "fb87e027-6f6c-4da3-a35a-b30e26d2e738",
-    "player_id": "094c9953-7459-4fe1-8a60-fdc6c96357ab",
-    "gross": 47,
-    "is_blind": false
-  },
-  {
-    "id": "c1bbf8a5-488d-46aa-a99a-c6bcb5a9c57e",
-    "matchup_id": "9313bce7-8045-4c26-a7e6-bcd4987b0476",
-    "player_id": "094c9953-7459-4fe1-8a60-fdc6c96357ab",
-    "gross": 52,
-    "is_blind": false
-  },
-  {
-    "id": "9500ea6e-8aa7-468f-b5e8-15aebeda0dc6",
-    "matchup_id": "002a871d-9728-4274-820b-c366d31714c6",
-    "player_id": "094c9953-7459-4fe1-8a60-fdc6c96357ab",
-    "gross": 46,
-    "is_blind": false
-  },
-  {
-    "id": "c1813fd7-af36-4dba-b6b7-790db981acf1",
-    "matchup_id": "aa34af48-fd64-41bb-9d50-360fbb0aef60",
-    "player_id": "094c9953-7459-4fe1-8a60-fdc6c96357ab",
-    "gross": 45,
-    "is_blind": false
-  },
-  {
-    "id": "520b07fa-2a92-4cfa-8e96-c6a56aa247cc",
-    "matchup_id": "8e1fa12e-0029-4614-bec8-6d120fb5d1db",
-    "player_id": "45801361-ad21-4fa2-89ad-ac7e13659eaa",
-    "gross": 47,
-    "is_blind": false
-  },
-  {
-    "id": "c2deb928-7cd1-4e2c-881a-b4ec703accb0",
-    "matchup_id": "3aa21033-36c5-4907-aba8-e2a0e995b14d",
-    "player_id": "45801361-ad21-4fa2-89ad-ac7e13659eaa",
-    "gross": 46,
-    "is_blind": false
-  },
-  {
-    "id": "f835625a-0a84-487c-8b3c-7fe0b114a19d",
-    "matchup_id": "4df96c99-c529-40c9-bb9c-fd02c61e99fe",
-    "player_id": "45801361-ad21-4fa2-89ad-ac7e13659eaa",
-    "gross": 44,
-    "is_blind": false
-  },
-  {
-    "id": "311ae757-3488-4708-806e-ebf8a710f402",
-    "matchup_id": "8bc36956-ab7e-40ab-bfff-ca38ff276c82",
-    "player_id": "45801361-ad21-4fa2-89ad-ac7e13659eaa",
-    "gross": 53,
-    "is_blind": false
-  },
-  {
-    "id": "a9f71394-777a-4a34-9be5-c8ff24c88a97",
-    "matchup_id": "002a871d-9728-4274-820b-c366d31714c6",
-    "player_id": "45801361-ad21-4fa2-89ad-ac7e13659eaa",
-    "gross": 42,
-    "is_blind": false
-  },
-  {
-    "id": "c8f65c8c-51bd-4b45-9a3e-e36ba485cd19",
-    "matchup_id": "8e1fa12e-0029-4614-bec8-6d120fb5d1db",
-    "player_id": "58c79f2c-dd4e-45bd-ac61-91d8be5f3341",
-    "gross": 62,
-    "is_blind": false
-  },
-  {
-    "id": "7155649c-6516-49fa-b13b-cc10f2715b9c",
-    "matchup_id": "3aa21033-36c5-4907-aba8-e2a0e995b14d",
-    "player_id": "58c79f2c-dd4e-45bd-ac61-91d8be5f3341",
-    "gross": 54,
-    "is_blind": false
-  },
-  {
-    "id": "4e2d9bac-0f27-4efb-b320-14c5c0ae9faf",
-    "matchup_id": "4df96c99-c529-40c9-bb9c-fd02c61e99fe",
-    "player_id": "58c79f2c-dd4e-45bd-ac61-91d8be5f3341",
-    "gross": 54,
-    "is_blind": false
-  },
-  {
-    "id": "0c4c7322-b20d-4fc0-9704-86b2e2cb3152",
-    "matchup_id": "8bc36956-ab7e-40ab-bfff-ca38ff276c82",
-    "player_id": "58c79f2c-dd4e-45bd-ac61-91d8be5f3341",
-    "gross": 55,
-    "is_blind": false
-  },
-  {
-    "id": "97d51185-e680-44f8-8c4d-674ffa361e10",
-    "matchup_id": "75d60317-882e-44bb-9d05-5e14ea1b1d22",
-    "player_id": "f794f0e1-3958-48b7-ae96-ff6ba2b9cc81",
-    "gross": 42,
-    "is_blind": false
-  },
-  {
-    "id": "11e629d1-db24-4d39-a487-487d0e9d18eb",
-    "matchup_id": "8bc36956-ab7e-40ab-bfff-ca38ff276c82",
-    "player_id": "f794f0e1-3958-48b7-ae96-ff6ba2b9cc81",
-    "gross": 41,
-    "is_blind": false
-  },
-  {
-    "id": "70d59bfd-9aa0-434a-9ee3-faede8d4860c",
-    "matchup_id": "3dba026f-4231-4360-bb28-bf1103dcda76",
-    "player_id": "f794f0e1-3958-48b7-ae96-ff6ba2b9cc81",
-    "gross": 43,
-    "is_blind": false
-  },
-  {
-    "id": "4a699014-6054-4460-ace9-98045844dbb4",
-    "matchup_id": "60a4e661-b8f2-4774-8348-02128614fa66",
-    "player_id": "f794f0e1-3958-48b7-ae96-ff6ba2b9cc81",
-    "gross": 36,
-    "is_blind": false
-  },
-  {
-    "id": "c81fe3d3-4061-4881-ba6b-5442e957d3ac",
-    "matchup_id": "75d60317-882e-44bb-9d05-5e14ea1b1d22",
-    "player_id": "e86deedb-14bb-4e79-a88e-0a7aea058470",
-    "gross": 41,
-    "is_blind": false
-  },
-  {
-    "id": "28828321-8072-46df-af2e-ad644156e616",
-    "matchup_id": "8bc36956-ab7e-40ab-bfff-ca38ff276c82",
-    "player_id": "e86deedb-14bb-4e79-a88e-0a7aea058470",
-    "gross": 43,
-    "is_blind": false
-  },
-  {
-    "id": "0408847b-2628-46e4-8937-7665291c4c46",
-    "matchup_id": "3dba026f-4231-4360-bb28-bf1103dcda76",
-    "player_id": "e86deedb-14bb-4e79-a88e-0a7aea058470",
-    "gross": 41,
-    "is_blind": false
-  },
-  {
-    "id": "71b472e1-4a15-4d25-8b5d-1a166fc9a6a6",
-    "matchup_id": "60a4e661-b8f2-4774-8348-02128614fa66",
-    "player_id": "e86deedb-14bb-4e79-a88e-0a7aea058470",
-    "gross": 41,
-    "is_blind": false
-  },
-  {
-    "id": "361693f4-e640-4f78-ac3b-e7a66548cc83",
-    "matchup_id": "af3eb264-f630-45f6-b0d0-1f06a3eb29a8",
-    "player_id": "e724d747-9aa5-469c-995e-1d3d4dad3e79",
-    "gross": 44,
-    "is_blind": false
-  },
-  {
-    "id": "f870757f-672a-49d4-b0fb-b1b70d90fd75",
-    "matchup_id": "9313bce7-8045-4c26-a7e6-bcd4987b0476",
-    "player_id": "e724d747-9aa5-469c-995e-1d3d4dad3e79",
-    "gross": 44,
-    "is_blind": false
-  },
-  {
-    "id": "61eaca17-3bff-4e1c-8760-5afb4d30be44",
-    "matchup_id": "3af5ab44-b872-4547-953d-6617d03ecf16",
-    "player_id": "e724d747-9aa5-469c-995e-1d3d4dad3e79",
-    "gross": 44,
-    "is_blind": false
-  },
-  {
-    "id": "cd848f03-f99b-49b6-b9b3-b477a51cb2ae",
-    "matchup_id": "af3eb264-f630-45f6-b0d0-1f06a3eb29a8",
-    "player_id": "5e233e80-4b3d-4789-8260-3b433243eea8",
-    "gross": 43,
-    "is_blind": false
-  },
-  {
-    "id": "b6bdf832-c1a8-47db-bb26-4e94e80aa9ac",
-    "matchup_id": "9313bce7-8045-4c26-a7e6-bcd4987b0476",
-    "player_id": "5e233e80-4b3d-4789-8260-3b433243eea8",
-    "gross": 48,
-    "is_blind": false
-  },
-  {
-    "id": "20c8874d-700c-464f-b584-43ac77750c5a",
-    "matchup_id": "3af5ab44-b872-4547-953d-6617d03ecf16",
-    "player_id": "5e233e80-4b3d-4789-8260-3b433243eea8",
-    "gross": 41,
-    "is_blind": false
-  },
-  {
-    "id": "3b05ced4-5e7e-4fe8-ac13-f7fb61f0a76d",
-    "matchup_id": "c43b7e4a-85ad-4e2a-9bf9-9969372438ad",
-    "player_id": "15370581-1169-4bd0-95c0-f2718f8d99f9",
-    "gross": 43,
-    "is_blind": false
-  },
-  {
-    "id": "b57c046d-32fe-4207-a3cf-7661f8bad1bf",
-    "matchup_id": "4df96c99-c529-40c9-bb9c-fd02c61e99fe",
-    "player_id": "15370581-1169-4bd0-95c0-f2718f8d99f9",
-    "gross": 47,
-    "is_blind": false
-  },
-  {
-    "id": "b34559e4-6c0b-4bfd-988e-31b0b8f9374e",
-    "matchup_id": "16337ec5-4607-4501-8a36-ab255ba365cd",
-    "player_id": "15370581-1169-4bd0-95c0-f2718f8d99f9",
-    "gross": 40,
-    "is_blind": false
-  },
-  {
-    "id": "af646b53-1250-49b4-9d4a-d8ef80de3a72",
-    "matchup_id": "8f01d14c-ddf6-47ff-96b6-3493ae2d8ee7",
-    "player_id": "15370581-1169-4bd0-95c0-f2718f8d99f9",
-    "gross": 40,
-    "is_blind": false
-  },
-  {
-    "id": "36eb4076-f766-4249-be3b-5c33fc97adac",
-    "matchup_id": "68c330cf-7cae-413e-9292-e08d65c6128a",
-    "player_id": "15370581-1169-4bd0-95c0-f2718f8d99f9",
-    "gross": 44,
-    "is_blind": false
-  },
-  {
-    "id": "0699727c-9d35-4ae1-b378-7a4588574851",
-    "matchup_id": "c43b7e4a-85ad-4e2a-9bf9-9969372438ad",
-    "player_id": "1c65fdde-dcaf-42fc-8d45-8f22c35fd639",
-    "gross": 43,
-    "is_blind": false
-  },
-  {
-    "id": "c6ba109c-6393-481a-9dbf-5706ef9d159c",
-    "matchup_id": "4df96c99-c529-40c9-bb9c-fd02c61e99fe",
-    "player_id": "1c65fdde-dcaf-42fc-8d45-8f22c35fd639",
-    "gross": 42,
-    "is_blind": false
-  },
-  {
-    "id": "f4f3b9c6-3b13-4c6e-b2a2-2f6d5636780a",
-    "matchup_id": "16337ec5-4607-4501-8a36-ab255ba365cd",
-    "player_id": "1c65fdde-dcaf-42fc-8d45-8f22c35fd639",
-    "gross": 45,
-    "is_blind": false
-  },
-  {
-    "id": "d429a5ab-948c-4dd8-800d-3b35631a93bf",
-    "matchup_id": "8f01d14c-ddf6-47ff-96b6-3493ae2d8ee7",
-    "player_id": "1c65fdde-dcaf-42fc-8d45-8f22c35fd639",
-    "gross": 45,
-    "is_blind": false
-  },
-  {
-    "id": "597f1ff5-2eb6-468e-a0bf-754e6f13d148",
-    "matchup_id": "68c330cf-7cae-413e-9292-e08d65c6128a",
-    "player_id": "1c65fdde-dcaf-42fc-8d45-8f22c35fd639",
-    "gross": 38,
-    "is_blind": false
-  },
-  {
-    "id": "535e4a92-3433-4962-9a63-3c4077bb73bc",
-    "matchup_id": "c43b7e4a-85ad-4e2a-9bf9-9969372438ad",
-    "player_id": "1199232e-d347-4204-84f1-7ba2d024d813",
-    "gross": 52,
-    "is_blind": false
-  },
-  {
-    "id": "5541fe17-2ba3-4ab5-8792-bd406d4661cf",
-    "matchup_id": "75d60317-882e-44bb-9d05-5e14ea1b1d22",
-    "player_id": "1199232e-d347-4204-84f1-7ba2d024d813",
-    "gross": 50,
-    "is_blind": false
-  },
-  {
-    "id": "6a5e1f63-a035-4536-a91b-b8dc32f5702f",
-    "matchup_id": "fb87e027-6f6c-4da3-a35a-b30e26d2e738",
-    "player_id": "1199232e-d347-4204-84f1-7ba2d024d813",
-    "gross": 63,
-    "is_blind": false
-  },
-  {
-    "id": "46091971-6c21-4c42-9143-ee52bbc1ca41",
-    "matchup_id": "c43b7e4a-85ad-4e2a-9bf9-9969372438ad",
-    "player_id": "50184776-4b69-4e22-917b-0567d87e03ce",
-    "gross": 39,
-    "is_blind": false
-  },
-  {
-    "id": "2b621345-f78c-45ac-8c83-480176ee2274",
-    "matchup_id": "75d60317-882e-44bb-9d05-5e14ea1b1d22",
-    "player_id": "50184776-4b69-4e22-917b-0567d87e03ce",
-    "gross": 44,
-    "is_blind": false
-  },
-  {
-    "id": "90a87ebb-486c-4a6c-aa49-5d9e65986dc1",
-    "matchup_id": "fb87e027-6f6c-4da3-a35a-b30e26d2e738",
-    "player_id": "50184776-4b69-4e22-917b-0567d87e03ce",
-    "gross": 44,
-    "is_blind": false
-  },
-  {
-    "id": "239f23b6-9f8f-4946-b746-2fe7f70a0ce0",
-    "matchup_id": "f86622f4-75fb-4462-84d6-eb9ca313c2de",
-    "player_id": "50184776-4b69-4e22-917b-0567d87e03ce",
-    "gross": 48,
-    "is_blind": false
-  },
-  {
-    "id": "0ded52e3-a21a-4abf-9910-c484aaa701cb",
-    "matchup_id": "af3eb264-f630-45f6-b0d0-1f06a3eb29a8",
-    "player_id": "c6e134c3-b627-4360-883c-8e20fe7e7c68",
-    "gross": 48,
-    "is_blind": false
-  },
-  {
-    "id": "63ede501-9a40-425f-9c8d-814a9078f7d9",
-    "matchup_id": "3aa21033-36c5-4907-aba8-e2a0e995b14d",
-    "player_id": "c6e134c3-b627-4360-883c-8e20fe7e7c68",
-    "gross": 45,
-    "is_blind": false
-  },
-  {
-    "id": "b0d497e0-0d72-4478-904f-89b779033467",
-    "matchup_id": "78efdace-1404-417a-8d8b-fcef0cdf451f",
-    "player_id": "c6e134c3-b627-4360-883c-8e20fe7e7c68",
-    "gross": 41,
-    "is_blind": false
-  },
-  {
-    "id": "dce6466d-059d-4a31-88b5-cb00dc1c3b21",
-    "matchup_id": "af3eb264-f630-45f6-b0d0-1f06a3eb29a8",
-    "player_id": "3f9d2954-30f7-46fb-82ae-aeaa4bf8941e",
-    "gross": 54,
-    "is_blind": false
-  },
-  {
-    "id": "29db46e1-c9de-4990-aed3-95eb17184890",
-    "matchup_id": "3aa21033-36c5-4907-aba8-e2a0e995b14d",
-    "player_id": "3f9d2954-30f7-46fb-82ae-aeaa4bf8941e",
-    "gross": 52,
-    "is_blind": false
-  },
-  {
-    "id": "1943a4f3-8710-45e8-8bde-64d2034fb31e",
-    "matchup_id": "78efdace-1404-417a-8d8b-fcef0cdf451f",
-    "player_id": "3f9d2954-30f7-46fb-82ae-aeaa4bf8941e",
-    "gross": 48,
-    "is_blind": false
-  },
-  {
-    "id": "a1e46154-bcd7-4229-8c5a-b3af12acd125",
-    "matchup_id": "f55ea1d4-64b8-4e59-9b96-405b0f3628b1",
-    "player_id": "5cfe4a20-e0d5-4970-a61c-a4fdff613d51",
-    "gross": 44,
-    "is_blind": false
-  },
-  {
-    "id": "69666c45-39b8-40bf-b1c5-8744e5b1ce27",
-    "matchup_id": "9dba10d8-a7fa-4890-b111-2f94927810d6",
-    "player_id": "5cfe4a20-e0d5-4970-a61c-a4fdff613d51",
-    "gross": 48,
-    "is_blind": false
-  },
-  {
-    "id": "13a8ba56-8a18-4a93-9664-e9cb68e81668",
-    "matchup_id": "5da0c651-8185-4900-a4c1-367a494f211a",
-    "player_id": "5cfe4a20-e0d5-4970-a61c-a4fdff613d51",
-    "gross": 47,
-    "is_blind": false
-  },
-  {
-    "id": "b4444fac-7b72-42ef-a0d3-e2acf2b00624",
-    "matchup_id": "fc4861f3-3fc2-4f4d-b38b-3a43a99d44f4",
-    "player_id": "5cfe4a20-e0d5-4970-a61c-a4fdff613d51",
-    "gross": 45,
-    "is_blind": false
-  },
-  {
-    "id": "7324af74-8226-4db3-ac7e-826d9ffe6154",
-    "matchup_id": "ce1fe122-5709-4d9b-99af-e814b1913b17",
-    "player_id": "5cfe4a20-e0d5-4970-a61c-a4fdff613d51",
-    "gross": 39,
-    "is_blind": false
-  },
-  {
-    "id": "5773439d-f580-4bba-9605-81a75350aa98",
-    "matchup_id": "f55ea1d4-64b8-4e59-9b96-405b0f3628b1",
-    "player_id": "3baea938-96a5-45b7-a7f0-3ab79774a7b4",
-    "gross": 59,
-    "is_blind": false
-  },
-  {
-    "id": "0a3caef3-53d0-47da-9c82-685776d8b8ac",
-    "matchup_id": "9dba10d8-a7fa-4890-b111-2f94927810d6",
-    "player_id": "3baea938-96a5-45b7-a7f0-3ab79774a7b4",
-    "gross": 54,
-    "is_blind": false
-  },
-  {
-    "id": "9c0b0168-daa6-47a3-b85e-3ea09593c12c",
-    "matchup_id": "5da0c651-8185-4900-a4c1-367a494f211a",
-    "player_id": "3baea938-96a5-45b7-a7f0-3ab79774a7b4",
-    "gross": 54,
-    "is_blind": false
-  },
-  {
-    "id": "3ab5f420-290e-4321-b5e5-7d9cf30be49c",
-    "matchup_id": "fc4861f3-3fc2-4f4d-b38b-3a43a99d44f4",
-    "player_id": "3baea938-96a5-45b7-a7f0-3ab79774a7b4",
-    "gross": 54,
-    "is_blind": false
-  },
-  {
-    "id": "cb033763-e58e-4f43-b3d9-bdc09ab3a04f",
-    "matchup_id": "ce1fe122-5709-4d9b-99af-e814b1913b17",
-    "player_id": "3baea938-96a5-45b7-a7f0-3ab79774a7b4",
-    "gross": 47,
-    "is_blind": false
-  },
-  {
-    "id": "585e2a39-5a77-45cf-aa1b-994d742d7bd1",
-    "matchup_id": "8e1fa12e-0029-4614-bec8-6d120fb5d1db",
-    "player_id": "58a25cb4-d240-4853-9410-8da86b7b56bd",
-    "gross": 47,
-    "is_blind": false
-  },
-  {
-    "id": "0c92f4da-b2be-4f02-bf4f-c5bec6f01b16",
-    "matchup_id": "5c386402-fb95-417f-89a3-b21ea6006bed",
-    "player_id": "58a25cb4-d240-4853-9410-8da86b7b56bd",
-    "gross": 54,
-    "is_blind": false
-  },
-  {
-    "id": "3f3a39dd-2b94-4d2c-8122-9e152e7771b8",
-    "matchup_id": "921aaf05-1bdf-4df7-afe8-66281418c769",
-    "player_id": "58a25cb4-d240-4853-9410-8da86b7b56bd",
-    "gross": 47,
-    "is_blind": false
-  },
-  {
-    "id": "6a90af64-b5b9-4212-afa3-fe2fbc5d1303",
-    "matchup_id": "d8b47586-63b8-4e10-9e3b-f7e089d758ce",
-    "player_id": "58a25cb4-d240-4853-9410-8da86b7b56bd",
-    "gross": 47,
-    "is_blind": false
-  },
-  {
-    "id": "757967ed-f20b-4a4a-9927-82282ed54494",
-    "matchup_id": "2cc0bdde-ee67-4ca4-a64e-c42e141d1bdb",
-    "player_id": "58a25cb4-d240-4853-9410-8da86b7b56bd",
-    "gross": 49,
-    "is_blind": false
-  },
-  {
-    "id": "6e62c8a0-5543-4a6f-b738-e9e6bb963a3c",
-    "matchup_id": "a1612204-3b63-4d43-af0e-9d4bf93e0e32",
-    "player_id": "58a25cb4-d240-4853-9410-8da86b7b56bd",
-    "gross": 53,
-    "is_blind": false
-  },
-  {
-    "id": "8a9ee1a3-c26d-4f7e-9e22-cc5b1e8b4663",
-    "matchup_id": "8e1fa12e-0029-4614-bec8-6d120fb5d1db",
-    "player_id": "f9fb1f9e-08b5-4c9b-96f6-0a8acb6ddc63",
-    "gross": 54,
-    "is_blind": false
-  },
-  {
-    "id": "99f2d87d-52a9-4db7-bb6a-671225f3553b",
-    "matchup_id": "5c386402-fb95-417f-89a3-b21ea6006bed",
-    "player_id": "f9fb1f9e-08b5-4c9b-96f6-0a8acb6ddc63",
-    "gross": 55,
-    "is_blind": false
-  },
-  {
-    "id": "c3370b45-d575-4c2c-95f3-13dcb944de80",
-    "matchup_id": "921aaf05-1bdf-4df7-afe8-66281418c769",
-    "player_id": "f9fb1f9e-08b5-4c9b-96f6-0a8acb6ddc63",
-    "gross": 59,
-    "is_blind": false
-  },
-  {
-    "id": "7d055b1c-0356-4d58-a7d0-684b41d4866f",
-    "matchup_id": "d8b47586-63b8-4e10-9e3b-f7e089d758ce",
-    "player_id": "f9fb1f9e-08b5-4c9b-96f6-0a8acb6ddc63",
-    "gross": 54,
-    "is_blind": false
-  },
-  {
-    "id": "9dc60de3-46e7-4a66-a1f2-18200aabc7fd",
-    "matchup_id": "2cc0bdde-ee67-4ca4-a64e-c42e141d1bdb",
-    "player_id": "f9fb1f9e-08b5-4c9b-96f6-0a8acb6ddc63",
-    "gross": 64,
-    "is_blind": false
-  },
-  {
-    "id": "877fc422-9379-4a40-9b17-ddda95ed5a79",
-    "matchup_id": "a1612204-3b63-4d43-af0e-9d4bf93e0e32",
-    "player_id": "f9fb1f9e-08b5-4c9b-96f6-0a8acb6ddc63",
-    "gross": 56,
-    "is_blind": false
-  },
-  {
-    "id": "e7a763ff-0f88-4b39-9b27-4b2a4f4b0915",
-    "matchup_id": "8a77d124-1d85-4032-b0b3-ad10a93b6329",
-    "player_id": "8b27968d-3365-455e-b36a-b61a691ecca2",
-    "gross": 50,
-    "is_blind": false
-  },
-  {
-    "id": "41c29807-ff35-4dce-afb8-ec391c5c1786",
-    "matchup_id": "a117a200-76e8-49ec-95f2-98a44ec6a15a",
-    "player_id": "8b27968d-3365-455e-b36a-b61a691ecca2",
-    "gross": 55,
-    "is_blind": false
-  },
-  {
-    "id": "3a2abd7e-d237-4c4a-a829-a9b9ae805b63",
-    "matchup_id": "3ce2803f-db0d-4255-8183-a63e94114ed7",
-    "player_id": "8b27968d-3365-455e-b36a-b61a691ecca2",
-    "gross": 60,
-    "is_blind": false
-  },
-  {
-    "id": "5cfb06c2-2cb1-45c5-bdb6-b9aeb05bc894",
-    "matchup_id": "5da0c651-8185-4900-a4c1-367a494f211a",
-    "player_id": "8b27968d-3365-455e-b36a-b61a691ecca2",
-    "gross": 58,
-    "is_blind": false
-  },
-  {
-    "id": "c34c2ab7-3835-41e4-8e87-b36325388d93",
-    "matchup_id": "ce1fe122-5709-4d9b-99af-e814b1913b17",
-    "player_id": "8b27968d-3365-455e-b36a-b61a691ecca2",
-    "gross": 55,
-    "is_blind": false
-  },
-  {
-    "id": "964cbf9a-2ae0-4b1e-b825-04ed7f0b2712",
-    "matchup_id": "8a77d124-1d85-4032-b0b3-ad10a93b6329",
-    "player_id": "576803c2-f3d3-4d95-921f-083985db10cc",
-    "gross": 45,
-    "is_blind": false
-  },
-  {
-    "id": "28f26038-8505-4425-adb4-abd12a01a188",
-    "matchup_id": "a117a200-76e8-49ec-95f2-98a44ec6a15a",
-    "player_id": "576803c2-f3d3-4d95-921f-083985db10cc",
-    "gross": 53,
-    "is_blind": false
-  },
-  {
-    "id": "bf657bc3-1d83-4192-ac6c-df2d1b06414b",
-    "matchup_id": "3ce2803f-db0d-4255-8183-a63e94114ed7",
-    "player_id": "576803c2-f3d3-4d95-921f-083985db10cc",
-    "gross": 43,
-    "is_blind": false
-  },
-  {
-    "id": "83c7bb81-4393-4289-a412-d3eaece4ff14",
-    "matchup_id": "5da0c651-8185-4900-a4c1-367a494f211a",
-    "player_id": "576803c2-f3d3-4d95-921f-083985db10cc",
-    "gross": 47,
-    "is_blind": false
-  },
-  {
-    "id": "36d23952-8afe-4b9a-8239-4af78a4d2726",
-    "matchup_id": "ce1fe122-5709-4d9b-99af-e814b1913b17",
-    "player_id": "576803c2-f3d3-4d95-921f-083985db10cc",
-    "gross": 46,
-    "is_blind": false
-  },
-  {
-    "id": "cb39307d-b6b0-4cf6-b3ce-830692478ff4",
-    "matchup_id": "a70afce9-9d16-438c-9922-c7f7ac2507cd",
-    "player_id": "bc9f2e32-535f-4ed7-8530-aa1c2fefad7c",
-    "gross": 56,
-    "is_blind": false
-  },
-  {
-    "id": "629e9e8e-e3b5-4ef2-ae4d-16cd897a17a8",
-    "matchup_id": "fc0debe9-ef46-4c3c-98d7-0a0a64141715",
-    "player_id": "bc9f2e32-535f-4ed7-8530-aa1c2fefad7c",
-    "gross": 49,
-    "is_blind": false
-  },
-  {
-    "id": "f44741c0-fb4c-499e-9ccf-ad683d49eedb",
-    "matchup_id": "921aaf05-1bdf-4df7-afe8-66281418c769",
-    "player_id": "bc9f2e32-535f-4ed7-8530-aa1c2fefad7c",
-    "gross": 61,
-    "is_blind": false
-  },
-  {
-    "id": "92cceb34-b6ef-43fc-b50c-74b96b2a0fec",
-    "matchup_id": "4a6c5e2f-9d0f-4ae7-96fc-a71752246968",
-    "player_id": "bc9f2e32-535f-4ed7-8530-aa1c2fefad7c",
-    "gross": 60,
-    "is_blind": false
-  },
-  {
-    "id": "5144bebe-10f4-4be3-9da0-b79d8319a36d",
-    "matchup_id": "8f01d14c-ddf6-47ff-96b6-3493ae2d8ee7",
-    "player_id": "bc9f2e32-535f-4ed7-8530-aa1c2fefad7c",
-    "gross": 50,
-    "is_blind": false
-  },
-  {
-    "id": "99e29c80-54a3-44e4-937c-d2d1d71c1c88",
-    "matchup_id": "fed5af2a-3934-40f4-a85a-65e35f518302",
-    "player_id": "bc9f2e32-535f-4ed7-8530-aa1c2fefad7c",
-    "gross": 51,
-    "is_blind": false
-  },
-  {
-    "id": "34a5882a-9239-4967-a819-57952558908f",
-    "matchup_id": "a70afce9-9d16-438c-9922-c7f7ac2507cd",
-    "player_id": "6beb4d57-3fdc-49b3-a830-d4bba2efe406",
-    "gross": 49,
-    "is_blind": false
-  },
-  {
-    "id": "90b337b3-b674-47a8-9af0-1199113207d9",
-    "matchup_id": "fc0debe9-ef46-4c3c-98d7-0a0a64141715",
-    "player_id": "6beb4d57-3fdc-49b3-a830-d4bba2efe406",
-    "gross": 58,
-    "is_blind": false
-  },
-  {
-    "id": "f7206a0f-af2e-4009-b293-21dc49f819aa",
-    "matchup_id": "921aaf05-1bdf-4df7-afe8-66281418c769",
-    "player_id": "6beb4d57-3fdc-49b3-a830-d4bba2efe406",
-    "gross": 50,
-    "is_blind": false
-  },
-  {
-    "id": "e6884c35-5944-43dd-bd2e-963777a3e602",
-    "matchup_id": "4a6c5e2f-9d0f-4ae7-96fc-a71752246968",
-    "player_id": "6beb4d57-3fdc-49b3-a830-d4bba2efe406",
-    "gross": 56,
-    "is_blind": false
-  },
-  {
-    "id": "4705eb6f-3121-4edc-a87d-b83afc054192",
-    "matchup_id": "8f01d14c-ddf6-47ff-96b6-3493ae2d8ee7",
-    "player_id": "6beb4d57-3fdc-49b3-a830-d4bba2efe406",
-    "gross": 49,
-    "is_blind": false
-  },
-  {
-    "id": "dcf7bc5c-df6b-4fde-95c9-2a9b48907cd0",
-    "matchup_id": "ee370eb3-6362-4ae8-8f9d-e0784950bd35",
-    "player_id": "b42100a4-f210-4512-a0b1-bb02100442cf",
-    "gross": 54,
-    "is_blind": false
-  },
-  {
-    "id": "68cea4c5-4599-4331-aa98-f83e46178e93",
-    "matchup_id": "a117a200-76e8-49ec-95f2-98a44ec6a15a",
-    "player_id": "b42100a4-f210-4512-a0b1-bb02100442cf",
-    "gross": 42,
-    "is_blind": false
-  },
-  {
-    "id": "0329044e-70ee-4f1d-8d43-6a6bb0007275",
-    "matchup_id": "9dba10d8-a7fa-4890-b111-2f94927810d6",
-    "player_id": "b42100a4-f210-4512-a0b1-bb02100442cf",
-    "gross": 46,
-    "is_blind": false
-  },
-  {
-    "id": "21e8a4c4-850b-43d6-b5aa-5f0132816fe8",
-    "matchup_id": "ee370eb3-6362-4ae8-8f9d-e0784950bd35",
-    "player_id": "e1d37712-5c13-4c2a-b576-44033095b725",
-    "gross": 51,
-    "is_blind": false
-  },
-  {
-    "id": "b635dcc9-daf4-477e-87fb-2c43cc233cd9",
-    "matchup_id": "a117a200-76e8-49ec-95f2-98a44ec6a15a",
-    "player_id": "e1d37712-5c13-4c2a-b576-44033095b725",
-    "gross": 51,
-    "is_blind": false
-  },
-  {
-    "id": "c9d0a879-2723-4ea4-b045-116965625aa2",
-    "matchup_id": "9dba10d8-a7fa-4890-b111-2f94927810d6",
-    "player_id": "e1d37712-5c13-4c2a-b576-44033095b725",
-    "gross": 55,
-    "is_blind": false
-  }
-]
+    {"id": "8c1f2182-c9a2-b972-e0e2-cd69510c9476", "matchup_id": "23f4b5d9-fbd3-7f1d-7341-44dbca1ed766", "player_id": "22a93b47-0639-44d0-9ac1-f76de428bda8", "gross": 46, "is_blind": false},
+    {"id": "d29ceb49-638b-dafa-357d-5d0a36260a7c", "matchup_id": "749198a8-89d7-3ff0-e0bb-ac0fb31e0277", "player_id": "22a93b47-0639-44d0-9ac1-f76de428bda8", "gross": 43, "is_blind": false},
+    {"id": "937155af-58c8-32e9-44f1-a5ec8e402a36", "matchup_id": "7166e418-4692-14fd-c1a5-add2e410a0a8", "player_id": "22a93b47-0639-44d0-9ac1-f76de428bda8", "gross": 42, "is_blind": false},
+    {"id": "4baf71e0-663a-d674-0938-8771733a45f8", "matchup_id": "99e19163-6870-9f25-96c9-42c6346460df", "player_id": "22a93b47-0639-44d0-9ac1-f76de428bda8", "gross": 45, "is_blind": false},
+    {"id": "c6faa1d7-556f-f094-6c85-c725674750a6", "matchup_id": "d700a3c5-3236-a223-27a5-cc8b037dcb31", "player_id": "22a93b47-0639-44d0-9ac1-f76de428bda8", "gross": 54, "is_blind": false},
+    {"id": "c85901b0-e5f9-9d88-d9c2-dcf02faa5679", "matchup_id": "ca8b0f16-567d-e28e-24a5-8d601d094ba3", "player_id": "22a93b47-0639-44d0-9ac1-f76de428bda8", "gross": 51, "is_blind": false},
+    {"id": "bf40c902-f90e-3b49-86d2-af1c3f3711ac", "matchup_id": "30589747-7665-083f-29a5-c23cd08338d9", "player_id": "22a93b47-0639-44d0-9ac1-f76de428bda8", "gross": 54, "is_blind": false},
+    {"id": "88c70cd3-c4f6-0981-5f6f-2cc371a56ef6", "matchup_id": "347f47ba-1f3a-b688-5d1d-65dc7f639c0e", "player_id": "22a93b47-0639-44d0-9ac1-f76de428bda8", "gross": 47, "is_blind": false},
+    {"id": "6a6ecee8-3cee-c97f-6173-cd91f61bad29", "matchup_id": "23f4b5d9-fbd3-7f1d-7341-44dbca1ed766", "player_id": "9c2a55d6-0218-4949-8784-b2b7cef84a89", "gross": 42, "is_blind": false},
+    {"id": "1098fb4e-3310-d0e7-c789-17293960e2f3", "matchup_id": "749198a8-89d7-3ff0-e0bb-ac0fb31e0277", "player_id": "9c2a55d6-0218-4949-8784-b2b7cef84a89", "gross": 42, "is_blind": false},
+    {"id": "26ca2abc-25cc-f9c7-cddd-770cb896cb91", "matchup_id": "7166e418-4692-14fd-c1a5-add2e410a0a8", "player_id": "9c2a55d6-0218-4949-8784-b2b7cef84a89", "gross": 54, "is_blind": false},
+    {"id": "10628840-5875-07ed-dcab-b5ea35151200", "matchup_id": "99e19163-6870-9f25-96c9-42c6346460df", "player_id": "9c2a55d6-0218-4949-8784-b2b7cef84a89", "gross": 42, "is_blind": false},
+    {"id": "12963649-18fe-2f50-5a7a-69c8a78bfdc9", "matchup_id": "d700a3c5-3236-a223-27a5-cc8b037dcb31", "player_id": "9c2a55d6-0218-4949-8784-b2b7cef84a89", "gross": 49, "is_blind": false},
+    {"id": "3c0c81bc-3b83-fe55-97c2-7e045b6740ee", "matchup_id": "ca8b0f16-567d-e28e-24a5-8d601d094ba3", "player_id": "9c2a55d6-0218-4949-8784-b2b7cef84a89", "gross": 43, "is_blind": false},
+    {"id": "16921562-ae83-24de-6380-b759b7e2cd7d", "matchup_id": "30589747-7665-083f-29a5-c23cd08338d9", "player_id": "9c2a55d6-0218-4949-8784-b2b7cef84a89", "gross": 44, "is_blind": false},
+    {"id": "cb540642-ee48-ed5d-b554-a0c16b24e033", "matchup_id": "23f4b5d9-fbd3-7f1d-7341-44dbca1ed766", "player_id": "1f2801b1-4e46-459b-9b99-919938b85746", "gross": 38, "is_blind": false},
+    {"id": "b1406298-8515-8141-e2af-30e87180d6c8", "matchup_id": "51fcb3d0-5b69-2809-f556-401ef84c4478", "player_id": "1f2801b1-4e46-459b-9b99-919938b85746", "gross": 43, "is_blind": false},
+    {"id": "0b6d05ba-bb4f-d2ec-868b-a2f53ca67cb9", "matchup_id": "d0ac0ede-541a-deda-0da4-9d5cc495be7c", "player_id": "1f2801b1-4e46-459b-9b99-919938b85746", "gross": 45, "is_blind": false},
+    {"id": "5da52b0f-17e6-9234-b98c-140f9769298a", "matchup_id": "ff09ecb5-8a2f-a66d-3a60-b5a8b7c877cc", "player_id": "1f2801b1-4e46-459b-9b99-919938b85746", "gross": 45, "is_blind": false},
+    {"id": "d548998a-8cb2-286d-1b21-d7360804ad0b", "matchup_id": "ce20b3d8-81d0-4d70-01d4-aa7376b6bfcf", "player_id": "1f2801b1-4e46-459b-9b99-919938b85746", "gross": 47, "is_blind": false},
+    {"id": "aea9eeca-ab85-62b0-7674-64940311b368", "matchup_id": "766ad779-906d-b30a-844d-1b3bf1ccb7ae", "player_id": "1f2801b1-4e46-459b-9b99-919938b85746", "gross": 46, "is_blind": false},
+    {"id": "b060d8da-1d8a-b664-e315-e35548b8b627", "matchup_id": "30589747-7665-083f-29a5-c23cd08338d9", "player_id": "1f2801b1-4e46-459b-9b99-919938b85746", "gross": 39, "is_blind": false},
+    {"id": "12d7fdac-bb23-ae3f-86ff-f2e4cfb4fb47", "matchup_id": "cfb55312-6148-620d-b927-f6d2572e9bd7", "player_id": "1f2801b1-4e46-459b-9b99-919938b85746", "gross": 44, "is_blind": false},
+    {"id": "be872e89-e5e6-050d-91ba-2938e2e279df", "matchup_id": "23f4b5d9-fbd3-7f1d-7341-44dbca1ed766", "player_id": "a388e4d8-994d-4841-8947-b21ef2a0c73c", "gross": 50, "is_blind": false},
+    {"id": "f52b0fd6-2aa4-1254-1938-856d0701c45f", "matchup_id": "51fcb3d0-5b69-2809-f556-401ef84c4478", "player_id": "a388e4d8-994d-4841-8947-b21ef2a0c73c", "gross": 54, "is_blind": false},
+    {"id": "b26f65bb-aa40-50c7-678f-cb1874b9830e", "matchup_id": "d0ac0ede-541a-deda-0da4-9d5cc495be7c", "player_id": "a388e4d8-994d-4841-8947-b21ef2a0c73c", "gross": 58, "is_blind": false},
+    {"id": "f7194466-e294-6c8e-c216-b748718a3b3d", "matchup_id": "ff09ecb5-8a2f-a66d-3a60-b5a8b7c877cc", "player_id": "a388e4d8-994d-4841-8947-b21ef2a0c73c", "gross": 53, "is_blind": false},
+    {"id": "854d1c33-2dda-1925-d0c0-ea0269156179", "matchup_id": "ce20b3d8-81d0-4d70-01d4-aa7376b6bfcf", "player_id": "a388e4d8-994d-4841-8947-b21ef2a0c73c", "gross": 60, "is_blind": false},
+    {"id": "76e59ae3-81eb-9502-30cf-cb8376041770", "matchup_id": "766ad779-906d-b30a-844d-1b3bf1ccb7ae", "player_id": "a388e4d8-994d-4841-8947-b21ef2a0c73c", "gross": 55, "is_blind": false},
+    {"id": "90cd7bbb-7f3d-f749-f678-fbe51ca080fe", "matchup_id": "30589747-7665-083f-29a5-c23cd08338d9", "player_id": "a388e4d8-994d-4841-8947-b21ef2a0c73c", "gross": 55, "is_blind": false},
+    {"id": "8a4150bf-b286-19c4-2aae-e1197683ae89", "matchup_id": "44584dd9-be7f-6679-b7b9-d123c8efab1c", "player_id": "39178706-dfec-4db2-9717-6c420ee81a33", "gross": 47, "is_blind": false},
+    {"id": "fcaa5b18-c577-ecea-daa1-eccd7f39f27e", "matchup_id": "28a7495e-3799-81f6-c951-1be002581cc8", "player_id": "39178706-dfec-4db2-9717-6c420ee81a33", "gross": 45, "is_blind": false},
+    {"id": "37b0186e-60a9-c98c-70ed-bd431d740fbb", "matchup_id": "b5dccda1-8b00-102a-6b34-6f351c4176fa", "player_id": "39178706-dfec-4db2-9717-6c420ee81a33", "gross": 45, "is_blind": false},
+    {"id": "8d2acffb-7db2-0481-4f85-d66a4bebc58a", "matchup_id": "5b932332-2e65-e211-c9f6-596e2d862e75", "player_id": "39178706-dfec-4db2-9717-6c420ee81a33", "gross": 47, "is_blind": false},
+    {"id": "f1f224da-87a9-96f5-b0f4-a26eb6d78f8a", "matchup_id": "8e127d01-a097-e9f8-b933-3c19134166c7", "player_id": "39178706-dfec-4db2-9717-6c420ee81a33", "gross": 45, "is_blind": false},
+    {"id": "2f230993-507c-ad20-32af-ac64d5132663", "matchup_id": "3780ecb8-60a7-16de-0be2-962936e008e4", "player_id": "39178706-dfec-4db2-9717-6c420ee81a33", "gross": 49, "is_blind": false},
+    {"id": "066d5f9d-d73a-95fa-ff5a-46259004bc7e", "matchup_id": "ce071e80-a38e-96c2-6974-91ad80158eae", "player_id": "39178706-dfec-4db2-9717-6c420ee81a33", "gross": 46, "is_blind": false},
+    {"id": "43adae29-c339-53f5-2632-74d35b332ffe", "matchup_id": "cfb55312-6148-620d-b927-f6d2572e9bd7", "player_id": "39178706-dfec-4db2-9717-6c420ee81a33", "gross": 41, "is_blind": false},
+    {"id": "143c80df-e2cf-e40a-e8ec-378f8b513a5b", "matchup_id": "44584dd9-be7f-6679-b7b9-d123c8efab1c", "player_id": "094c9953-7459-4fe1-8a60-fdc6c96357ab", "gross": 40, "is_blind": false},
+    {"id": "45c85330-8759-8f08-00a8-db95261cdb97", "matchup_id": "28a7495e-3799-81f6-c951-1be002581cc8", "player_id": "094c9953-7459-4fe1-8a60-fdc6c96357ab", "gross": 52, "is_blind": false},
+    {"id": "3a7972cb-7a9e-53b8-12aa-2b958c08849e", "matchup_id": "b5dccda1-8b00-102a-6b34-6f351c4176fa", "player_id": "094c9953-7459-4fe1-8a60-fdc6c96357ab", "gross": 50, "is_blind": false},
+    {"id": "fcbcd1ee-7f0c-e702-0fa0-0e85c3effc11", "matchup_id": "5b932332-2e65-e211-c9f6-596e2d862e75", "player_id": "094c9953-7459-4fe1-8a60-fdc6c96357ab", "gross": 45, "is_blind": false},
+    {"id": "dcc03dae-e377-c300-3d74-9fb71b3ebe14", "matchup_id": "8e127d01-a097-e9f8-b933-3c19134166c7", "player_id": "094c9953-7459-4fe1-8a60-fdc6c96357ab", "gross": 47, "is_blind": false},
+    {"id": "4872c8ba-123d-626e-4795-15d133f3506b", "matchup_id": "3780ecb8-60a7-16de-0be2-962936e008e4", "player_id": "094c9953-7459-4fe1-8a60-fdc6c96357ab", "gross": 52, "is_blind": false},
+    {"id": "5806f874-1554-cdc9-a02c-6b1e6f46ac3a", "matchup_id": "ce071e80-a38e-96c2-6974-91ad80158eae", "player_id": "094c9953-7459-4fe1-8a60-fdc6c96357ab", "gross": 46, "is_blind": false},
+    {"id": "d760a91f-222e-86d8-7dc1-c7f13c1320b2", "matchup_id": "cfb55312-6148-620d-b927-f6d2572e9bd7", "player_id": "094c9953-7459-4fe1-8a60-fdc6c96357ab", "gross": 45, "is_blind": false},
+    {"id": "5b070f1e-2b07-459f-38d3-c3b34e057e12", "matchup_id": "44584dd9-be7f-6679-b7b9-d123c8efab1c", "player_id": "45801361-ad21-4fa2-89ad-ac7e13659eaa", "gross": 46, "is_blind": false},
+    {"id": "d65ca7ad-8c4b-8170-b52b-a7152853a23f", "matchup_id": "89aa564a-414c-505f-8def-1052e76a9bb2", "player_id": "45801361-ad21-4fa2-89ad-ac7e13659eaa", "gross": 46, "is_blind": false},
+    {"id": "b3ef59b2-5588-bbf9-f66a-c8bf5091c9be", "matchup_id": "5926c084-3165-3e3b-88c5-67de18048d37", "player_id": "45801361-ad21-4fa2-89ad-ac7e13659eaa", "gross": 47, "is_blind": false},
+    {"id": "1992f0b0-4777-8ff9-612f-c5397519be67", "matchup_id": "788a6253-bd26-dcc7-eb28-81cad1536deb", "player_id": "45801361-ad21-4fa2-89ad-ac7e13659eaa", "gross": 46, "is_blind": false},
+    {"id": "6b1c6c79-3db0-0f7d-f35d-8db3c3695239", "matchup_id": "f9b24b25-48cd-bca1-91e4-46f1384bda7f", "player_id": "45801361-ad21-4fa2-89ad-ac7e13659eaa", "gross": 44, "is_blind": false},
+    {"id": "7adef8a1-d70d-8124-e3e8-4212fa08a9c2", "matchup_id": "3780ecb8-60a7-16de-0be2-962936e008e4", "player_id": "45801361-ad21-4fa2-89ad-ac7e13659eaa", "gross": 53, "is_blind": false},
+    {"id": "1e6e8154-c339-bbba-4fe6-aef36f6cfc0b", "matchup_id": "ce071e80-a38e-96c2-6974-91ad80158eae", "player_id": "45801361-ad21-4fa2-89ad-ac7e13659eaa", "gross": 42, "is_blind": false},
+    {"id": "5ef1d759-8a30-ae87-2d2c-19044d6009c1", "matchup_id": "44584dd9-be7f-6679-b7b9-d123c8efab1c", "player_id": "58c79f2c-dd4e-45bd-ac61-91d8be5f3341", "gross": 58, "is_blind": false},
+    {"id": "e1dcf567-44ac-ef9f-0bf2-e112e9771a2b", "matchup_id": "89aa564a-414c-505f-8def-1052e76a9bb2", "player_id": "58c79f2c-dd4e-45bd-ac61-91d8be5f3341", "gross": 62, "is_blind": false},
+    {"id": "4c764809-4401-3d2b-3ede-0c0fcc04e254", "matchup_id": "5926c084-3165-3e3b-88c5-67de18048d37", "player_id": "58c79f2c-dd4e-45bd-ac61-91d8be5f3341", "gross": 54, "is_blind": false},
+    {"id": "5ea1e2fc-6448-6cd2-cf2a-00b7d7ca1266", "matchup_id": "788a6253-bd26-dcc7-eb28-81cad1536deb", "player_id": "58c79f2c-dd4e-45bd-ac61-91d8be5f3341", "gross": 54, "is_blind": false},
+    {"id": "c5bac924-7735-34dd-cec3-8c48b86c8b03", "matchup_id": "f9b24b25-48cd-bca1-91e4-46f1384bda7f", "player_id": "58c79f2c-dd4e-45bd-ac61-91d8be5f3341", "gross": 55, "is_blind": false},
+    {"id": "fa2366ef-e152-64ab-f2a4-c8793197998a", "matchup_id": "3b6d0ae4-a793-2f2d-8394-494683d7ed62", "player_id": "f794f0e1-3958-48b7-ae96-ff6ba2b9cc81", "gross": 38, "is_blind": false},
+    {"id": "522f331e-eb85-c844-97ff-99d04c3fe9c5", "matchup_id": "40635635-2336-b49f-ccc6-2b69c35f5be4", "player_id": "f794f0e1-3958-48b7-ae96-ff6ba2b9cc81", "gross": 39, "is_blind": false},
+    {"id": "df2a9d2a-bbc1-b092-f1cf-21dc8b3e26e2", "matchup_id": "71316939-6706-a5ca-8d0e-012f50183461", "player_id": "f794f0e1-3958-48b7-ae96-ff6ba2b9cc81", "gross": 40, "is_blind": false},
+    {"id": "8f22b237-dc8b-d94a-0bd3-04520069fb8a", "matchup_id": "c882889a-9b4b-702f-fff1-e3ed1c4822dc", "player_id": "f794f0e1-3958-48b7-ae96-ff6ba2b9cc81", "gross": 42, "is_blind": false},
+    {"id": "e25f439d-040c-07f4-2028-3594139178b0", "matchup_id": "f9b24b25-48cd-bca1-91e4-46f1384bda7f", "player_id": "f794f0e1-3958-48b7-ae96-ff6ba2b9cc81", "gross": 43, "is_blind": false},
+    {"id": "10acebf3-ffb9-ea11-2e6a-2b45fb2cb260", "matchup_id": "766ad779-906d-b30a-844d-1b3bf1ccb7ae", "player_id": "f794f0e1-3958-48b7-ae96-ff6ba2b9cc81", "gross": 41, "is_blind": false},
+    {"id": "c536f281-c7b1-b20a-5ee1-e43ec319ee96", "matchup_id": "ae6825cf-0c0e-fb9c-3b46-7d5c656c12b7", "player_id": "f794f0e1-3958-48b7-ae96-ff6ba2b9cc81", "gross": 43, "is_blind": false},
+    {"id": "13b701be-f1b4-20fc-278d-bfe2293dd586", "matchup_id": "edbbe441-a12e-3c95-2dc5-d7dd7f7f17e7", "player_id": "f794f0e1-3958-48b7-ae96-ff6ba2b9cc81", "gross": 36, "is_blind": false},
+    {"id": "c0a30b64-60b0-d50e-1217-f1296995caf1", "matchup_id": "3b6d0ae4-a793-2f2d-8394-494683d7ed62", "player_id": "e86deedb-14bb-4e79-a88e-0a7aea058470", "gross": 40, "is_blind": false},
+    {"id": "236c6567-8115-ea4e-d97b-dbcb0fced412", "matchup_id": "40635635-2336-b49f-ccc6-2b69c35f5be4", "player_id": "e86deedb-14bb-4e79-a88e-0a7aea058470", "gross": 41, "is_blind": false},
+    {"id": "806f4a96-f92e-09c2-9644-4cb14b422d95", "matchup_id": "71316939-6706-a5ca-8d0e-012f50183461", "player_id": "e86deedb-14bb-4e79-a88e-0a7aea058470", "gross": 42, "is_blind": false},
+    {"id": "9112794a-5d21-e1e1-e786-fdb2bc01e07a", "matchup_id": "c882889a-9b4b-702f-fff1-e3ed1c4822dc", "player_id": "e86deedb-14bb-4e79-a88e-0a7aea058470", "gross": 41, "is_blind": false},
+    {"id": "71049ac4-056c-0f5a-29d0-a7908a5676ed", "matchup_id": "f9b24b25-48cd-bca1-91e4-46f1384bda7f", "player_id": "e86deedb-14bb-4e79-a88e-0a7aea058470", "gross": 47, "is_blind": false},
+    {"id": "67266665-ea85-1904-bc45-9e6e9160b01d", "matchup_id": "766ad779-906d-b30a-844d-1b3bf1ccb7ae", "player_id": "e86deedb-14bb-4e79-a88e-0a7aea058470", "gross": 43, "is_blind": false},
+    {"id": "20146d87-adab-09f4-6e1c-e30d08043a01", "matchup_id": "ae6825cf-0c0e-fb9c-3b46-7d5c656c12b7", "player_id": "e86deedb-14bb-4e79-a88e-0a7aea058470", "gross": 41, "is_blind": false},
+    {"id": "14b4dcf5-2d5d-1152-7b30-9ee94e3016b2", "matchup_id": "edbbe441-a12e-3c95-2dc5-d7dd7f7f17e7", "player_id": "e86deedb-14bb-4e79-a88e-0a7aea058470", "gross": 41, "is_blind": false},
+    {"id": "889b9c57-9482-fdea-7191-2d2249cc3949", "matchup_id": "3b6d0ae4-a793-2f2d-8394-494683d7ed62", "player_id": "e724d747-9aa5-469c-995e-1d3d4dad3e79", "gross": 42, "is_blind": false},
+    {"id": "3b5e6158-ef2d-b438-99fa-54a9387148ec", "matchup_id": "db21167d-a4ab-280a-8813-1fe40c75a3c5", "player_id": "e724d747-9aa5-469c-995e-1d3d4dad3e79", "gross": 46, "is_blind": false},
+    {"id": "392f9dbb-5502-0fe3-f4ec-796b1a69f0e0", "matchup_id": "5f3aecf3-26ae-b9bc-c682-74a0fea2e2b7", "player_id": "e724d747-9aa5-469c-995e-1d3d4dad3e79", "gross": 44, "is_blind": false},
+    {"id": "33116cc9-363a-cbd6-8431-eb3e9dd92d30", "matchup_id": "c882889a-9b4b-702f-fff1-e3ed1c4822dc", "player_id": "e724d747-9aa5-469c-995e-1d3d4dad3e79", "gross": 47, "is_blind": false},
+    {"id": "fafb71d1-4b60-89af-1ad4-4cf1bc8c4c47", "matchup_id": "8e127d01-a097-e9f8-b933-3c19134166c7", "player_id": "e724d747-9aa5-469c-995e-1d3d4dad3e79", "gross": 45, "is_blind": false},
+    {"id": "f528551d-aeda-7b3d-1f91-9b18819bd809", "matchup_id": "263fd61c-326a-37bf-1999-5d440f7a6dc1", "player_id": "e724d747-9aa5-469c-995e-1d3d4dad3e79", "gross": 44, "is_blind": false},
+    {"id": "5a72480c-652f-29cf-032a-a08a5f420723", "matchup_id": "ae6825cf-0c0e-fb9c-3b46-7d5c656c12b7", "player_id": "e724d747-9aa5-469c-995e-1d3d4dad3e79", "gross": 44, "is_blind": false},
+    {"id": "182336a8-7a89-e05a-78f2-f594fe7c8fc3", "matchup_id": "4bc10e15-2652-a9df-4b05-f54f12f031da", "player_id": "e724d747-9aa5-469c-995e-1d3d4dad3e79", "gross": 41, "is_blind": false},
+    {"id": "391963cb-2375-f68c-d014-d4f5e16a3a8b", "matchup_id": "3b6d0ae4-a793-2f2d-8394-494683d7ed62", "player_id": "5e233e80-4b3d-4789-8260-3b433243eea8", "gross": 44, "is_blind": false},
+    {"id": "bfebc4da-d42d-581d-647d-c508e280a2a8", "matchup_id": "db21167d-a4ab-280a-8813-1fe40c75a3c5", "player_id": "5e233e80-4b3d-4789-8260-3b433243eea8", "gross": 44, "is_blind": false},
+    {"id": "14c29266-bd74-4073-3259-6e3dfd5d8d97", "matchup_id": "5f3aecf3-26ae-b9bc-c682-74a0fea2e2b7", "player_id": "5e233e80-4b3d-4789-8260-3b433243eea8", "gross": 43, "is_blind": false},
+    {"id": "edb44061-b2f2-17c3-ba74-bb58a5e376fa", "matchup_id": "c882889a-9b4b-702f-fff1-e3ed1c4822dc", "player_id": "5e233e80-4b3d-4789-8260-3b433243eea8", "gross": 41, "is_blind": false},
+    {"id": "cc571c86-a2a9-0787-539f-0eeaaab9e30f", "matchup_id": "8e127d01-a097-e9f8-b933-3c19134166c7", "player_id": "5e233e80-4b3d-4789-8260-3b433243eea8", "gross": 52, "is_blind": false},
+    {"id": "e9041e07-3ea5-d921-da60-fda09979d302", "matchup_id": "263fd61c-326a-37bf-1999-5d440f7a6dc1", "player_id": "5e233e80-4b3d-4789-8260-3b433243eea8", "gross": 48, "is_blind": false},
+    {"id": "1fcac796-f834-f27c-0f76-a08bbbc92fc6", "matchup_id": "ae6825cf-0c0e-fb9c-3b46-7d5c656c12b7", "player_id": "5e233e80-4b3d-4789-8260-3b433243eea8", "gross": 41, "is_blind": false},
+    {"id": "6a56f730-5349-bb8a-8b60-41795c87deac", "matchup_id": "4bc10e15-2652-a9df-4b05-f54f12f031da", "player_id": "5e233e80-4b3d-4789-8260-3b433243eea8", "gross": 39, "is_blind": false},
+    {"id": "7485bed4-66a6-7563-b9ba-c0c5ffae8fc5", "matchup_id": "ac77bafb-0751-7f7f-7d68-4ae4896e3da4", "player_id": "15370581-1169-4bd0-95c0-f2718f8d99f9", "gross": 44, "is_blind": false},
+    {"id": "a46c955c-f42b-680c-16cd-061d8da3f9ba", "matchup_id": "d63c3200-1187-658f-8cb3-72d7085bf505", "player_id": "15370581-1169-4bd0-95c0-f2718f8d99f9", "gross": 41, "is_blind": false},
+    {"id": "9d707515-0ca8-1976-6152-fb5974cad6bd", "matchup_id": "5f3aecf3-26ae-b9bc-c682-74a0fea2e2b7", "player_id": "15370581-1169-4bd0-95c0-f2718f8d99f9", "gross": 43, "is_blind": false},
+    {"id": "eb59b1af-b46a-3faa-0937-4947ab1fcd14", "matchup_id": "788a6253-bd26-dcc7-eb28-81cad1536deb", "player_id": "15370581-1169-4bd0-95c0-f2718f8d99f9", "gross": 39, "is_blind": false},
+    {"id": "d403ce96-aa9b-7181-9c44-0d64106f2b25", "matchup_id": "ce20b3d8-81d0-4d70-01d4-aa7376b6bfcf", "player_id": "15370581-1169-4bd0-95c0-f2718f8d99f9", "gross": 47, "is_blind": false},
+    {"id": "3eda3efb-05ba-e37c-4e7c-06f612337047", "matchup_id": "6c2c9ae0-b989-cb6e-6d98-6703aa0ea7b1", "player_id": "15370581-1169-4bd0-95c0-f2718f8d99f9", "gross": 40, "is_blind": false},
+    {"id": "701a88b6-c104-518a-dae4-eae8c395970f", "matchup_id": "1ab116d8-4db9-4384-f9f3-96dc29378ad7", "player_id": "15370581-1169-4bd0-95c0-f2718f8d99f9", "gross": 40, "is_blind": false},
+    {"id": "c5d2c963-f53c-f2ab-fce5-1135ec996265", "matchup_id": "2ca7102d-0864-8400-fb6b-eca0b73cdaf6", "player_id": "15370581-1169-4bd0-95c0-f2718f8d99f9", "gross": 44, "is_blind": false},
+    {"id": "81fcb029-3945-a554-42c4-af99e5f6ec2e", "matchup_id": "ac77bafb-0751-7f7f-7d68-4ae4896e3da4", "player_id": "1c65fdde-dcaf-42fc-8d45-8f22c35fd639", "gross": 43, "is_blind": false},
+    {"id": "aee4c23d-2ead-8e2f-0982-5c19ede83f75", "matchup_id": "d63c3200-1187-658f-8cb3-72d7085bf505", "player_id": "1c65fdde-dcaf-42fc-8d45-8f22c35fd639", "gross": 40, "is_blind": false},
+    {"id": "167ee49b-8490-5664-9f29-8d8ec5665e39", "matchup_id": "5f3aecf3-26ae-b9bc-c682-74a0fea2e2b7", "player_id": "1c65fdde-dcaf-42fc-8d45-8f22c35fd639", "gross": 43, "is_blind": false},
+    {"id": "5d1cf66e-9a69-5ac6-6576-a580866db7dd", "matchup_id": "788a6253-bd26-dcc7-eb28-81cad1536deb", "player_id": "1c65fdde-dcaf-42fc-8d45-8f22c35fd639", "gross": 43, "is_blind": false},
+    {"id": "a37bd596-8f8f-035b-475b-74c266d248df", "matchup_id": "ce20b3d8-81d0-4d70-01d4-aa7376b6bfcf", "player_id": "1c65fdde-dcaf-42fc-8d45-8f22c35fd639", "gross": 42, "is_blind": false},
+    {"id": "5fc4014d-4962-5d76-028f-daebc8c6afdc", "matchup_id": "6c2c9ae0-b989-cb6e-6d98-6703aa0ea7b1", "player_id": "1c65fdde-dcaf-42fc-8d45-8f22c35fd639", "gross": 45, "is_blind": false},
+    {"id": "482b2b8a-406c-a22e-783d-b69572b873b5", "matchup_id": "1ab116d8-4db9-4384-f9f3-96dc29378ad7", "player_id": "1c65fdde-dcaf-42fc-8d45-8f22c35fd639", "gross": 45, "is_blind": false},
+    {"id": "bf1aa541-7f29-7a9d-a854-9d78d0aa1a39", "matchup_id": "2ca7102d-0864-8400-fb6b-eca0b73cdaf6", "player_id": "1c65fdde-dcaf-42fc-8d45-8f22c35fd639", "gross": 38, "is_blind": false},
+    {"id": "e8dac5af-d60c-4de8-29dd-a80a57d138fb", "matchup_id": "ac77bafb-0751-7f7f-7d68-4ae4896e3da4", "player_id": "1199232e-d347-4204-84f1-7ba2d024d813", "gross": 44, "is_blind": false},
+    {"id": "692c1b11-afc1-5d87-123d-1f9dc0746bcc", "matchup_id": "d63c3200-1187-658f-8cb3-72d7085bf505", "player_id": "1199232e-d347-4204-84f1-7ba2d024d813", "gross": 46, "is_blind": false},
+    {"id": "965c4bb3-6bf9-0ff9-a49b-16a1e6d795cb", "matchup_id": "71316939-6706-a5ca-8d0e-012f50183461", "player_id": "1199232e-d347-4204-84f1-7ba2d024d813", "gross": 52, "is_blind": false},
+    {"id": "3dc51c01-4f9c-86be-4d47-4d9f98d192eb", "matchup_id": "5b932332-2e65-e211-c9f6-596e2d862e75", "player_id": "1199232e-d347-4204-84f1-7ba2d024d813", "gross": 50, "is_blind": false},
+    {"id": "e77cb448-7ced-816a-b518-d0aebff3172c", "matchup_id": "61ac25e8-085b-6915-fa17-34e11d7d403a", "player_id": "1199232e-d347-4204-84f1-7ba2d024d813", "gross": 63, "is_blind": false},
+    {"id": "01b99873-9341-ee9d-b2ad-ed902b8e1404", "matchup_id": "72de41a8-dde2-75b1-7b32-1ddcb5415385", "player_id": "1199232e-d347-4204-84f1-7ba2d024d813", "gross": 44, "is_blind": false},
+    {"id": "02a75cc5-fac0-cc12-2139-01d3277bd1d6", "matchup_id": "ac77bafb-0751-7f7f-7d68-4ae4896e3da4", "player_id": "50184776-4b69-4e22-917b-0567d87e03ce", "gross": 45, "is_blind": false},
+    {"id": "bb53d6b1-6ec7-c854-c233-864596cf6750", "matchup_id": "d63c3200-1187-658f-8cb3-72d7085bf505", "player_id": "50184776-4b69-4e22-917b-0567d87e03ce", "gross": 46, "is_blind": false},
+    {"id": "e487b3ad-d27a-46e6-782a-8a7b63e9f2ac", "matchup_id": "71316939-6706-a5ca-8d0e-012f50183461", "player_id": "50184776-4b69-4e22-917b-0567d87e03ce", "gross": 39, "is_blind": false},
+    {"id": "b53af300-4eb8-73d5-cf93-c2ebe77fa347", "matchup_id": "5b932332-2e65-e211-c9f6-596e2d862e75", "player_id": "50184776-4b69-4e22-917b-0567d87e03ce", "gross": 44, "is_blind": false},
+    {"id": "50d0304c-8b69-997d-3d19-dd99612c0362", "matchup_id": "61ac25e8-085b-6915-fa17-34e11d7d403a", "player_id": "50184776-4b69-4e22-917b-0567d87e03ce", "gross": 44, "is_blind": false},
+    {"id": "413a1fb8-0c79-2b11-1a92-abe513e6e760", "matchup_id": "72de41a8-dde2-75b1-7b32-1ddcb5415385", "player_id": "50184776-4b69-4e22-917b-0567d87e03ce", "gross": 41, "is_blind": false},
+    {"id": "41202384-add7-bfda-469c-06fb9175d972", "matchup_id": "1ab116d8-4db9-4384-f9f3-96dc29378ad7", "player_id": "50184776-4b69-4e22-917b-0567d87e03ce", "gross": 40, "is_blind": false},
+    {"id": "3d3d0539-9082-77c4-161e-4a426b30b230", "matchup_id": "25aa0bf0-ab3c-4be1-0056-52a0436bb2a4", "player_id": "50184776-4b69-4e22-917b-0567d87e03ce", "gross": 48, "is_blind": false},
+    {"id": "8a9d276a-7208-12ff-52a6-214743098cb0", "matchup_id": "b0de90a6-a128-c2d4-2c1c-e3cb156ffca8", "player_id": "c6e134c3-b627-4360-883c-8e20fe7e7c68", "gross": 46, "is_blind": false},
+    {"id": "b04f5e6e-13aa-cfa5-acef-a5b5514fe76a", "matchup_id": "db21167d-a4ab-280a-8813-1fe40c75a3c5", "player_id": "c6e134c3-b627-4360-883c-8e20fe7e7c68", "gross": 48, "is_blind": false},
+    {"id": "c48aad35-9c7b-eb02-e89b-e1bcedd9d0b0", "matchup_id": "5926c084-3165-3e3b-88c5-67de18048d37", "player_id": "c6e134c3-b627-4360-883c-8e20fe7e7c68", "gross": 45, "is_blind": false},
+    {"id": "e4e5922f-cb9f-12aa-3cf9-6b0746d9bbc2", "matchup_id": "ff09ecb5-8a2f-a66d-3a60-b5a8b7c877cc", "player_id": "c6e134c3-b627-4360-883c-8e20fe7e7c68", "gross": 41, "is_blind": false},
+    {"id": "4a471f66-5da6-1fb6-0290-aca993db4189", "matchup_id": "b0de90a6-a128-c2d4-2c1c-e3cb156ffca8", "player_id": "3f9d2954-30f7-46fb-82ae-aeaa4bf8941e", "gross": 47, "is_blind": false},
+    {"id": "4964dd94-fe34-1be7-6fb2-54a631cf9411", "matchup_id": "db21167d-a4ab-280a-8813-1fe40c75a3c5", "player_id": "3f9d2954-30f7-46fb-82ae-aeaa4bf8941e", "gross": 54, "is_blind": false},
+    {"id": "781cb7f1-642c-0901-3c5a-119ab4c35c6c", "matchup_id": "5926c084-3165-3e3b-88c5-67de18048d37", "player_id": "3f9d2954-30f7-46fb-82ae-aeaa4bf8941e", "gross": 52, "is_blind": false},
+    {"id": "a90a5788-e1e4-1d03-1788-1b4d1e399d4a", "matchup_id": "ff09ecb5-8a2f-a66d-3a60-b5a8b7c877cc", "player_id": "3f9d2954-30f7-46fb-82ae-aeaa4bf8941e", "gross": 48, "is_blind": false},
+    {"id": "9225b9dd-6b5a-8630-a622-461b085cdc88", "matchup_id": "b0de90a6-a128-c2d4-2c1c-e3cb156ffca8", "player_id": "5cfe4a20-e0d5-4970-a61c-a4fdff613d51", "gross": 42, "is_blind": false},
+    {"id": "412a693c-0083-0289-d0b3-2c04c4544235", "matchup_id": "40635635-2336-b49f-ccc6-2b69c35f5be4", "player_id": "5cfe4a20-e0d5-4970-a61c-a4fdff613d51", "gross": 42, "is_blind": false},
+    {"id": "c1b0f7c1-1fdb-6891-d4c0-a187f4864232", "matchup_id": "b5dccda1-8b00-102a-6b34-6f351c4176fa", "player_id": "5cfe4a20-e0d5-4970-a61c-a4fdff613d51", "gross": 41, "is_blind": false},
+    {"id": "f07b07a2-595f-7595-9315-a23fc78675fe", "matchup_id": "4aa4a0eb-b685-5219-af62-ea81f401cd7d", "player_id": "5cfe4a20-e0d5-4970-a61c-a4fdff613d51", "gross": 44, "is_blind": false},
+    {"id": "1514c658-e098-82fb-9846-7021950f1fd6", "matchup_id": "30fc63a0-77e5-aea6-a83d-e552942ea954", "player_id": "5cfe4a20-e0d5-4970-a61c-a4fdff613d51", "gross": 48, "is_blind": false},
+    {"id": "93363c1b-62be-fac2-9e52-55036707fc29", "matchup_id": "ca8b0f16-567d-e28e-24a5-8d601d094ba3", "player_id": "5cfe4a20-e0d5-4970-a61c-a4fdff613d51", "gross": 47, "is_blind": false},
+    {"id": "f531e4a7-c74b-ee1a-0d27-52609e27b474", "matchup_id": "1e4f7e8d-4cbe-e638-6c52-74c424ba739d", "player_id": "5cfe4a20-e0d5-4970-a61c-a4fdff613d51", "gross": 45, "is_blind": false},
+    {"id": "02959f0a-4fd6-83a0-a46d-ec01373b6d7f", "matchup_id": "25aa0bf0-ab3c-4be1-0056-52a0436bb2a4", "player_id": "5cfe4a20-e0d5-4970-a61c-a4fdff613d51", "gross": 39, "is_blind": false},
+    {"id": "36a7aa33-8c1e-b379-ff79-a05d94b7248d", "matchup_id": "b0de90a6-a128-c2d4-2c1c-e3cb156ffca8", "player_id": "3baea938-96a5-45b7-a7f0-3ab79774a7b4", "gross": 51, "is_blind": false},
+    {"id": "45a004b6-3d1f-dd39-2f1d-6bb6b1d29d49", "matchup_id": "40635635-2336-b49f-ccc6-2b69c35f5be4", "player_id": "3baea938-96a5-45b7-a7f0-3ab79774a7b4", "gross": 52, "is_blind": false},
+    {"id": "87f3472a-8cb9-8e26-f23e-ac43c1e23359", "matchup_id": "b5dccda1-8b00-102a-6b34-6f351c4176fa", "player_id": "3baea938-96a5-45b7-a7f0-3ab79774a7b4", "gross": 55, "is_blind": false},
+    {"id": "bc9300ee-dc11-d18c-38a1-20fb1d4a4496", "matchup_id": "4aa4a0eb-b685-5219-af62-ea81f401cd7d", "player_id": "3baea938-96a5-45b7-a7f0-3ab79774a7b4", "gross": 59, "is_blind": false},
+    {"id": "320aeca0-ecd5-b381-75ce-70d7b0a6be31", "matchup_id": "30fc63a0-77e5-aea6-a83d-e552942ea954", "player_id": "3baea938-96a5-45b7-a7f0-3ab79774a7b4", "gross": 54, "is_blind": false},
+    {"id": "0bcd9c6c-defa-aac2-31ab-852f1186fcec", "matchup_id": "ca8b0f16-567d-e28e-24a5-8d601d094ba3", "player_id": "3baea938-96a5-45b7-a7f0-3ab79774a7b4", "gross": 54, "is_blind": false},
+    {"id": "234affa9-c5cf-03dc-3c23-106810a3ba65", "matchup_id": "1e4f7e8d-4cbe-e638-6c52-74c424ba739d", "player_id": "3baea938-96a5-45b7-a7f0-3ab79774a7b4", "gross": 54, "is_blind": false},
+    {"id": "681cdfdb-f8b6-6e54-66f4-2673e33d5d2a", "matchup_id": "25aa0bf0-ab3c-4be1-0056-52a0436bb2a4", "player_id": "3baea938-96a5-45b7-a7f0-3ab79774a7b4", "gross": 47, "is_blind": false},
+    {"id": "47e6ca0c-81b4-d04e-dd54-1d40e0534398", "matchup_id": "c742436a-e907-cb6c-e03c-05d99270b854", "player_id": "58a25cb4-d240-4853-9410-8da86b7b56bd", "gross": 50, "is_blind": false},
+    {"id": "0f143db2-34f7-4e5f-da1b-a46477d537d9", "matchup_id": "89aa564a-414c-505f-8def-1052e76a9bb2", "player_id": "58a25cb4-d240-4853-9410-8da86b7b56bd", "gross": 50, "is_blind": false},
+    {"id": "30098c08-9142-6cdc-8e9f-8073fcf30b49", "matchup_id": "d0ac0ede-541a-deda-0da4-9d5cc495be7c", "player_id": "58a25cb4-d240-4853-9410-8da86b7b56bd", "gross": 47, "is_blind": false},
+    {"id": "6ac92e43-0d37-c945-cf25-1256f9664970", "matchup_id": "ee52f776-53db-c1ac-c7a1-0330fe0dced8", "player_id": "58a25cb4-d240-4853-9410-8da86b7b56bd", "gross": 54, "is_blind": false},
+    {"id": "a4963966-ab7e-a58e-755c-538796710e6a", "matchup_id": "d700a3c5-3236-a223-27a5-cc8b037dcb31", "player_id": "58a25cb4-d240-4853-9410-8da86b7b56bd", "gross": 47, "is_blind": false},
+    {"id": "0bfad7f5-8c56-05c9-0375-503b281cffab", "matchup_id": "dc3c2cd1-e151-7af7-5b94-75157a48b1d7", "player_id": "58a25cb4-d240-4853-9410-8da86b7b56bd", "gross": 47, "is_blind": false},
+    {"id": "f2a9f3ac-69f5-3e5c-5c4f-a14a8712f89b", "matchup_id": "a3294894-f830-2304-877a-0a2e50bfa8d5", "player_id": "58a25cb4-d240-4853-9410-8da86b7b56bd", "gross": 49, "is_blind": false},
+    {"id": "6dddecf4-6e06-24b2-4d99-97ac5afd4003", "matchup_id": "2ca7102d-0864-8400-fb6b-eca0b73cdaf6", "player_id": "58a25cb4-d240-4853-9410-8da86b7b56bd", "gross": 53, "is_blind": false},
+    {"id": "d08b3edb-bbb9-0a01-801a-bbf6d6b83923", "matchup_id": "c742436a-e907-cb6c-e03c-05d99270b854", "player_id": "f9fb1f9e-08b5-4c9b-96f6-0a8acb6ddc63", "gross": 52, "is_blind": false},
+    {"id": "59be55b1-d9dd-f630-3f3b-d6cce9205dd6", "matchup_id": "89aa564a-414c-505f-8def-1052e76a9bb2", "player_id": "f9fb1f9e-08b5-4c9b-96f6-0a8acb6ddc63", "gross": 57, "is_blind": false},
+    {"id": "b3c446b5-37e5-2ce4-aa61-f7f429a6ca9e", "matchup_id": "d0ac0ede-541a-deda-0da4-9d5cc495be7c", "player_id": "f9fb1f9e-08b5-4c9b-96f6-0a8acb6ddc63", "gross": 54, "is_blind": false},
+    {"id": "ee3728a4-15ec-5259-559b-b09668700467", "matchup_id": "ee52f776-53db-c1ac-c7a1-0330fe0dced8", "player_id": "f9fb1f9e-08b5-4c9b-96f6-0a8acb6ddc63", "gross": 55, "is_blind": false},
+    {"id": "d13f8d64-11dc-695b-83e9-9594988b8687", "matchup_id": "d700a3c5-3236-a223-27a5-cc8b037dcb31", "player_id": "f9fb1f9e-08b5-4c9b-96f6-0a8acb6ddc63", "gross": 59, "is_blind": false},
+    {"id": "0b2f27c1-f62e-1685-42e2-ccffdfe05140", "matchup_id": "dc3c2cd1-e151-7af7-5b94-75157a48b1d7", "player_id": "f9fb1f9e-08b5-4c9b-96f6-0a8acb6ddc63", "gross": 54, "is_blind": false},
+    {"id": "160ef562-2f8f-d534-e0ea-be1b893c604a", "matchup_id": "a3294894-f830-2304-877a-0a2e50bfa8d5", "player_id": "f9fb1f9e-08b5-4c9b-96f6-0a8acb6ddc63", "gross": 64, "is_blind": false},
+    {"id": "a4c144e8-9731-b992-fb3b-d7fca4cb670a", "matchup_id": "2ca7102d-0864-8400-fb6b-eca0b73cdaf6", "player_id": "f9fb1f9e-08b5-4c9b-96f6-0a8acb6ddc63", "gross": 56, "is_blind": false},
+    {"id": "a3eb0217-0afa-c027-e06f-bae20c462223", "matchup_id": "c742436a-e907-cb6c-e03c-05d99270b854", "player_id": "8b27968d-3365-455e-b36a-b61a691ecca2", "gross": 52, "is_blind": false},
+    {"id": "a7cf4c2a-58e7-3258-d8c3-b3922862306b", "matchup_id": "28a7495e-3799-81f6-c951-1be002581cc8", "player_id": "8b27968d-3365-455e-b36a-b61a691ecca2", "gross": 58, "is_blind": false},
+    {"id": "0050eb4f-57a5-f264-2999-7a4d2f3fbeac", "matchup_id": "08fd6b33-8a39-ee66-7f2f-2a72a0feec14", "player_id": "8b27968d-3365-455e-b36a-b61a691ecca2", "gross": 50, "is_blind": false},
+    {"id": "5ab19503-1d9f-94ee-18c0-a1c33c11b4a4", "matchup_id": "99e19163-6870-9f25-96c9-42c6346460df", "player_id": "8b27968d-3365-455e-b36a-b61a691ecca2", "gross": 55, "is_blind": false},
+    {"id": "04da3333-b18c-b53c-393e-a29c68b50e6a", "matchup_id": "30fc63a0-77e5-aea6-a83d-e552942ea954", "player_id": "8b27968d-3365-455e-b36a-b61a691ecca2", "gross": 60, "is_blind": false},
+    {"id": "ab651c29-a536-c665-4cbd-244d2f937b07", "matchup_id": "72de41a8-dde2-75b1-7b32-1ddcb5415385", "player_id": "8b27968d-3365-455e-b36a-b61a691ecca2", "gross": 58, "is_blind": false},
+    {"id": "9b406580-0d36-5d30-df31-2b434cfaea52", "matchup_id": "a3294894-f830-2304-877a-0a2e50bfa8d5", "player_id": "8b27968d-3365-455e-b36a-b61a691ecca2", "gross": 49, "is_blind": false},
+    {"id": "75fb18fb-c30a-5c69-e555-dcc1192d1f9c", "matchup_id": "4bc10e15-2652-a9df-4b05-f54f12f031da", "player_id": "8b27968d-3365-455e-b36a-b61a691ecca2", "gross": 55, "is_blind": false},
+    {"id": "56272f9a-2982-b50a-c936-e5962265717f", "matchup_id": "c742436a-e907-cb6c-e03c-05d99270b854", "player_id": "576803c2-f3d3-4d95-921f-083985db10cc", "gross": 42, "is_blind": false},
+    {"id": "322f6cb6-b36a-ca9e-8d36-4cf0098ebf10", "matchup_id": "28a7495e-3799-81f6-c951-1be002581cc8", "player_id": "576803c2-f3d3-4d95-921f-083985db10cc", "gross": 45, "is_blind": false},
+    {"id": "a9459347-2a97-cb5f-93d5-696840f0266f", "matchup_id": "08fd6b33-8a39-ee66-7f2f-2a72a0feec14", "player_id": "576803c2-f3d3-4d95-921f-083985db10cc", "gross": 45, "is_blind": false},
+    {"id": "afb2e332-1437-4791-ca86-b0de9415ef40", "matchup_id": "99e19163-6870-9f25-96c9-42c6346460df", "player_id": "576803c2-f3d3-4d95-921f-083985db10cc", "gross": 53, "is_blind": false},
+    {"id": "6d88728a-7322-7fc4-987c-e363fbbdf52e", "matchup_id": "30fc63a0-77e5-aea6-a83d-e552942ea954", "player_id": "576803c2-f3d3-4d95-921f-083985db10cc", "gross": 43, "is_blind": false},
+    {"id": "75f74190-3669-03b5-9959-234962a02982", "matchup_id": "72de41a8-dde2-75b1-7b32-1ddcb5415385", "player_id": "576803c2-f3d3-4d95-921f-083985db10cc", "gross": 47, "is_blind": false},
+    {"id": "8838197d-a025-b6cc-da82-e000c16bd2d1", "matchup_id": "a3294894-f830-2304-877a-0a2e50bfa8d5", "player_id": "576803c2-f3d3-4d95-921f-083985db10cc", "gross": 48, "is_blind": false},
+    {"id": "c78bc2ed-7f3e-dc7f-a3df-5eba29dce231", "matchup_id": "4bc10e15-2652-a9df-4b05-f54f12f031da", "player_id": "576803c2-f3d3-4d95-921f-083985db10cc", "gross": 46, "is_blind": false},
+    {"id": "21b1ab80-fedf-b375-c919-73bd67f33f9f", "matchup_id": "7061d1c4-2214-5b73-4626-e43bf72ebdf7", "player_id": "bc9f2e32-535f-4ed7-8530-aa1c2fefad7c", "gross": 56, "is_blind": false},
+    {"id": "dbfcf8eb-0719-e650-7069-9ad8a40b5065", "matchup_id": "51fcb3d0-5b69-2809-f556-401ef84c4478", "player_id": "bc9f2e32-535f-4ed7-8530-aa1c2fefad7c", "gross": 52, "is_blind": false},
+    {"id": "60ae390c-e06f-d295-81b5-95a1c641b97a", "matchup_id": "7166e418-4692-14fd-c1a5-add2e410a0a8", "player_id": "bc9f2e32-535f-4ed7-8530-aa1c2fefad7c", "gross": 56, "is_blind": false},
+    {"id": "5a6c5524-58ea-fba8-5c72-d5fca5ab70a4", "matchup_id": "ee52f776-53db-c1ac-c7a1-0330fe0dced8", "player_id": "bc9f2e32-535f-4ed7-8530-aa1c2fefad7c", "gross": 49, "is_blind": false},
+    {"id": "e85a35d0-f124-a673-edd6-ca3c705292cc", "matchup_id": "f201865a-4b3d-3a2c-9126-76337ba72766", "player_id": "bc9f2e32-535f-4ed7-8530-aa1c2fefad7c", "gross": 61, "is_blind": false},
+    {"id": "c7285d17-a5b9-2d04-a3d6-d6d13be97a87", "matchup_id": "6c2c9ae0-b989-cb6e-6d98-6703aa0ea7b1", "player_id": "bc9f2e32-535f-4ed7-8530-aa1c2fefad7c", "gross": 60, "is_blind": false},
+    {"id": "76d32b97-ec8e-96bc-37d8-6eae395b199b", "matchup_id": "23fc5bfc-4a40-4249-e72b-82c44b316393", "player_id": "bc9f2e32-535f-4ed7-8530-aa1c2fefad7c", "gross": 50, "is_blind": false},
+    {"id": "8afcc09e-cd8b-dc48-71bd-3be953c05122", "matchup_id": "edbbe441-a12e-3c95-2dc5-d7dd7f7f17e7", "player_id": "bc9f2e32-535f-4ed7-8530-aa1c2fefad7c", "gross": 51, "is_blind": false},
+    {"id": "91e3dbe9-9672-4fb3-43e8-6c94c390966a", "matchup_id": "7061d1c4-2214-5b73-4626-e43bf72ebdf7", "player_id": "6beb4d57-3fdc-49b3-a830-d4bba2efe406", "gross": 50, "is_blind": false},
+    {"id": "b62d4348-852e-fdc7-5e9c-a05c0420dbd2", "matchup_id": "51fcb3d0-5b69-2809-f556-401ef84c4478", "player_id": "6beb4d57-3fdc-49b3-a830-d4bba2efe406", "gross": 49, "is_blind": false},
+    {"id": "d839ab74-c35a-724f-d9a6-75dacc7b2f34", "matchup_id": "7166e418-4692-14fd-c1a5-add2e410a0a8", "player_id": "6beb4d57-3fdc-49b3-a830-d4bba2efe406", "gross": 58, "is_blind": false},
+    {"id": "fcbfb4bc-fcd5-2793-0db3-345fc290711a", "matchup_id": "ee52f776-53db-c1ac-c7a1-0330fe0dced8", "player_id": "6beb4d57-3fdc-49b3-a830-d4bba2efe406", "gross": 50, "is_blind": false},
+    {"id": "857498f5-3875-9854-3ff6-36bdd5c38b7a", "matchup_id": "f201865a-4b3d-3a2c-9126-76337ba72766", "player_id": "6beb4d57-3fdc-49b3-a830-d4bba2efe406", "gross": 56, "is_blind": false},
+    {"id": "0012c85b-6f32-24b9-248d-6520ceb8a9fa", "matchup_id": "6c2c9ae0-b989-cb6e-6d98-6703aa0ea7b1", "player_id": "6beb4d57-3fdc-49b3-a830-d4bba2efe406", "gross": 49, "is_blind": false},
+    {"id": "23627c8c-4fa3-22ef-4317-de0516d40855", "matchup_id": "7061d1c4-2214-5b73-4626-e43bf72ebdf7", "player_id": "b42100a4-f210-4512-a0b1-bb02100442cf", "gross": 45, "is_blind": false},
+    {"id": "38a8173f-6422-bb2d-45e6-4e69549f3d9b", "matchup_id": "749198a8-89d7-3ff0-e0bb-ac0fb31e0277", "player_id": "b42100a4-f210-4512-a0b1-bb02100442cf", "gross": 45, "is_blind": false},
+    {"id": "ab812f39-65df-b3df-7a9f-529dadfd389d", "matchup_id": "08fd6b33-8a39-ee66-7f2f-2a72a0feec14", "player_id": "b42100a4-f210-4512-a0b1-bb02100442cf", "gross": 54, "is_blind": false},
+    {"id": "ba2b4826-d5ce-4259-78b6-2543f5aea1c5", "matchup_id": "4aa4a0eb-b685-5219-af62-ea81f401cd7d", "player_id": "b42100a4-f210-4512-a0b1-bb02100442cf", "gross": 42, "is_blind": false},
+    {"id": "1ad56f4a-65f1-4263-73bf-060730e2289c", "matchup_id": "61ac25e8-085b-6915-fa17-34e11d7d403a", "player_id": "b42100a4-f210-4512-a0b1-bb02100442cf", "gross": 46, "is_blind": false},
+    {"id": "3d2a23ff-fa63-14e8-c3e0-b642110dadbe", "matchup_id": "263fd61c-326a-37bf-1999-5d440f7a6dc1", "player_id": "b42100a4-f210-4512-a0b1-bb02100442cf", "gross": 40, "is_blind": false},
+    {"id": "7f4e6ea9-b822-2b19-a9e0-4882ebd506fd", "matchup_id": "7061d1c4-2214-5b73-4626-e43bf72ebdf7", "player_id": "e1d37712-5c13-4c2a-b576-44033095b725", "gross": 60, "is_blind": false},
+    {"id": "86ab8c8c-0409-d08b-168b-1d7f12fa969f", "matchup_id": "749198a8-89d7-3ff0-e0bb-ac0fb31e0277", "player_id": "e1d37712-5c13-4c2a-b576-44033095b725", "gross": 49, "is_blind": false},
+    {"id": "0febeeaf-76c5-f0bf-44b4-b32615900e6e", "matchup_id": "08fd6b33-8a39-ee66-7f2f-2a72a0feec14", "player_id": "e1d37712-5c13-4c2a-b576-44033095b725", "gross": 51, "is_blind": false},
+    {"id": "19c4c753-01c1-59ce-5914-690f26a340d0", "matchup_id": "4aa4a0eb-b685-5219-af62-ea81f401cd7d", "player_id": "e1d37712-5c13-4c2a-b576-44033095b725", "gross": 51, "is_blind": false},
+    {"id": "105554d2-1110-7521-3e36-6a8fd76830af", "matchup_id": "61ac25e8-085b-6915-fa17-34e11d7d403a", "player_id": "e1d37712-5c13-4c2a-b576-44033095b725", "gross": 55, "is_blind": false},
+    {"id": "869e0295-6e93-ffb8-9c7b-66843fcfe7a8", "matchup_id": "263fd61c-326a-37bf-1999-5d440f7a6dc1", "player_id": "e1d37712-5c13-4c2a-b576-44033095b725", "gross": 49, "is_blind": false}
+  ]
   const handicaps = [
   {
     "id": "8cff71bc-0b9e-40b2-9de9-9aff74edb312",
@@ -4671,4 +2839,5 @@ export async function seedIfEmpty(db) {
   await putMany('matchups', matchups)
   await putMany('scores', scores)
   await putMany('handicaps', handicaps)
+  await db.put('settings', { id: 'seed_version', value: SEED_VERSION })
 }
