@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useAuth } from '../../hooks/useAuth.jsx'
 import { useSeason } from '../Season.jsx'
 import * as store from '../../lib/store.js'
 import { newId, deleteOne } from '../../lib/db.js'
 
 export default function SeasonRoster() {
   const { seasonId } = useParams()
-  const { isAdmin } = useAuth()
   const { season } = useSeason()
   const [teams, setTeams] = useState([])
   const [teamPlayers, setTeamPlayers] = useState([])
@@ -53,7 +51,7 @@ export default function SeasonRoster() {
     setEditingTeam(null)
   }
 
-  async function saveTeamPlayer(teamId, playerId, currentHcp, prevHcp) {
+  async function saveTeamPlayer(teamId, playerId, currentHcp, prevHcp, email, phone) {
     const existing = teamPlayers.find(tp => tp.team_id === teamId && tp.player_id === playerId)
     if (!existing) {
       await store.teamPlayers.upsert({ id: newId(), team_id: teamId, player_id: playerId })
@@ -64,6 +62,10 @@ export default function SeasonRoster() {
         current_hcp: parseFloat(currentHcp) || null,
         prev_season_hcp: prevHcp !== '' ? (parseFloat(prevHcp) || null) : null,
       })
+    }
+    const player = players.find(p => p.id === playerId)
+    if (player) {
+      await store.players.upsert({ ...player, email: email ?? player.email, phone: phone ?? player.phone })
     }
     await load()
   }
@@ -83,11 +85,9 @@ export default function SeasonRoster() {
           <h2 className="font-bold text-gray-900">Roster</h2>
           <p className="text-xs text-gray-400 mt-0.5">{teams.length} teams · {season.name}</p>
         </div>
-        {isAdmin && (
-          <button onClick={() => setShowAddTeam(true)} className="text-xs bg-green-700 text-white px-3 py-1.5 rounded-lg font-medium">
-            + Add Team
-          </button>
-        )}
+        <button onClick={() => setShowAddTeam(true)} className="text-xs bg-green-700 text-white px-3 py-1.5 rounded-lg font-medium">
+          + Add Team
+        </button>
       </div>
 
       {showAddTeam && (
@@ -103,12 +103,10 @@ export default function SeasonRoster() {
               <span className="text-sm font-bold text-gray-800">
                 Team {team.number}{team.name ? ` — ${team.name}` : ''}
               </span>
-              {isAdmin && (
-                <button onClick={() => setEditingTeam(isEditing ? null : team.id)}
-                  className="text-xs text-green-700 font-medium">
-                  {isEditing ? 'Done' : 'Edit'}
-                </button>
-              )}
+              <button onClick={() => setEditingTeam(isEditing ? null : team.id)}
+                className="text-xs text-green-700 font-medium">
+                {isEditing ? 'Done' : 'Edit'}
+              </button>
             </div>
 
             {isEditing && (
@@ -120,13 +118,13 @@ export default function SeasonRoster() {
             <div className="divide-y divide-gray-50">
               {members.map((m, idx) => (
                 <PlayerRow key={m.player_id} member={m} slot={idx === 0 ? 'A' : 'B'}
-                  isAdmin={isAdmin} onSave={(hcp, prev) => saveTeamPlayer(team.id, m.player_id, hcp, prev)}
+                  onSave={(hcp, prev, email, phone) => saveTeamPlayer(team.id, m.player_id, hcp, prev, email, phone)}
                   onRemove={() => removeTeamPlayer(m.id)} />
               ))}
               {members.length === 0 && (
                 <p className="px-4 py-4 text-xs text-gray-400">No players assigned.</p>
               )}
-              {isAdmin && members.length < 2 && (
+              {members.length < 2 && (
                 <AddPlayerRow teamId={team.id} players={players} teamPlayers={teamPlayers}
                   onAdd={(pid) => saveTeamPlayer(team.id, pid, '', '')} />
               )}
@@ -137,22 +135,24 @@ export default function SeasonRoster() {
 
       {teams.length === 0 && !showAddTeam && (
         <div className="bg-white rounded-xl shadow-sm p-8 text-center text-gray-400 text-sm">
-          No teams yet.{isAdmin ? ' Tap + Add Team to get started.' : ''}
+          No teams yet. Tap + Add Team to get started.
         </div>
       )}
     </div>
   )
 }
 
-function PlayerRow({ member, slot, isAdmin, onSave, onRemove }) {
+function PlayerRow({ member, slot, onSave, onRemove }) {
   const [editing, setEditing] = useState(false)
   const [hcp, setHcp] = useState(member.currentHcp ?? '')
   const [prev, setPrev] = useState(member.prevHcp ?? '')
+  const [email, setEmail] = useState(member.player.email || '')
+  const [phone, setPhone] = useState(member.player.phone || '')
   const p = member.player
   const name = `${p.first_name || ''} ${p.last_name || ''}`.trim()
 
   async function save() {
-    await onSave(hcp, prev)
+    await onSave(hcp, prev, email, phone)
     setEditing(false)
   }
 
@@ -168,11 +168,9 @@ function PlayerRow({ member, slot, isAdmin, onSave, onRemove }) {
           {member.currentHcp != null && <p className="text-sm font-bold text-green-700">HCP {member.currentHcp}</p>}
           {member.prevHcp != null && <p className="text-xs text-gray-400">Prev: {member.prevHcp}</p>}
         </div>
-        {isAdmin && (
-          <button onClick={() => setEditing(!editing)} className="text-xs text-green-700 font-medium ml-1">
-            {editing ? 'Cancel' : 'Edit'}
-          </button>
-        )}
+        <button onClick={() => setEditing(!editing)} className="text-xs text-green-700 font-medium ml-1">
+          {editing ? 'Cancel' : 'Edit'}
+        </button>
       </div>
       {editing && (
         <div className="mt-3 bg-green-50 rounded-lg p-3 space-y-2">
@@ -188,8 +186,18 @@ function PlayerRow({ member, slot, isAdmin, onSave, onRemove }) {
                 className="w-full border border-gray-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-green-600 bg-white" />
             </div>
           </div>
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1">Email</label>
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="player@email.com"
+              className="w-full border border-gray-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-green-600 bg-white" />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1">Phone</label>
+            <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="555-555-5555"
+              className="w-full border border-gray-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-green-600 bg-white" />
+          </div>
           <div className="flex gap-2">
-            <button onClick={save} className="flex-1 bg-green-700 text-white rounded-lg py-1.5 text-xs font-semibold">Save HCP</button>
+            <button onClick={save} className="flex-1 bg-green-700 text-white rounded-lg py-1.5 text-xs font-semibold">Save</button>
             <button onClick={onRemove} className="px-3 bg-red-50 text-red-600 rounded-lg py-1.5 text-xs font-semibold">Remove</button>
           </div>
         </div>

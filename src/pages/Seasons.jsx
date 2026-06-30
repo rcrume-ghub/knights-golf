@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../hooks/useAuth.jsx'
 import * as store from '../lib/store.js'
 import { newId } from '../lib/db.js'
 
 export default function Seasons() {
-  const { isAdmin } = useAuth()
   const navigate = useNavigate()
   const [allSeasons, setAllSeasons] = useState([])
   const [loading, setLoading] = useState(true)
@@ -34,14 +32,12 @@ export default function Seasons() {
           <h2 className="font-bold text-gray-900">Seasons</h2>
           <p className="text-xs text-gray-400 mt-0.5">{allSeasons.length} season{allSeasons.length !== 1 ? 's' : ''} on record</p>
         </div>
-        {isAdmin && (
-          <button
-            onClick={() => setShowNew(true)}
-            className="text-xs bg-green-700 text-white px-3 py-1.5 rounded-lg font-medium"
-          >
-            + New Season
-          </button>
-        )}
+        <button
+          onClick={() => setShowNew(true)}
+          className="text-xs bg-green-700 text-white px-3 py-1.5 rounded-lg font-medium"
+        >
+          + New Season
+        </button>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm overflow-hidden divide-y divide-gray-50">
@@ -61,7 +57,7 @@ export default function Seasons() {
                 <p className="text-xs text-gray-400">Starts {fmtDate(s.start_date)}</p>
               )}
             </div>
-            {isAdmin && !s.is_active && (
+            {!s.is_active && (
               <button
                 onClick={() => setActive(s.id)}
                 className="flex-shrink-0 text-xs border border-gray-200 text-gray-600 px-3 py-1.5 rounded-lg font-medium hover:bg-gray-50 transition-colors"
@@ -76,7 +72,7 @@ export default function Seasons() {
         )}
       </div>
 
-      {showNew && isAdmin && (
+      {showNew && (
         <NewSeasonModal onClose={() => setShowNew(false)} onSaved={load} />
       )}
     </div>

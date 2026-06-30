@@ -50,7 +50,7 @@ export default function SeasonStats() {
     const playerStats = {}
     for (const t of allTeams) {
       for (const pid of (teamPlayersMap[t.id] || [])) {
-        if (!playerStats[pid]) playerStats[pid] = { points: 0, grossScores: [], netScores: [] }
+        if (!playerStats[pid]) playerStats[pid] = { teamId: t.id, points: 0, grossScores: [], netScores: [] }
       }
     }
 
@@ -91,6 +91,7 @@ export default function SeasonStats() {
       }
     }
 
+    const teamById = Object.fromEntries(allTeams.map(t => [t.id, t]))
     const teamStandings = allTeams.map(t => ({
       ...t, ...teamStats[t.id], playerIds: teamPlayersMap[t.id] || []
     })).sort((a, b) => b.points - a.points)
@@ -103,7 +104,7 @@ export default function SeasonStats() {
       startHcp: startHcpMap[pid] ?? null,
     })).filter(p => p.player)
 
-    setData({ teamStandings, allPlayerStats, weeksPlayed: played.length, playerById })
+    setData({ teamStandings, allPlayerStats, weeksPlayed: played.length, playerById, teamById })
     setLoading(false)
   }
 
@@ -116,11 +117,9 @@ export default function SeasonStats() {
     </div>
   )
 
-  if (!data) return (
-    <div className="p-8 text-center text-gray-400 text-sm">No data yet.</div>
-  )
+  if (!data) return <div className="p-8 text-center text-gray-400 text-sm">No data yet.</div>
 
-  const { teamStandings, allPlayerStats, weeksPlayed, playerById } = data
+  const { teamStandings, allPlayerStats, weeksPlayed, playerById, teamById } = data
   const withScores = allPlayerStats.filter(p => p.grossScores.length > 0)
   const topGross = [...withScores].sort((a, b) => a.bestGross - b.bestGross).slice(0, 5)
   const topNet = [...withScores].sort((a, b) => a.bestNet - b.bestNet).slice(0, 5)
@@ -133,106 +132,210 @@ export default function SeasonStats() {
   }
 
   return (
-    <div className="px-4 py-4 max-w-2xl mx-auto space-y-4">
-      <div className="bg-white rounded-xl shadow-sm p-4">
-        <h2 className="font-bold text-gray-900">{season.name} Stats</h2>
-        <p className="text-xs text-gray-400 mt-0.5">Through Week {weeksPlayed}</p>
+    <div className="px-4 py-4 max-w-2xl mx-auto space-y-5">
+
+      {/* Header */}
+      <div className="bg-green-800 rounded-xl px-4 py-3 text-white">
+        <h2 className="font-bold text-base">{season.name} — Season Stats</h2>
+        <p className="text-xs text-green-300 mt-0.5">Through Week {weeksPlayed}</p>
       </div>
 
-      <Section title="Team Standings">
+      {/* Team Standings */}
+      <StatSection title="🏆 Season Standings">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-gray-100">
-              <th className="text-left px-4 py-2 text-xs text-gray-400 font-semibold uppercase w-8">#</th>
-              <th className="text-left px-2 py-2 text-xs text-gray-400 font-semibold uppercase">Team</th>
-              <th className="text-right px-2 py-2 text-xs text-gray-400 font-semibold uppercase">Players</th>
-              <th className="text-right px-4 py-2 text-xs text-gray-400 font-semibold uppercase">Pts</th>
+            <tr className="bg-green-700 text-white text-xs">
+              <th className="px-3 py-2 text-left w-8">#</th>
+              <th className="px-3 py-2 text-left">Team</th>
+              <th className="px-3 py-2 text-left">Players</th>
+              <th className="px-3 py-2 text-right">Pts</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
             {teamStandings.map((t, i) => (
-              <tr key={t.id} className={i < 3 ? 'bg-green-50' : ''}>
-                <td className="px-4 py-2.5">
+              <tr key={t.id} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                <td className="px-3 py-2.5">
                   <span className={`font-bold text-sm ${i < 3 ? 'text-green-700' : 'text-gray-400'}`}>{i + 1}</span>
                 </td>
-                <td className="px-2 py-2.5 font-semibold text-gray-900 text-sm">Team {t.number}</td>
-                <td className="px-2 py-2.5 text-right text-xs text-gray-400">
+                <td className="px-3 py-2.5 font-semibold text-gray-900 text-sm">Team {t.number}</td>
+                <td className="px-3 py-2.5 text-xs text-gray-500">
                   {t.playerIds.map(pName).filter(Boolean).join(' & ')}
                 </td>
-                <td className="px-4 py-2.5 text-right">
-                  <span className={`font-bold ${i < 3 ? 'text-green-700' : 'text-gray-700'}`}>{t.points}</span>
+                <td className="px-3 py-2.5 text-right">
+                  <span className={`font-bold text-sm ${i < 3 ? 'text-green-700' : 'text-gray-700'}`}>
+                    {t.points % 1 === 0 ? t.points : t.points.toFixed(1)}
+                  </span>
                 </td>
               </tr>
             ))}
             {teamStandings.length === 0 && (
-              <tr><td colSpan={4} className="px-4 py-6 text-center text-xs text-gray-400">No team data yet.</td></tr>
+              <tr><td colSpan={4} className="px-4 py-6 text-center text-xs text-gray-400">No data yet.</td></tr>
             )}
           </tbody>
         </table>
-      </Section>
+      </StatSection>
 
-      <Section title="Lowest Gross Score (single round)">
-        <LeaderList items={topGross} getValue={p => p.bestGross} unit="gross" pName={pName} />
-      </Section>
-
-      <Section title="Lowest Net Score (single round)">
-        <LeaderList items={topNet} getValue={p => p.bestNet} unit="net" pName={pName} />
-      </Section>
-
-      <Section title="Most Individual Points">
-        <LeaderList items={topPoints} getValue={p => p.points} unit="pts" pName={pName} />
-      </Section>
-
-      {hcpPlayers.length > 0 && (
-        <Section title="Handicap Tracker">
-          <div className="divide-y divide-gray-50">
-            {hcpPlayers.map(p => {
+      {/* Top 3 Lowest HCP */}
+      <StatSection title="🎯 Top 3 Lowest Handicap">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-green-700 text-white text-xs">
+              <th className="px-3 py-2 text-left w-8">#</th>
+              <th className="px-3 py-2 text-left">Player</th>
+              <th className="px-3 py-2 text-left">Team</th>
+              <th className="px-3 py-2 text-right">HCP</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-50">
+            {hcpPlayers.slice(0, 3).map((p, i) => {
               const delta = p.startHcp != null ? p.currentHcp - p.startHcp : null
               return (
-                <div key={p.pid} className="px-4 py-2.5 flex items-center">
-                  <span className="flex-1 text-sm text-gray-800">{pName(p.pid)}</span>
-                  <span className="text-sm font-semibold text-gray-900 mr-2">{p.currentHcp.toFixed(1)}</span>
-                  {delta != null && (
-                    <span className={`text-xs font-medium ${delta < 0 ? 'text-green-600' : delta > 0 ? 'text-red-500' : 'text-gray-400'}`}>
-                      {delta < 0 ? '▼' : delta > 0 ? '▲' : '–'}{Math.abs(delta).toFixed(1)}
-                    </span>
-                  )}
-                </div>
+                <tr key={p.pid} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                  <td className="px-3 py-2.5 font-bold text-gray-400 text-sm">{i + 1}.</td>
+                  <td className="px-3 py-2.5 text-gray-800 text-sm">{pName(p.pid)}</td>
+                  <td className="px-3 py-2.5 text-xs text-gray-500">Team {teamById[p.teamId]?.number ?? '?'}</td>
+                  <td className="px-3 py-2.5 text-right">
+                    <span className="font-bold text-blue-700">{Math.round(p.currentHcp)}</span>
+                    {delta != null && (
+                      <span className={`ml-1.5 text-xs font-medium ${delta < 0 ? 'text-green-600' : delta > 0 ? 'text-red-500' : 'text-gray-400'}`}>
+                        {delta < 0 ? '▼' : delta > 0 ? '▲' : '–'}
+                      </span>
+                    )}
+                  </td>
+                </tr>
               )
             })}
-          </div>
-        </Section>
+            {hcpPlayers.length === 0 && <EmptyRow cols={4} />}
+          </tbody>
+        </table>
+      </StatSection>
+
+      {/* Lowest Gross */}
+      <StatSection title="📊 Top 5 Lowest Score (w/o Handicap)">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-green-700 text-white text-xs">
+              <th className="px-3 py-2 text-left w-8">#</th>
+              <th className="px-3 py-2 text-left">Player</th>
+              <th className="px-3 py-2 text-left">Team</th>
+              <th className="px-3 py-2 text-right">Gross</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-50">
+            {topGross.map((p, i) => (
+              <tr key={p.pid} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                <td className="px-3 py-2.5 font-bold text-gray-400 text-sm">{i + 1}.</td>
+                <td className="px-3 py-2.5 text-gray-800 text-sm">{pName(p.pid)}</td>
+                <td className="px-3 py-2.5 text-xs text-gray-500">Team {teamById[p.teamId]?.number ?? '?'}</td>
+                <td className="px-3 py-2.5 text-right font-bold text-green-700">{p.bestGross}</td>
+              </tr>
+            ))}
+            {topGross.length === 0 && <EmptyRow cols={4} />}
+          </tbody>
+        </table>
+      </StatSection>
+
+      {/* Lowest Net */}
+      <StatSection title="📊 Top 5 Lowest Score (w/ Handicap)">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-green-700 text-white text-xs">
+              <th className="px-3 py-2 text-left w-8">#</th>
+              <th className="px-3 py-2 text-left">Player</th>
+              <th className="px-3 py-2 text-left">Team</th>
+              <th className="px-3 py-2 text-right">Net</th>
+              <th className="px-3 py-2 text-right">Gross</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-50">
+            {topNet.map((p, i) => (
+              <tr key={p.pid} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                <td className="px-3 py-2.5 font-bold text-gray-400 text-sm">{i + 1}.</td>
+                <td className="px-3 py-2.5 text-gray-800 text-sm">{pName(p.pid)}</td>
+                <td className="px-3 py-2.5 text-xs text-gray-500">Team {teamById[p.teamId]?.number ?? '?'}</td>
+                <td className="px-3 py-2.5 text-right font-bold text-blue-700">{p.bestNet}</td>
+                <td className="px-3 py-2.5 text-right text-xs text-gray-400">{p.bestGross}</td>
+              </tr>
+            ))}
+            {topNet.length === 0 && <EmptyRow cols={5} />}
+          </tbody>
+        </table>
+      </StatSection>
+
+      {/* Most Individual Points */}
+      <StatSection title="⭐ Most Individual Points">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-green-700 text-white text-xs">
+              <th className="px-3 py-2 text-left w-8">#</th>
+              <th className="px-3 py-2 text-left">Player</th>
+              <th className="px-3 py-2 text-left">Team</th>
+              <th className="px-3 py-2 text-right">Pts</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-50">
+            {topPoints.map((p, i) => (
+              <tr key={p.pid} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                <td className="px-3 py-2.5 font-bold text-gray-400 text-sm">{i + 1}.</td>
+                <td className="px-3 py-2.5 text-gray-800 text-sm">{pName(p.pid)}</td>
+                <td className="px-3 py-2.5 text-xs text-gray-500">Team {teamById[p.teamId]?.number ?? '?'}</td>
+                <td className="px-3 py-2.5 text-right font-bold text-green-700">{p.points % 1 === 0 ? p.points : p.points.toFixed(1)}</td>
+              </tr>
+            ))}
+            {topPoints.length === 0 && <EmptyRow cols={4} />}
+          </tbody>
+        </table>
+      </StatSection>
+
+      {/* Full HCP Tracker */}
+      {hcpPlayers.length > 0 && (
+        <StatSection title="📋 Handicap Tracker — All Players">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-green-700 text-white text-xs">
+                <th className="px-3 py-2 text-left">Player</th>
+                <th className="px-3 py-2 text-left">Team</th>
+                <th className="px-3 py-2 text-right">HCP</th>
+                <th className="px-3 py-2 text-right">Change</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50">
+              {hcpPlayers.map((p, i) => {
+                const delta = p.startHcp != null ? p.currentHcp - p.startHcp : null
+                return (
+                  <tr key={p.pid} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                    <td className="px-3 py-2.5 text-gray-800 text-sm">{pName(p.pid)}</td>
+                    <td className="px-3 py-2.5 text-xs text-gray-500">Team {teamById[p.teamId]?.number ?? '?'}</td>
+                    <td className="px-3 py-2.5 text-right font-bold text-gray-900">{Math.round(p.currentHcp)}</td>
+                    <td className="px-3 py-2.5 text-right">
+                      {delta != null ? (
+                        <span className={`text-xs font-semibold ${delta < 0 ? 'text-green-600' : delta > 0 ? 'text-red-500' : 'text-gray-400'}`}>
+                          {delta < 0 ? '▼' : delta > 0 ? '▲' : '–'}{Math.abs(delta).toFixed(1)}
+                        </span>
+                      ) : <span className="text-xs text-gray-300">—</span>}
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </StatSection>
       )}
     </div>
   )
 }
 
-function Section({ title, children }) {
+function StatSection({ title, children }) {
   return (
-    <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-      <div className="px-4 py-2.5 border-b border-gray-100">
-        <h3 className="text-sm font-semibold text-gray-700">{title}</h3>
+    <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+      <div className="px-4 py-2.5 border-b-2 border-green-700 bg-white">
+        <h3 className="text-sm font-bold text-gray-900">{title}</h3>
       </div>
       {children}
     </div>
   )
 }
 
-function LeaderList({ items, getValue, unit, pName }) {
-  return (
-    <div className="divide-y divide-gray-50">
-      {items.map((p, i) => (
-        <div key={p.pid} className="px-4 py-2.5 flex items-center gap-3">
-          <span className={`text-sm font-bold w-4 ${i === 0 ? 'text-green-700' : 'text-gray-400'}`}>{i + 1}</span>
-          <span className="flex-1 text-sm text-gray-800">{pName(p.pid)}</span>
-          <span className="text-sm font-semibold text-gray-900">
-            {getValue(p)} <span className="text-xs text-gray-400">{unit}</span>
-          </span>
-        </div>
-      ))}
-      {items.length === 0 && (
-        <p className="px-4 py-4 text-xs text-gray-400 text-center">No data yet.</p>
-      )}
-    </div>
-  )
+function EmptyRow({ cols }) {
+  return <tr><td colSpan={cols} className="px-4 py-5 text-center text-xs text-gray-400">No data yet.</td></tr>
 }

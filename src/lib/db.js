@@ -58,6 +58,12 @@ export async function clearStore(storeName) {
   return db.clear(storeName)
 }
 
+export async function clearAllData() {
+  const db = await getDB()
+  const stores = ['seasons', 'players', 'teams', 'team_players', 'weeks', 'matchups', 'scores', 'handicaps', 'season_player_hcp', 'dues', 'settings']
+  for (const s of stores) await db.clear(s)
+}
+
 // ─── Settings (PIN, first-run flag) ──────────────────────────────────────────
 
 export async function getSetting(key) {

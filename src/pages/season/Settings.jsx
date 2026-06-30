@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSeason } from '../Season.jsx'
 import * as store from '../../lib/store.js'
+import EmailSettings from '../admin/EmailSettings.jsx'
 
 export default function Settings({ onSeasonChange }) {
   const { seasonId } = useParams()
@@ -64,6 +65,8 @@ export default function Settings({ onSeasonChange }) {
       <div className="bg-gray-50 rounded-xl p-4 border border-dashed border-gray-200">
         <p className="text-xs text-gray-500">To edit season name, start date, schedule settings — go to the <strong>Schedule</strong> tab and use Season Settings.</p>
       </div>
+
+      <EmailSettings compact />
     </div>
   )
 }

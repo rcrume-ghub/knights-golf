@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useAuth } from '../../hooks/useAuth.jsx'
 import { useSeason } from '../Season.jsx'
 import * as store from '../../lib/store.js'
 import { newId, deleteOne } from '../../lib/db.js'
+import { getNine } from '../../lib/handicap.js'
 
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 const WEEK_TYPES = [
@@ -16,11 +16,11 @@ const WEEK_TYPES = [
 
 export default function SeasonSchedule() {
   const { seasonId } = useParams()
-  const { isAdmin } = useAuth()
   const { season, refreshSeason } = useSeason()
   const [teams, setTeams] = useState([])
   const [weeks, setWeeks] = useState([])
   const [matchups, setMatchups] = useState([])
+  const [teamPlayersMap, setTeamPlayersMap] = useState({})
   const [selectedWeekId, setSelectedWeekId] = useState(null)
   const [loading, setLoading] = useState(true)
   const [generating, setGenerating] = useState(false)
@@ -42,9 +42,35 @@ export default function SeasonSchedule() {
   }, [selectedWeekId])
 
   async function load() {
-    const [t, w] = await Promise.all([store.teams.getBySeason(seasonId), store.weeks.getBySeason(seasonId)])
+    const [t, w, allTp, allPlayers, allHcps] = await Promise.all([
+      store.teams.getBySeason(seasonId),
+      store.weeks.getBySeason(seasonId),
+      store.teamPlayers.getAll(),
+      store.players.getAll(),
+      store.handicaps.getAll(),
+    ])
     setTeams(t)
     setWeeks(w)
+
+    const playerById = Object.fromEntries(allPlayers.map(p => [p.id, p]))
+    const hcpMap = {}
+    for (const h of allHcps) {
+      if (!hcpMap[h.player_id] || new Date(h.calculated_at) > new Date(hcpMap[h.player_id].calculated_at)) {
+        hcpMap[h.player_id] = h
+      }
+    }
+    const tpm = {}
+    for (const tp of allTp) {
+      const p = playerById[tp.player_id]
+      if (!p) continue
+      if (!tpm[tp.team_id]) tpm[tp.team_id] = []
+      tpm[tp.team_id].push({ ...p, hcp: hcpMap[p.id]?.value ?? 99 })
+    }
+    for (const tid of Object.keys(tpm)) {
+      tpm[tid].sort((a, b) => a.hcp - b.hcp)
+    }
+    setTeamPlayersMap(tpm)
+
     if (w.length > 0 && !selectedWeekId) setSelectedWeekId(w[0].id)
     setLoading(false)
   }
@@ -122,11 +148,9 @@ export default function SeasonSchedule() {
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
           <h3 className="text-sm font-semibold text-gray-800">Season Settings</h3>
-          {isAdmin && (
-            <button onClick={() => setEditingSettings(!editingSettings)} className="text-xs text-green-700 font-medium">
-              {editingSettings ? 'Cancel' : 'Edit'}
-            </button>
-          )}
+          <button onClick={() => setEditingSettings(!editingSettings)} className="text-xs text-green-700 font-medium">
+            {editingSettings ? 'Cancel' : 'Edit'}
+          </button>
         </div>
         {editingSettings ? (
           <form onSubmit={saveSettings} className="p-4 space-y-3">
@@ -169,31 +193,47 @@ export default function SeasonSchedule() {
             </button>
           </form>
         ) : (
-          <div className="px-4 py-3 grid grid-cols-2 gap-2 text-sm">
-            <InfoRow label="Start Date" value={fmtDate(season.start_date)} />
-            <InfoRow label="League Night" value={DAYS[season.league_night] || '—'} />
-            <InfoRow label="Weeks" value={season.weeks} />
-            <InfoRow label="Par" value={season.par} />
-            <InfoRow label="Blind Score" value={season.blind_score} />
-            <InfoRow label="Max HCP" value={season.max_handicap} />
+          <div className="px-4 py-3 space-y-2 text-sm">
+            <div className="grid grid-cols-2 gap-2">
+              <InfoRow label="Start Date" value={fmtDate(season.start_date)} />
+              <InfoRow label="League Night" value={DAYS[season.league_night] || '—'} />
+              <InfoRow label="Weeks" value={season.weeks} />
+              <InfoRow label="Max HCP" value={season.max_handicap} />
+            </div>
+            {/* Par + Blind Score: split by nine */}
+            <div className="mt-2 rounded-xl overflow-hidden border border-gray-100">
+              <div className="grid grid-cols-3 bg-gray-50 text-xs font-semibold text-gray-500 px-3 py-1.5">
+                <span></span>
+                <span className="text-center text-green-700">Front 9</span>
+                <span className="text-center text-blue-700">Back 9</span>
+              </div>
+              <div className="grid grid-cols-3 border-t border-gray-100 px-3 py-2 items-center">
+                <span className="text-xs text-gray-500">Par</span>
+                <span className="text-center font-bold text-green-700">{season.par ?? 35}</span>
+                <span className="text-center font-bold text-blue-700">{(season.par ?? 35) + 1}</span>
+              </div>
+              <div className="grid grid-cols-3 border-t border-gray-100 px-3 py-2 items-center">
+                <span className="text-xs text-gray-500">Blind Score</span>
+                <span className="text-center font-bold text-green-700">{season.blind_score ?? 39}</span>
+                <span className="text-center font-bold text-blue-700">{(season.blind_score ?? 39) + 1}</span>
+              </div>
+            </div>
           </div>
         )}
       </div>
 
       {/* Schedule Generator */}
-      {isAdmin && (
-        <div className="bg-white rounded-xl shadow-sm p-4 space-y-3">
-          <div>
-            <p className="text-sm font-semibold text-gray-800">Schedule Generator</p>
-            <p className="text-xs text-gray-400 mt-0.5">Auto-builds a round-robin from {teams.length} teams. Generates {settings.weeks || season.weeks} weeks starting {fmtDate(settings.start_date || season.start_date) || 'from start date above'}.</p>
-          </div>
-          {teams.length < 2 && <p className="text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2">Add teams in the Roster tab first.</p>}
-          <button onClick={generate} disabled={generating || teams.length < 2}
-            className="w-full bg-green-700 text-white rounded-xl py-2.5 text-sm font-semibold disabled:opacity-50">
-            {generating ? 'Generating…' : weeks.length > 0 ? 'Regenerate Schedule' : 'Generate Schedule'}
-          </button>
+      <div className="bg-white rounded-xl shadow-sm p-4 space-y-3">
+        <div>
+          <p className="text-sm font-semibold text-gray-800">Schedule Generator</p>
+          <p className="text-xs text-gray-400 mt-0.5">Auto-builds a round-robin from {teams.length} teams. Generates {settings.weeks || season.weeks} weeks starting {fmtDate(settings.start_date || season.start_date) || 'from start date above'}.</p>
         </div>
-      )}
+        {teams.length < 2 && <p className="text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2">Add teams in the Roster tab first.</p>}
+        <button onClick={generate} disabled={generating || teams.length < 2}
+          className="w-full bg-green-700 text-white rounded-xl py-2.5 text-sm font-semibold disabled:opacity-50">
+          {generating ? 'Generating…' : weeks.length > 0 ? 'Regenerate Schedule' : 'Generate Schedule'}
+        </button>
+      </div>
 
       {/* Week editor */}
       {weeks.length > 0 && (
@@ -212,33 +252,45 @@ export default function SeasonSchedule() {
 
           {selectedWeek && (
             <div className="bg-white rounded-xl shadow-sm p-4 space-y-3">
+              {selectedWeek.date && (
+                <div className="flex items-center gap-2">
+                  <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${getNine(selectedWeek.date, season.start_date) === 'Front 9' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}>
+                    {getNine(selectedWeek.date, season.start_date)}
+                  </span>
+                  <span className="text-xs text-gray-400">Week {selectedWeek.number} · {new Date(selectedWeek.date + 'T12:00:00').toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
+                </div>
+              )}
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-gray-600 mb-1">Date</label>
-                  <input type="date" value={selectedWeek.date || ''} disabled={!isAdmin}
+                  <input type="date" value={selectedWeek.date || ''}
                     onChange={e => updateWeekField(selectedWeek.id, 'date', e.target.value)} className={inp} />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-gray-600 mb-1">Type</label>
-                  <select value={selectedWeek.week_type || 'regular'} disabled={!isAdmin}
+                  <select value={selectedWeek.week_type || 'regular'}
                     onChange={e => updateWeekField(selectedWeek.id, 'week_type', e.target.value)} className={inp}>
                     {WEEK_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                   </select>
                 </div>
               </div>
               <div className="divide-y divide-gray-50 -mx-4">
-                {matchups.map((m, idx) => (
-                  <div key={m.id} className="px-4 py-2.5 flex items-center gap-3">
-                    <span className="text-xs bg-green-100 text-green-700 rounded-full w-6 h-6 flex items-center justify-center font-bold flex-shrink-0">
-                      {m.hole_assignment || idx + 1}
-                    </span>
-                    <span className="text-sm text-gray-800">
-                      <span className="font-semibold">{teamLabel(teamById[m.home_team_id])}</span>
-                      <span className="text-gray-400 mx-2">vs</span>
-                      <span className="font-semibold">{teamLabel(teamById[m.away_team_id])}</span>
-                    </span>
-                  </div>
-                ))}
+                {matchups.map((m, idx) => {
+                  const homeTeam = teamById[m.home_team_id]
+                  const awayTeam = teamById[m.away_team_id]
+                  return (
+                    <div key={m.id} className="px-4 py-3 flex items-start gap-3">
+                      <span className="text-xs bg-green-100 text-green-700 rounded-full w-6 h-6 flex items-center justify-center font-bold flex-shrink-0 mt-0.5">
+                        {m.hole_assignment || idx + 1}
+                      </span>
+                      <div className="flex-1 min-w-0 space-y-1.5">
+                        <TeamBubble team={homeTeam} players={teamPlayersMap[m.home_team_id]} side="home" />
+                        <div className="text-xs text-gray-400 px-1">vs</div>
+                        <TeamBubble team={awayTeam} players={teamPlayersMap[m.away_team_id]} side="away" />
+                      </div>
+                    </div>
+                  )
+                })}
                 {matchups.length === 0 && selectedWeek.week_type === 'bye' && (
                   <p className="px-4 py-4 text-xs text-gray-400 text-center">Bye week — no matchups.</p>
                 )}
@@ -246,6 +298,25 @@ export default function SeasonSchedule() {
             </div>
           )}
         </>
+      )}
+    </div>
+  )
+}
+
+function TeamBubble({ team, players, side }) {
+  if (!team) return <div className="rounded-xl border bg-gray-50 px-3 py-2 text-xs text-gray-400">Unknown team</div>
+  const bg = side === 'home' ? '#F3E4C9' : '#DBCEA5'
+  return (
+    <div className="rounded-xl border border-stone-300 px-3 py-2 text-stone-900" style={{ backgroundColor: bg }}>
+      <p className="text-sm font-bold leading-tight">{team.name || `Team ${team.number}`}</p>
+      {players && players.length > 0 && (
+        <p className="text-xs mt-0.5 opacity-80">
+          {players.slice(0, 2).map((p, i) => {
+            const name = `${p.first_name || ''} ${p.last_name || ''}`.trim() || '—'
+            const hcp = p.hcp === 99 ? '?' : p.hcp
+            return `(${['A','B'][i]}) ${name} [${hcp}]`
+          }).join(' · ')}
+        </p>
       )}
     </div>
   )
@@ -263,6 +334,16 @@ function InfoRow({ label, value }) {
 function teamLabel(team) {
   if (!team) return '?'
   return team.name || `Team ${team.number}`
+}
+
+function rosterLine(players) {
+  if (!players || players.length === 0) return ''
+  const ranks = ['A', 'B']
+  return players.slice(0, 2).map((p, i) => {
+    const name = `${p.first_name || ''} ${p.last_name || ''}`.trim() || '—'
+    const hcp = p.hcp === 99 ? '?' : p.hcp
+    return `(${ranks[i]}) ${name} [${hcp}]`
+  }).join(' & ')
 }
 
 function roundRobin(ids) {
