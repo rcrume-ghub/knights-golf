@@ -3,12 +3,16 @@ import { useParams } from 'react-router-dom'
 import { useSeason } from '../Season.jsx'
 import * as store from '../../lib/store.js'
 import { netScore, calcMatchPoints } from '../../lib/handicap.js'
+import { useAuth } from '../../hooks/useAuth.jsx'
 
 export default function SeasonStats() {
   const { seasonId } = useParams()
   const { season } = useSeason()
+  const { isCommissioner, showDecimals, setShowDecimals } = useAuth()
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
+
+  const fmtHcp = (v) => v == null ? '—' : (isCommissioner && showDecimals) ? v.toFixed(1) : String(Math.round(v))
 
   useEffect(() => { load() }, [seasonId])
 
@@ -135,9 +139,19 @@ export default function SeasonStats() {
     <div className="px-4 py-4 max-w-2xl mx-auto space-y-5">
 
       {/* Header */}
-      <div className="bg-green-800 rounded-xl px-4 py-3 text-white">
-        <h2 className="font-bold text-base">{season.name} — Season Stats</h2>
-        <p className="text-xs text-green-300 mt-0.5">Through Week {weeksPlayed}</p>
+      <div className="bg-green-800 rounded-xl px-4 py-3 text-white flex items-center justify-between">
+        <div>
+          <h2 className="font-bold text-base">{season.name} — Season Stats</h2>
+          <p className="text-xs text-green-300 mt-0.5">Through Week {weeksPlayed}</p>
+        </div>
+        {isCommissioner && (
+          <button
+            onClick={() => setShowDecimals(v => !v)}
+            className={`text-xs px-2.5 py-1 rounded-lg font-semibold border transition-colors ${showDecimals ? 'bg-white text-green-800 border-white' : 'border-green-500 text-green-200'}`}
+          >
+            HCP {showDecimals ? '.0' : '#'}
+          </button>
+        )}
       </div>
 
       {/* Team Standings */}
@@ -195,7 +209,7 @@ export default function SeasonStats() {
                   <td className="px-3 py-2.5 text-gray-800 text-sm">{pName(p.pid)}</td>
                   <td className="px-3 py-2.5 text-xs text-gray-500">Team {teamById[p.teamId]?.number ?? '?'}</td>
                   <td className="px-3 py-2.5 text-right">
-                    <span className="font-bold text-blue-700">{Math.round(p.currentHcp)}</span>
+                    <span className="font-bold text-blue-700">{fmtHcp(p.currentHcp)}</span>
                     {delta != null && (
                       <span className={`ml-1.5 text-xs font-medium ${delta < 0 ? 'text-green-600' : delta > 0 ? 'text-red-500' : 'text-gray-400'}`}>
                         {delta < 0 ? '▼' : delta > 0 ? '▲' : '–'}
@@ -306,7 +320,7 @@ export default function SeasonStats() {
                   <tr key={p.pid} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
                     <td className="px-3 py-2.5 text-gray-800 text-sm">{pName(p.pid)}</td>
                     <td className="px-3 py-2.5 text-xs text-gray-500">Team {teamById[p.teamId]?.number ?? '?'}</td>
-                    <td className="px-3 py-2.5 text-right font-bold text-gray-900">{Math.round(p.currentHcp)}</td>
+                    <td className="px-3 py-2.5 text-right font-bold text-gray-900">{fmtHcp(p.currentHcp)}</td>
                     <td className="px-3 py-2.5 text-right">
                       {delta != null ? (
                         <span className={`text-xs font-semibold ${delta < 0 ? 'text-green-600' : delta > 0 ? 'text-red-500' : 'text-gray-400'}`}>

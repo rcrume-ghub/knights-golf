@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import * as store from './lib/store.js'
+import { AuthProvider } from './hooks/useAuth.jsx'
 import Layout from './components/Layout.jsx'
 import Setup from './pages/Setup.jsx'
 import Home from './pages/Home.jsx'
@@ -67,7 +68,9 @@ function AppShell() {
 export default function App() {
   return (
     <BrowserRouter>
-      <AppShell />
+      <AuthProvider>
+        <AppShell />
+      </AuthProvider>
     </BrowserRouter>
   )
 }
