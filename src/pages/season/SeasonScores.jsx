@@ -4,6 +4,7 @@ import { useSeason } from '../Season.jsx'
 import * as store from '../../lib/store.js'
 import { newId } from '../../lib/db.js'
 import { netScore, calcMatchPoints, getNine } from '../../lib/handicap.js'
+import { recalcHcps } from '../../lib/calcHcp.js'
 
 export default function SeasonScores() {
   const { seasonId } = useParams()
@@ -16,6 +17,8 @@ export default function SeasonScores() {
   const [saved, setSaved] = useState(false)
   const [rainoutModal, setRainoutModal] = useState(false)
   const [finalizeModal, setFinalizeModal] = useState(false)
+  const [hcpSetupModal, setHcpSetupModal] = useState(false)
+  const [hcpSetupPlayers, setHcpSetupPlayers] = useState([])
   const [allSubs, setAllSubs] = useState([])
 
   useEffect(() => { loadWeeks() }, [seasonId])
@@ -40,17 +43,20 @@ export default function SeasonScores() {
   }
 
   async function loadMatchups(weekId) {
-    const [allMatchups, allTeams, allTeamPlayers, allPlayers, allHandicaps] = await Promise.all([
+    const [allMatchups, allTeams, allTeamPlayers, allPlayers, allHandicaps, prevHcps] = await Promise.all([
       store.matchups.getByWeek(weekId),
       store.teams.getBySeason(seasonId),
       store.teamPlayers.getAll(),
       store.players.getAll(),
-      store.handicaps.getAll()
+      store.handicaps.getAll(),
+      store.seasonPlayerHcp.getBySeason(seasonId),
     ])
 
     const playerById = Object.fromEntries(allPlayers.map(p => [p.id, p]))
     const teamById = Object.fromEntries(allTeams.map(t => [t.id, t]))
+    const prevHcpMap = Object.fromEntries(prevHcps.map(h => [h.player_id, h.prev_season_hcp]))
 
+    // Latest computed HCP per player
     const hcpMap = {}
     for (const h of allHandicaps) {
       if (!hcpMap[h.player_id] || new Date(h.calculated_at) > new Date(hcpMap[h.player_id].calculated_at)) {
@@ -62,7 +68,11 @@ export default function SeasonScores() {
     for (const tp of allTeamPlayers) {
       if (!teamPlayersMap[tp.team_id]) teamPlayersMap[tp.team_id] = []
       const p = playerById[tp.player_id]
-      if (p) teamPlayersMap[tp.team_id].push({ ...p, hcp: hcpMap[p.id]?.value ?? 99 })
+      if (!p) continue
+      const computed = hcpMap[p.id]
+      const hcpValue = computed?.value ?? prevHcpMap[p.id] ?? null
+      const hcpStatus = computed?.status ?? (prevHcpMap[p.id] != null ? 'prev_season' : 'not_established')
+      teamPlayersMap[tp.team_id].push({ ...p, hcp: hcpValue ?? 99, hcpStatus })
     }
     for (const tid of Object.keys(teamPlayersMap)) {
       teamPlayersMap[tid].sort((a, b) => a.hcp - b.hcp)
@@ -88,6 +98,7 @@ export default function SeasonScores() {
             teamNumber: side === 'home' ? homeTeam?.number : awayTeam?.number,
             slot, side,
             handicap: player.hcp === 99 ? null : player.hcp,
+            hcpStatus: player.hcpStatus,
             gross: existing?.gross ?? '',
             isBlind: existing?.is_blind ?? false,
             isSub: existing?.is_sub ?? false,
@@ -126,6 +137,49 @@ export default function SeasonScores() {
     setSaving(false)
   }
 
+  // Check if any players in this week's matchups are missing both computed HCP and prev_season_hcp
+  async function checkHcpSetupNeeded() {
+    const [prevHcps, computedHcps, allPlayers] = await Promise.all([
+      store.seasonPlayerHcp.getBySeason(seasonId),
+      store.handicaps.getAll(),
+      store.players.getAll(),
+    ])
+    const prevMap = Object.fromEntries(prevHcps.map(h => [h.player_id, h.prev_season_hcp]))
+    const hasComputed = new Set(computedHcps.map(h => h.player_id))
+    const playerById = Object.fromEntries(allPlayers.map(p => [p.id, p]))
+
+    const weekPlayerIds = [...new Set(matchups.flatMap(m => m.entries).map(e => e.playerId))]
+    const missing = weekPlayerIds.filter(pid => !hasComputed.has(pid) && prevMap[pid] == null)
+
+    if (missing.length > 0) {
+      setHcpSetupPlayers(missing.map(pid => ({
+        id: pid,
+        name: `${playerById[pid]?.first_name || ''} ${playerById[pid]?.last_name || ''}`.trim()
+      })))
+      setHcpSetupModal(true)
+      return true
+    }
+    return false
+  }
+
+  async function handleFinalizeClick() {
+    const needsSetup = await checkHcpSetupNeeded()
+    if (!needsSetup) setFinalizeModal(true)
+  }
+
+  async function handleHcpSetupDone(entries) {
+    for (const { playerId, hcp, noHcp } of entries) {
+      await store.seasonPlayerHcp.upsert({
+        player_id: playerId,
+        season_id: seasonId,
+        prev_season_hcp: noHcp ? null : hcp,
+        no_hcp: noHcp,
+      })
+    }
+    setHcpSetupModal(false)
+    setFinalizeModal(true)
+  }
+
   async function handleFinalize(resolutions, missing) {
     // Apply resolutions to local matchup state
     for (const entry of missing) {
@@ -144,7 +198,6 @@ export default function SeasonScores() {
     // Save all scores then finalize the week
     setSaving(true)
     const allEntries = matchups.flatMap(m => m.entries).filter(e => e.gross !== '' || e.isBlind)
-    // Also include newly resolved entries
     const resolvedEntries = missing
       .filter(e => {
         const res = resolutions[`${e.matchupId}_${e.playerId}`]
@@ -171,7 +224,13 @@ export default function SeasonScores() {
       gross: e.isBlind ? season.blind_score : parseInt(e.gross),
       is_blind: e.isBlind,
     })))
+
+    const selectedWeek = allWeeks.find(w => w.id === selectedWeekId)
     await store.weeks.upsert({ ...selectedWeek, is_finalized: true })
+
+    // Recalculate HCPs for all season players using all finalized weeks
+    await recalcHcps(seasonId, selectedWeekId)
+
     setSaving(false)
     setFinalizeModal(false)
     loadWeeks()
@@ -179,6 +238,7 @@ export default function SeasonScores() {
   }
 
   async function handleUnfinalize() {
+    const selectedWeek = allWeeks.find(w => w.id === selectedWeekId)
     await store.weeks.upsert({ ...selectedWeek, is_finalized: false })
     loadWeeks()
   }
@@ -279,7 +339,7 @@ export default function SeasonScores() {
             {saving ? 'Saving…' : saved ? '✓ Scores saved' : 'Save Scores'}
           </button>
           <button
-            onClick={() => setFinalizeModal(true)}
+            onClick={handleFinalizeClick}
             disabled={saving}
             className="w-full bg-blue-700 text-white rounded-xl py-3 font-semibold text-sm hover:bg-blue-800 disabled:opacity-50 transition-colors shadow-sm"
           >
@@ -308,6 +368,13 @@ export default function SeasonScores() {
           onDone={() => { setRainoutModal(false); loadWeeks() }}
         />
       )}
+      {hcpSetupModal && (
+        <HcpSetupModal
+          players={hcpSetupPlayers}
+          onDone={handleHcpSetupDone}
+          onClose={() => setHcpSetupModal(false)}
+        />
+      )}
       {finalizeModal && selectedWeek && (
         <FinalizeModal
           week={selectedWeek}
@@ -332,8 +399,9 @@ function MatchupCard({ matchup, matchNumber, season, weekDate, onUpdate, readOnl
   const getNet = e => {
     if (!e) return null
     if (e.isBlind) return blindScore
+    if (e.handicap == null) return null // No HCP — can't compute net
     const gross = parseInt(e.gross)
-    return isNaN(gross) ? null : netScore(gross, e.handicap ?? 0)
+    return isNaN(gross) ? null : netScore(gross, e.handicap)
   }
 
   const homeHasBozo = home.some(e => e.isBlind)
@@ -409,6 +477,13 @@ function MatchupCard({ matchup, matchNumber, season, weekDate, onUpdate, readOnl
   )
 }
 
+const HCP_STATUS_BADGE = {
+  not_established: { label: 'No HCP', cls: 'bg-red-100 text-red-700' },
+  prev_season:     { label: null, cls: '' },
+  temp:            { label: 'Temp', cls: 'bg-amber-100 text-amber-700' },
+  established:     { label: null, cls: '' },
+}
+
 function PlayerInput({ entry, result, onChange, side, readOnly, blindScore = 39 }) {
   if (!entry) return <div />
   const baseBg = side === 'home' ? '#F3E4C9' : '#DBCEA5'
@@ -417,9 +492,12 @@ function PlayerInput({ entry, result, onChange, side, readOnly, blindScore = 39 
     : result === 'tie' ? 'ring-2 ring-yellow-400'
     : ''
   const net = entry.isBlind ? blindScore : (() => {
+    if (entry.handicap == null) return null
     const g = parseInt(entry.gross)
-    return isNaN(g) ? null : netScore(g, entry.handicap ?? 0)
+    return isNaN(g) ? null : netScore(g, entry.handicap)
   })()
+
+  const badge = HCP_STATUS_BADGE[entry.hcpStatus]
 
   return (
     <div className={`rounded-lg border border-stone-300 p-2 ${resultRing}`} style={{ backgroundColor: baseBg }}>
@@ -470,8 +548,13 @@ function PlayerInput({ entry, result, onChange, side, readOnly, blindScore = 39 
       {readOnly && entry.isSub && entry.subName && (
         <p className="text-xs text-blue-600 mt-0.5 truncate">Sub: {entry.subName}</p>
       )}
-      <div className="flex items-center justify-between mt-1">
-        <span className="text-xs text-gray-400">Hdcp: {entry.handicap ?? '—'}</span>
+      <div className="flex items-center justify-between mt-1 gap-1">
+        <span className="text-xs text-gray-400">
+          Hdcp: {entry.handicap != null ? entry.handicap : '—'}
+          {badge?.label && (
+            <span className={`ml-1 px-1 py-0.5 rounded text-xs font-medium ${badge.cls}`}>{badge.label}</span>
+          )}
+        </span>
         {net != null && <span className="text-xs font-semibold text-gray-700">Net: {net}</span>}
       </div>
     </div>
@@ -496,6 +579,71 @@ function fmtType(t) {
   return { regular: 'Regular', position_night: 'Position Night', scramble: 'Scramble', end_scramble: 'End Scramble', holiday: 'Holiday', rainout: 'Rained Out' }[t] || t
 }
 
+function HcpSetupModal({ players, onDone, onClose }) {
+  const [entries, setEntries] = useState(
+    players.map(p => ({ playerId: p.id, name: p.name, hcp: '', noHcp: false }))
+  )
+
+  function update(idx, field, value) {
+    setEntries(prev => prev.map((e, i) => i === idx ? { ...e, [field]: value } : e))
+  }
+
+  function submit() {
+    const parsed = entries.map(e => ({
+      playerId: e.playerId,
+      hcp: e.noHcp ? null : parseFloat(e.hcp),
+      noHcp: e.noHcp,
+    }))
+    const invalid = parsed.some(e => !e.noHcp && (isNaN(e.hcp) || e.hcp < 0 || e.hcp > 36))
+    if (invalid) { alert('Enter a valid HCP (0–36) or check "No HCP Established".'); return }
+    onDone(parsed)
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-end justify-center p-4" onClick={onClose}>
+      <div className="bg-white rounded-2xl w-full max-w-sm shadow-xl" onClick={e => e.stopPropagation()}>
+        <div className="px-5 pt-5 pb-3 border-b border-gray-100">
+          <h2 className="text-base font-bold text-gray-900">HCP Setup Required</h2>
+          <p className="text-xs text-gray-500 mt-1">
+            These players have no prior-season HCP on file. Enter their HCP or mark as not established.
+          </p>
+        </div>
+        <div className="px-5 py-4 space-y-4 max-h-64 overflow-y-auto">
+          {entries.map((entry, idx) => (
+            <div key={entry.playerId} className="space-y-1.5">
+              <p className="text-sm font-semibold text-gray-800">{entry.name}</p>
+              <input
+                type="number" inputMode="decimal"
+                value={entry.hcp}
+                onChange={e => update(idx, 'hcp', e.target.value)}
+                disabled={entry.noHcp}
+                placeholder="Prior HCP (e.g. 12.5)"
+                className="w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm disabled:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-green-600"
+                min={0} max={36} step={0.1}
+              />
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={entry.noHcp}
+                  onChange={e => update(idx, 'noHcp', e.target.checked)}
+                  className="w-4 h-4 accent-red-600"
+                />
+                <span className="text-xs text-gray-600">No HCP Established — scoring paused until 3 rounds played</span>
+              </label>
+            </div>
+          ))}
+        </div>
+        <div className="px-5 pb-5 pt-3 border-t border-gray-100 space-y-2">
+          <button onClick={submit} className="w-full bg-green-700 text-white rounded-xl py-3 text-sm font-semibold">
+            Save & Continue to Finalize
+          </button>
+          <button onClick={onClose} className="w-full text-gray-400 py-2 text-sm">Cancel</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function FinalizeModal({ week, matchups, season, allSubs, onClose, onFinalize }) {
   const missing = matchups.flatMap(m =>
     m.entries.filter(e => e.gross === '' && !e.isBlind).map(e => ({ ...e, matchupId: m.id, homeTeam: m.homeTeam, awayTeam: m.awayTeam }))
@@ -507,7 +655,6 @@ function FinalizeModal({ week, matchups, season, allSubs, onClose, onFinalize })
   )
   const [saving, setSaving] = useState(false)
 
-  // Detect forfeit: both players from same team+matchup are missing
   const forfeitGroups = {}
   for (const e of missing) {
     const gk = `${e.matchupId}_${e.side}`
@@ -551,7 +698,6 @@ function FinalizeModal({ week, matchups, season, allSubs, onClose, onFinalize })
               <p className="text-sm text-gray-500">{missing.length} missing score{missing.length > 1 ? 's' : ''}. How should each be handled?</p>
               {Object.entries(forfeitGroups).map(([gk, entries]) => {
                 const bothMissing = entries.length === 2
-                const teamNum = entries[0].teamNumber
                 return entries.map(entry => {
                   const key = initKey(entry)
                   const res = resolutions[key]
@@ -712,16 +858,14 @@ function MissingSlotResolver({ entry, resolution, allSubs, canForfeit, onForfeit
 }
 
 function RainoutModal({ week, allWeeks, seasonId, season, onClose, onDone }) {
-  const [step, setStep] = useState('ask') // 'ask' | 'no_confirm' | 'done'
+  const [step, setStep] = useState('ask')
   const [saving, setSaving] = useState(false)
 
   async function markRainout(addMakeup) {
     setSaving(true)
-    // Mark the week as rainout
     await store.weeks.upsert({ ...week, week_type: 'rainout' })
 
     if (addMakeup) {
-      // Create makeup week at end of season
       const maxNum = Math.max(...allWeeks.map(w => w.number))
       const lastWeek = allWeeks.find(w => w.number === maxNum)
       const lastDate = lastWeek?.date ? new Date(lastWeek.date + 'T12:00:00') : null
@@ -736,7 +880,6 @@ function RainoutModal({ week, allWeeks, seasonId, season, onClose, onDone }) {
         week_type: 'makeup',
       })
 
-      // Duplicate matchups from rained-out week into makeup week
       const originalMatchups = await store.matchups.getByWeek(week.id)
       for (const m of originalMatchups) {
         await store.matchups.upsert({
@@ -766,24 +909,16 @@ function RainoutModal({ week, allWeeks, seasonId, season, onClose, onDone }) {
           <>
             <p className="text-sm text-gray-600 text-center">Add a makeup week to the end of the season?</p>
             <div className="space-y-2">
-              <button
-                onClick={() => markRainout(true)}
-                disabled={saving}
-                className="w-full bg-green-700 text-white rounded-xl py-3 text-sm font-semibold disabled:opacity-50"
-              >
+              <button onClick={() => markRainout(true)} disabled={saving}
+                className="w-full bg-green-700 text-white rounded-xl py-3 text-sm font-semibold disabled:opacity-50">
                 {saving ? 'Saving…' : 'Yes — Add Makeup Week'}
               </button>
-              <button
-                onClick={() => setStep('no_confirm')}
-                disabled={saving}
-                className="w-full border border-gray-200 text-gray-600 rounded-xl py-3 text-sm font-medium"
-              >
+              <button onClick={() => setStep('no_confirm')} disabled={saving}
+                className="w-full border border-gray-200 text-gray-600 rounded-xl py-3 text-sm font-medium">
                 No — Just Mark as Rained Out
               </button>
-              <button
-                onClick={onClose}
-                className="w-full border border-gray-200 text-gray-500 rounded-xl py-3 text-sm font-medium hover:bg-gray-50 transition-colors"
-              >
+              <button onClick={onClose}
+                className="w-full border border-gray-200 text-gray-500 rounded-xl py-3 text-sm font-medium hover:bg-gray-50 transition-colors">
                 Cancel
               </button>
             </div>
@@ -794,20 +929,16 @@ function RainoutModal({ week, allWeeks, seasonId, season, onClose, onDone }) {
           <>
             <p className="text-sm text-gray-600 text-center">Are you sure? This week will be marked as rained out with no makeup scheduled.</p>
             <div className="space-y-2">
-              <button
-                onClick={() => markRainout(false)}
-                disabled={saving}
-                className="w-full bg-red-600 text-white rounded-xl py-3 text-sm font-semibold disabled:opacity-50"
-              >
+              <button onClick={() => markRainout(false)} disabled={saving}
+                className="w-full bg-red-600 text-white rounded-xl py-3 text-sm font-semibold disabled:opacity-50">
                 {saving ? 'Saving…' : 'Yes, Mark Rained Out'}
               </button>
-              <button onClick={() => setStep('ask')} className="w-full border border-gray-200 text-gray-600 rounded-xl py-3 text-sm font-medium">
+              <button onClick={() => setStep('ask')}
+                className="w-full border border-gray-200 text-gray-600 rounded-xl py-3 text-sm font-medium">
                 ← Go Back
               </button>
-              <button
-                onClick={onClose}
-                className="w-full border border-gray-200 text-gray-500 rounded-xl py-3 text-sm font-medium hover:bg-gray-50 transition-colors"
-              >
+              <button onClick={onClose}
+                className="w-full border border-gray-200 text-gray-500 rounded-xl py-3 text-sm font-medium hover:bg-gray-50 transition-colors">
                 Cancel
               </button>
             </div>
